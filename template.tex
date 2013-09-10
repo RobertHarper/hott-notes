@@ -1,0 +1,30 @@
+\documentclass[12pt]{article}
+\input{macros}
+\metadata{Vonnie III}{2099/99/99}
+
+\begin{document}
+
+\section{Goal}
+
+The main topic today is to test the template file.
+
+\section{Whatever}
+
+This is a paragraph with no purpose other than
+occupying some space.
+
+\begin{mathpar}
+    \infer*[Right=Reflection]{
+      \G \entails \bot \to \bot
+    }{
+      \G \entails \top \to \top
+    }
+    \\
+    \infer*[]{
+    }{
+      \G \entails \fst(\trans{p}{x}) \concat z \jdeq y : A
+    }
+\end{mathpar}
+The above rule is as insightful as this paragraph.
+
+\end{document}

@@ -1,0 +1,59 @@
+%%% This file can never be completed.
+%%% If you need something but cannot find it,
+%%% contact the TA Favonia!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basic packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{fancyhdr}
+\usepackage{mathpartir}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fancy page style
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\newcommand{\metadata}[2]{
+  \lhead{}
+  \chead{}
+  \rhead{\bfseries Homotopy Type Theory}
+  \lfoot{#1}
+  \cfoot{#2}
+  \rfoot{\thepage}
+}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some really basic macros.
+% (Lots of them were stolen from HoTT/Book.)
+% See macros.tex in HoTT/book.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\G}{\Gamma}
+\newcommand{\entails}{\vdash}
+%%% Judgmental equality
+\newcommand{\jdeq}{\equiv}
+%%% Definition
+\newcommand{\defeq}{\vcentcolon\equiv}
+%%% Binary sums
+\newcommand{\inlsym}{{\mathsf{inl}}}
+\newcommand{\inrsym}{{\mathsf{inr}}}
+\newcommand{\inl}{\ensuremath\inlsym\xspace}
+\newcommand{\inr}{\ensuremath\inrsym\xspace}
+%%% Pairs
+\newcommand{\pair}{\ensuremath{\mathsf{pair}}\xspace}
+\newcommand{\tuple}[2]{(#1,#2)}
+\newcommand{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
+\newcommand{\fst}{\ensuremath{\proj1}\xspace}
+\newcommand{\snd}{\ensuremath{\proj2}\xspace}
+%%% Path concatenation
+\newcommand{\concat}{%
+  \mathchoice{\mathbin{\raisebox{0.5ex}{$\displaystyle\centerdot$}}}%
+  {\mathbin{\raisebox{0.5ex}{$\centerdot$}}}%
+  {\mathbin{\raisebox{0.25ex}{$\scriptstyle\,\centerdot\,$}}}%
+  {\mathbin{\raisebox{0.1ex}{$\scriptscriptstyle\,\centerdot\,$}}}
+}
+%%% Transport (covariant)
+\newcommand{\trans}[2]{\ensuremath{{#1}_{*}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
