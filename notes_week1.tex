@@ -1,30 +1,76 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
+%\metadata{Vonnie III}{2099/99/99}
+
+\usepackage{mathpartir}
+
+% Package for customizing page layout
+\usepackage[a4paper,scale=0.8]{geometry}
+
+\setlength{\parskip}{0.1cm}
+\setlength{\parindent}{0mm}
+
+% names
+\newcommand{\HoTT}{Homotopy Type Theory}
+
 \input{macros}
-\metadata{Vonnie III}{2099/99/99}
 
 \begin{document}
 
-\section{Goal}
+\title{15-819 Homotopy Type Theory\\ Lecture Notes}
+\author{Henry DeYoung and Stephanie Balzer}
+\date{September 9 and 11, 2013}
 
-The main topic today is to test the template file.
+\maketitle
 
-\section{Whatever}
+\section{Contents}\label{sec:contents}
 
-This is a paragraph with no purpose other than
-occupying some space.
+These notes summarize the lectures on \HoTT\ (HoTT) given by Professor Robert Harper on
+September 9 and 11, 2013, at CMU.  They start by providing a introduction to HoTT, capturing
+its main ideas and its connection to other related type theories.  Then they present
+Intuitionistic Propositional Logic (IPL), giving both an inference-rule-based formulation as
+well an order-theoretic formulation.  The notes conclude with a brief summary.
 
-\begin{mathpar}
-    \infer*[Right=Reflection]{
-      \G \entails \bot \to \bot
-    }{
-      \G \entails \top \to \top
-    }
-    \\
-    \infer*[]{
-    }{
-      \G \entails \fst(\trans{p}{x}) \concat z \jdeq y : A
-    }
-\end{mathpar}
-The above rule is as insightful as this paragraph.
+% [COMMENT_SB:] How does IPL relate to HoTT?
+
+\section{Introduction to \HoTT\ (HoTT)}\label{sec:intro}
+
+\subsection{In a Nutshell}\label{subsec:hott_in_nutshell}
+
+\subsection{In Type Theory Context}\label{subsec:type_theory_context}
+
+\section{Intuitionistic Propositional Logic (IPL)}\label{sec:ipl}
+
+\subsection{Inference-Rule-Based Formulation}\label{subsec:ipl_rules}
+
+% [COMMENT_SB:] Explain difference between introduction and elimination rules.  Mention
+% Gentzen's rule of inversion.
+
+\subsubsection{Negative Fragment}\label{subsubsec:ipl_negfrag}
+
+\subsubsection{Positive Fragment}\label{subsubsec:ipl_posfrag}
+
+\subsection{Order-Theoretic Formulation}\label{subsec:ipl_order}
+
+\section{Summary}\label{sec:summary}
+
+% \section{Example Formulae}
+
+% This is a paragraph with no purpose other than
+% occupying some space.
+
+% \begin{mathpar}
+%     \infer*[Right=Reflection]{
+%       \G \entails \bot \to \bot
+%     }{
+%       \G \entails \top \to \top
+%     }
+%     \\
+%     \infer*[]{
+%     }{
+%       \G \entails \fst(\trans{p}{x}) \concat z \jdeq y : A
+%     }
+% \end{mathpar}
+
+% The above rule is as insightful as this paragraph.
 
 \end{document}
