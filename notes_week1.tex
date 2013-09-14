@@ -1,15 +1,96 @@
 % arara: pdflatex
+% arara: bibtex
+% arara: pdflatex
 % arara: pdflatex
 \documentclass[12pt]{article}
+
+% Package for customizing page layout
+\usepackage[a4paper,scale=0.8]{geometry}
+
 \input{macros}
-\metadata{Vonnie III}{2099/99/99}
 
 \usepackage{proof}
 \usepackage{glossaries}
 
+\metadata{Vonnie III}{2099/99/99}
+
+% for url in bib entries
+\usepackage{url}
+
+\setlength{\parskip}{0.1cm}
+\setlength{\parindent}{0mm}
+
+% package to customize three basic list environments: enumerate, itemize and description.
+\usepackage{enumitem}
+\setitemize{noitemsep, topsep=0pt, leftmargin=*}
+\setenumerate{noitemsep, topsep=0pt, leftmargin=*}
+\setdescription{noitemsep, topsep=0pt, leftmargin=*}
+
+% names
+\newcommand{\HoTT}{Homotopy Type Theory}
+
 \begin{document}
 
+\title{15-819 Homotopy Type Theory\\ Lecture Notes}
+\author{Henry DeYoung and Stephanie Balzer}
+\date{September 9 and 11, 2013}
+
+\maketitle
+
+\section{Contents}\label{sec:contents}
+
+These notes summarize the lectures on \HoTT\ (HoTT) given by Professor Robert Harper on
+September 9 and 11, 2013, at CMU.  They start by providing a introduction to HoTT, capturing
+its main ideas and its connection to other related type theories.  Then they present
+Intuitionistic Propositional Logic (IPL), giving both an inference-rule-based formulation as
+well an order-theoretic formulation.  The notes conclude with a brief summary.
+
+% [COMMENT_SB:] How does IPL relate to HoTT?
+
+\section{Introduction to \HoTT\ (HoTT)}\label{sec:intro}
+
+\subsection{In a Nutshell}\label{subsec:hott_in_nutshell}
+
+The notion of proof relevance requires us to draw a fine distinction between the proofs given
+in a intuitionistic logic and the ones given in conventional mathematics.
+Harper~\cite{Harper2012} calls the former \textbf{proofs} and the latter \textbf{formal
+  proofs}.  Formal proofs arise from the application of the inductively defined rules in a
+fixed formal system.  According to G\"{o}del's Incompleteness Theorem, however, we know that
+there are certain propositions that are true for which there is no formal proof.  Thus, an
+intuitionistic approach defeats the adoption of a formal proof since in intuitionism true
+propositions are only those for which there exists a proof.
+
+According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
+
+\begin{itemize}
+
+\item is a nice way to phrase arguments in homotopy theory that avoids some of the technicalities
+  in the classical proofs by treating spaces and paths \textbf{synthetically}, rather than
+  \textbf{analytically}
+
+\item is a good language for \textbf{mechanization} of mathematics that provides for the concise
+  formulation of proofs in a form that can be verified by a computer
+
+\item points the way towards a vast extension of the concept of computation that enables us to
+  \textbf{compute with abstract geometric objects} such as spheres or toruses
+
+\item is a new \textbf{foundation for mathematics} that subsumes set theory by generalizing
+  types from mere sets to arbitrary infinity groupoids, sets being but particularly simple
+  types (those with no non-trivial higher-dimensional structure).
+
+\end{itemize}
+
+HoTT's most distinctive feature is its \textbf{constructivity}.
+
+\subsection{In Type Theory Context}\label{subsec:type_theory_context}
+
+Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
+because the typing judgement is not decidable.
+
 \section{Intuitionistic Propositional Logic: ``Logic as if people matter''}\label{sec:ipl}
+
+% [COMMENT_SB:] Explain difference between introduction and elimination rules.  Mention
+% Gentzen's rule of inversion.
 
 \newacronym{IPL}{IPL}{intuitionistic propositional logic}%
 %
@@ -88,5 +169,14 @@ Because is a pair of verifications of $A$ and $B$, we are justified in deducing 
 \subsubsection{Implication}\label{sec:implication}
 
 \subsubsection{Summary of the negative fragment of \gls{IPL}}\label{sec:summary-negative}
+
+\subsection{Positive fragment of \gls{IPL}}\label{sec:positive}
+
+\section{Order-Theoretic Formulation of \gls{IPL}}\label{sec:ipl_order}
+
+\section{Summary}\label{sec:summary}
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
 
 \end{document}
