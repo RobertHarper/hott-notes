@@ -4,8 +4,11 @@
 % arara: pdflatex
 \documentclass[12pt]{article}
 
+\usepackage{lmodern}
+\usepackage{microtype}
+
 % Package for customizing page layout
-\usepackage[a4paper,scale=0.8]{geometry}
+% \usepackage[a4paper,scale=0.8]{geometry}
 
 \input{macros}
 
@@ -17,8 +20,8 @@
 % for url in bib entries
 \usepackage{url}
 
-\setlength{\parskip}{0.1cm}
-\setlength{\parindent}{0mm}
+% \setlength{\parskip}{0.1cm}
+% \setlength{\parindent}{0mm}
 
 % package to customize three basic list environments: enumerate, itemize and description.
 \usepackage{enumitem}
@@ -87,14 +90,16 @@ HoTT's most distinctive feature is its \textbf{constructivity}.
 Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
 because the typing judgement is not decidable.
 
-\section{Intuitionistic Propositional Logic: ``Logic as if people matter''}\label{sec:ipl}
+\section{Intuitionistic propositional logic: ``Logic as if people matter''}\label{sec:ipl}
 
 % [COMMENT_SB:] Explain difference between introduction and elimination rules.  Mention
 % Gentzen's rule of inversion.
 
+What is meant by \emph{intuitionistic} logic?  One might say its slogan is ``logic as if people matter'', alluding to Brouwer's principle that mathematics is a social process.
+
 \newacronym{IPL}{IPL}{intuitionistic propositional logic}%
 %
-As advanced by Per Martin-L\"{o}f, a modern presentation of \gls{IPL} distinguishes the notions of \vocab{judgement} and \vocab{proposition}.
+As advanced by Per Martin-L\"{o}f, a modern presentation of \gls{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
 A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
 For instance, 
 
@@ -122,26 +127,14 @@ The proposition $\truth$ is trivially true, and so its introduction rule makes t
     }
 \end{equation*}
 
-We should also pause to consider an elimination rule for $\truth$: from a proof of $\truth \true$, what can we deduce?
+We should also pause to consider an elimination rule: from a proof of $\truth \true$, what can we deduce?
 Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
 For this reason, there is no elimination rule for $\truth$.
-
-To summarize, here are the formation, introduction, and elimination rules for truth:
-\begin{mathpar}
-  \infer[{\truth}F]{\truth \prop}{
-    }
-  \\
-  \infer[{\truth}I]{\truth \true}{
-    }
-  \and
-  \text{(no ${\truth}E$ rule)}
-\end{mathpar}
 
 \subsubsection{Conjunction}\label{sec:conjunction}
 
 Another familiar group of propositions are the conjunctions.
-If $A$ and $B$ are propositions, then so is their conjunction, which we write as $A \conj B$.
-This is the content of the formation rule for conjunction.
+If $A$ and $B$ are propositions, then so is their conjunction, which we write as $A \conj B$; this is the content of the formation rule for conjunction.
 \begin{equation*}
   \infer[{\conj}F]{A \conj B \prop}{
     A \prop & B \prop}
@@ -171,6 +164,47 @@ Because is a pair of verifications of $A$ and $B$, we are justified in deducing 
 \subsubsection{Summary of the negative fragment of \gls{IPL}}\label{sec:summary-negative}
 
 \subsection{Positive fragment of \gls{IPL}}\label{sec:positive}
+
+\subsubsection{Disjunction}\label{sec:disjunction}
+
+As for conjunction and implication, the disjunction, $A \disj B$, of $A$ and $B$ is a well-formed proposition if both $A$ and $B$ are themselves well-formed propositions.
+\begin{equation*}
+  \infer[{\disj}F]{A \disj B \prop}{
+    A \prop & B \prop}
+\end{equation*}
+
+A disjunction $A \disj B$ may be introduced in either of two ways: $A \disj B$ is true if $A$ is true or if $B$ is true.
+\begin{mathpar}
+  \infer[{\disj}I_1]{A \disj B \true}{
+    A \true}
+  \and
+  \infer[{\disj}I_2]{A \disj B \true}{
+    B \true}
+\end{mathpar}
+To devise the elimination rule, consider what may we deduce from the knowledge that $A \disj B$ is true.
+For $A \disj B$ to be true, it must have been ultimately introduced using one of the two introduction rules.
+Therefore, either $A$ or $B$ is true (or possibly both).
+The elimination rule allows us to reason by these two cases: If $C \true$ follows from $A \true$ and also follows from $B \true$, then $C$ is true in either case.
+\begin{equation*}
+  \infer[{\disj}E]{C \true}{
+    A \disj B \true &
+    A \true \entails C \true & B \true \entails C \true}
+\end{equation*}
+
+\subsubsection{Falsehood}\label{sec:falsehood}
+
+The unit of disjunction is falsehood, the proposition that is trivially never true, which we write as $\falsehood$.  Its formation rule is immediate evidence that $\falsehood$ is a well-formed proposition.
+\begin{equation*}
+  \infer[{\falsehood}F]{\falsehood \prop}{
+    }
+\end{equation*}
+
+Because $\falsehood$ should never be true, it has no introduction rule.
+The elimination rule captures \latin{ex falso quodlibet}: from a proof of $\falsehood \true$, we may deduce that \emph{any} proposition $C$ is true because there is ultimately no way to introduce $\falsehood \true$.
+\begin{equation*}
+  \infer[{\falsehood}E]{C \true}{
+    \falsehood \true}
+\end{equation*}
 
 \section{Order-Theoretic Formulation of \gls{IPL}}\label{sec:ipl_order}
 
