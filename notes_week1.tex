@@ -1,13 +1,14 @@
 \documentclass[11pt]{article}
-%\metadata{Vonnie III}{2099/99/99}
-
-\usepackage{mathpartir}
-
-% for url in bib entries
-\usepackage{url}
 
 % Package for customizing page layout
 \usepackage[a4paper,scale=0.8]{geometry}
+
+\input{macros}
+
+\metadata{Vonnie III}{2099/99/99}
+
+% for url in bib entries
+\usepackage{url}
 
 \setlength{\parskip}{0.1cm}
 \setlength{\parindent}{0mm}
@@ -20,8 +21,6 @@
 
 % names
 \newcommand{\HoTT}{Homotopy Type Theory}
-
-\input{macros}
 
 \begin{document}
 
@@ -77,6 +76,9 @@ According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
 HoTT's most distinctive feature is its \textbf{constructivity}.
 
 \subsection{In Type Theory Context}\label{subsec:type_theory_context}
+
+Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
+because the typing judgement is not decidable.
 
 \section{Intuitionistic Propositional Logic (IPL)}\label{sec:ipl}
 
