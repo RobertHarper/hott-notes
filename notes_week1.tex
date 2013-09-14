@@ -1,30 +1,92 @@
+% arara: pdflatex
+% arara: pdflatex
 \documentclass[12pt]{article}
 \input{macros}
 \metadata{Vonnie III}{2099/99/99}
 
+\usepackage{proof}
+\usepackage{glossaries}
+
 \begin{document}
 
-\section{Goal}
+\section{Intuitionistic Propositional Logic: ``Logic as if people matter''}\label{sec:ipl}
 
-The main topic today is to test the template file.
+\newacronym{IPL}{IPL}{intuitionistic propositional logic}%
+%
+As advanced by Per Martin-L\"{o}f, a modern presentation of \gls{IPL} distinguishes the notions of \vocab{judgement} and \vocab{proposition}.
+A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
+For instance, 
 
-\section{Whatever}
+% Ultimately, we are interested in judging the truth, or provability, of a proposition.
+% But first, 
 
-This is a paragraph with no purpose other than
-occupying some space.
+Thus, in \gls{IPL}, the two most basic judgements are $A \prop$ and $A \true$:
 
+
+\subsection{Negative fragment of \gls{IPL}}\label{sec:ipl-negative}
+
+\subsubsection{Truth}\label{sec:truth}
+
+One of the simplest propositions is \vocab{truth}, which we write as $\truth$.
+Its formation rule serves as immediate evidence of the judgment $\truth \prop$, that $\truth$ is indeed a well-formed proposition.
+\begin{equation*}
+  \infer[{\truth}F]{\truth \prop}{
+    }
+\end{equation*}
+
+We have yet to give meaning to truth, however; to do so, we must say what counts as a verification of $\truth$.
+The proposition $\truth$ is trivially true, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
+\begin{equation*}
+  \infer[{\truth}I]{\truth \true}{
+    }
+\end{equation*}
+
+We should also pause to consider an elimination rule for $\truth$: from a proof of $\truth \true$, what can we deduce?
+Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
+For this reason, there is no elimination rule for $\truth$.
+
+To summarize, here are the formation, introduction, and elimination rules for truth:
 \begin{mathpar}
-    \infer*[Right=Reflection]{
-      \G \entails \bot \to \bot
-    }{
-      \G \entails \top \to \top
+  \infer[{\truth}F]{\truth \prop}{
     }
-    \\
-    \infer*[]{
-    }{
-      \G \entails \fst(\trans{p}{x}) \concat z \jdeq y : A
+  \\
+  \infer[{\truth}I]{\truth \true}{
     }
+  \and
+  \text{(no ${\truth}E$ rule)}
 \end{mathpar}
-The above rule is as insightful as this paragraph.
+
+\subsubsection{Conjunction}\label{sec:conjunction}
+
+Another familiar group of propositions are the conjunctions.
+If $A$ and $B$ are propositions, then so is their conjunction, which we write as $A \conj B$.
+This is the content of the formation rule for conjunction.
+\begin{equation*}
+  \infer[{\conj}F]{A \conj B \prop}{
+    A \prop & B \prop}
+\end{equation*}
+
+To give meaning to conjunction, we must say what counts as a verification of $A \conj B$.
+This is done by the following introduction rule, which shows that a verification of $A \conj B$ consists of a verification of $A$ paired with a verification of $B$.
+\begin{equation*}
+  \infer[{\conj}I]{A \conj B \true}{
+    A \true & B \true}
+\end{equation*}
+
+On the flip side, what may we deduce from the knowledge that $A \conj B$ is true?
+Because is a pair of verifications of $A$ and $B$, we are justified in deducing $A \true$ and $B \true$.
+\begin{mathpar}
+  \infer[{\conj}E_1]{A \true}{
+    A \conj B \true}
+  \and
+  \infer[{\conj}E_2]{B \true}{
+    A \conj B \true}
+\end{mathpar}
+
+\subsubsection{Logical entailment}\label{sec:logical-entailment}
+
+\subsubsection{Implication}\label{sec:implication}
+
+\subsubsection{Summary of the negative fragment of \gls{IPL}}\label{sec:summary-negative}
 
 \end{document}

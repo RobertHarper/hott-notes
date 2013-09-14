@@ -27,6 +27,9 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
+
+\newcommand*{\vocab}[1]{\emph{#1}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some really basic macros.
 % (Lots of them were stolen from HoTT/Book.)
@@ -34,6 +37,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\G}{\Gamma}
 \newcommand{\entails}{\vdash}
+
+
+\newcommand*{\judgmentfont}[1]{\textsf{#1}}
+\newcommand*{\postfixjudgment}[1]{%
+  \relax\ifnum\lastnodetype>0\mskip\medmuskip\fi
+  \text{\judgmentfont{#1}}%
+}
+\newcommand*{\prop}{\postfixjudgment{prop}}
+\newcommand*{\true}{\postfixjudgment{true}}
+
+
+\newcommand*{\truth}{\top}
+\newcommand*{\conj}{\wedge}
+
+
 %%% Judgmental equality
 \newcommand{\jdeq}{\equiv}
 %%% Definition
