@@ -29,9 +29,6 @@
 \setenumerate{noitemsep, topsep=0pt, leftmargin=*}
 \setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
-% names
-\newcommand{\HoTT}{Homotopy Type Theory}
-
 \begin{document}
 
 \title{15-819 Homotopy Type Theory\\ Lecture Notes}
@@ -40,23 +37,51 @@
 
 \maketitle
 
+% [COMMENT_SB:]
+
+% > We should decide on capitalization of terms like Homotopy Type Theory and Intuitionistic
+%   Propositional Logic.
+
+% > Should we have a title for inference-rule based formulation of IPL?
+
+% > Is it Brouwer's program, principle, or dictum?
+
 \section{Contents}\label{sec:contents}
 
-These notes summarize the lectures on \HoTT\ (HoTT) given by Professor Robert Harper on
-September 9 and 11, 2013, at CMU.  They start by providing a introduction to HoTT, capturing
-its main ideas and its connection to other related type theories.  Then they present
+These notes summarize the lectures on Homotopy Type Theory (HoTT) given by Professor Robert
+Harper on September 9 and 11, 2013, at CMU.  They start by providing a introduction to HoTT,
+capturing its main ideas and its connection to other related type theories.  Then they present
 Intuitionistic Propositional Logic (IPL), giving both an inference-rule-based formulation as
 well an order-theoretic formulation.  The notes conclude with a brief summary.
 
 % [COMMENT_SB:] How does IPL relate to HoTT?
 
-\section{Introduction to \HoTT\ (HoTT)}\label{sec:intro}
+\section{Introduction to Homotopy Type Theory}\label{sec:intro}
 
-\subsection{In a Nutshell}\label{subsec:hott_in_nutshell}
+\newacronym{HoTT}{HoTT}{Homotopy Type Theory}%
+%
+\gls{HoTT} is the subject of a very active research community that gathered in 2012 at the Institute for Advanced
+Study (IAS) to participate in the Univalent Foundations Program.  The results of the program
+have been recently published in the HoTT Book~\cite{HoTTBook2013}.
+
+\subsection{HoTT in a nutshell}\label{subsec:hott_in_nutshell}
+
+\gls{HoTT} is based on Per Martin-L\"{o}fs Intuitionistic Type Theory, which provides a
+foundation for \emph{intuitionistic mathematics} and which is an extension of \emph{Brouwer's
+  program}.  Brouwer viewed mathematical reasoning as a human activity and mathematics as a
+language for communicating mathematical concepts.  As a result, Brouwer perceives the ability
+of executing a step-by-step procedure or algorithm for performing a \emph{construction} as a
+fundamental human faculty.
+
+Adopting Brouwer's constructive viewpoint, intuitionistic theories view proofs as the
+fundamental forms of construction.  An intuitionistic (or constructive) theory and \gls{HoTT},
+in particular, is thus said to be is \emph{proof relevant}.  For \gls{HoTT} proof relevance
+means that proofs become mathematical objects~\cite{Harper2013}.  Proofs of equality correspond
+to paths in a space.
 
 The notion of proof relevance requires us to draw a fine distinction between the proofs given
 in a intuitionistic logic and the ones given in conventional mathematics.
-Harper~\cite{Harper2012} calls the former \textbf{proofs} and the latter \textbf{formal
+Harper~\cite{Harper2012} calls the former \emph{proofs} and the latter \emph{formal
   proofs}.  Formal proofs arise from the application of the inductively defined rules in a
 fixed formal system.  According to G\"{o}del's Incompleteness Theorem, however, we know that
 there are certain propositions that are true for which there is no formal proof.  Thus, an
@@ -68,24 +93,24 @@ According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
 \begin{itemize}
 
 \item is a nice way to phrase arguments in homotopy theory that avoids some of the technicalities
-  in the classical proofs by treating spaces and paths \textbf{synthetically}, rather than
-  \textbf{analytically}
+  in the classical proofs by treating spaces and paths \emph{synthetically}, rather than
+  \emph{analytically}
 
-\item is a good language for \textbf{mechanization} of mathematics that provides for the concise
+\item is a good language for \emph{mechanization} of mathematics that provides for the concise
   formulation of proofs in a form that can be verified by a computer
 
 \item points the way towards a vast extension of the concept of computation that enables us to
-  \textbf{compute with abstract geometric objects} such as spheres or toruses
+  \emph{compute with abstract geometric objects} such as spheres or toruses
 
-\item is a new \textbf{foundation for mathematics} that subsumes set theory by generalizing
+\item is a new \emph{foundation for mathematics} that subsumes set theory by generalizing
   types from mere sets to arbitrary infinity groupoids, sets being but particularly simple
   types (those with no non-trivial higher-dimensional structure).
 
 \end{itemize}
 
-HoTT's most distinctive feature is its \textbf{constructivity}.
+HoTT's most distinctive feature is its \emph{constructivity}.
 
-\subsection{In Type Theory Context}\label{subsec:type_theory_context}
+\subsection{HoTT in type theory context}\label{subsec:type_theory_context}
 
 Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
 because the typing judgement is not decidable.
@@ -206,7 +231,7 @@ The elimination rule captures \latin{ex falso quodlibet}: from a proof of $\fals
     \falsehood \true}
 \end{equation*}
 
-\section{Order-Theoretic Formulation of \gls{IPL}}\label{sec:ipl_order}
+\section{Order-theoretic formulation of \gls{IPL}}\label{sec:ipl_order}
 
 \section{Summary}\label{sec:summary}
 
