@@ -3,11 +3,20 @@
 
 \usepackage{mathpartir}
 
+% for url in bib entries
+\usepackage{url}
+
 % Package for customizing page layout
 \usepackage[a4paper,scale=0.8]{geometry}
 
 \setlength{\parskip}{0.1cm}
 \setlength{\parindent}{0mm}
+
+% package to customize three basic list environments: enumerate, itemize and description.
+\usepackage{enumitem}
+\setitemize{noitemsep, topsep=0pt, leftmargin=*}
+\setenumerate{noitemsep, topsep=0pt, leftmargin=*}
+\setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
 % names
 \newcommand{\HoTT}{Homotopy Type Theory}
@@ -35,6 +44,37 @@ well an order-theoretic formulation.  The notes conclude with a brief summary.
 \section{Introduction to \HoTT\ (HoTT)}\label{sec:intro}
 
 \subsection{In a Nutshell}\label{subsec:hott_in_nutshell}
+
+The notion of proof relevance requires us to draw a fine distinction between the proofs given
+in a intuitionistic logic and the ones given in conventional mathematics.
+Harper~\cite{Harper2012} calls the former \textbf{proofs} and the latter \textbf{formal
+  proofs}.  Formal proofs arise from the application of the inductively defined rules in a
+fixed formal system.  According to G\"{o}del's Incompleteness Theorem, however, we know that
+there are certain propositions that are true for which there is no formal proof.  Thus, an
+intuitionistic approach defeats the adoption of a formal proof since in intuitionism true
+propositions are only those for which there exists a proof.
+
+According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
+
+\begin{itemize}
+
+\item is a nice way to phrase arguments in homotopy theory that avoids some of the technicalities
+  in the classical proofs by treating spaces and paths \textbf{synthetically}, rather than
+  \textbf{analytically}
+
+\item is a good language for \textbf{mechanization} of mathematics that provides for the concise
+  formulation of proofs in a form that can be verified by a computer
+
+\item points the way towards a vast extension of the concept of computation that enables us to
+  \textbf{compute with abstract geometric objects} such as spheres or toruses
+
+\item is a new \textbf{foundation for mathematics} that subsumes set theory by generalizing
+  types from mere sets to arbitrary infinity groupoids, sets being but particularly simple
+  types (those with no non-trivial higher-dimensional structure).
+
+\end{itemize}
+
+HoTT's most distinctive feature is its \textbf{constructivity}.
 
 \subsection{In Type Theory Context}\label{subsec:type_theory_context}
 
@@ -72,5 +112,8 @@ well an order-theoretic formulation.  The notes conclude with a brief summary.
 % \end{mathpar}
 
 % The above rule is as insightful as this paragraph.
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
 
 \end{document}
