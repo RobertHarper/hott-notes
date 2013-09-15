@@ -103,6 +103,8 @@ As advanced by Per Martin-L\"{o}f, a modern presentation of \gls{IPL} distinguis
 A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
 For instance, 
 
+The principle of harmony is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss harmony more precisely, but we can already give an informal treatment.
+
 % Ultimately, we are interested in judging the truth, or provability, of a proposition.
 % But first, 
 
@@ -110,6 +112,45 @@ Thus, in \gls{IPL}, the two most basic judgements are $A \prop$ and $A \true$:
 
 
 \subsection{Negative fragment of \gls{IPL}}\label{sec:ipl-negative}
+
+\subsubsection{Conjunction}\label{sec:conjunction}
+
+One familiar group of propositions are the conjunctions.
+If $A$ and $B$ are well-formed propositions, then so is their conjunction, which we write as $A \conj B$.
+The formation rule for conjunction serves as evidence of the judgement $A \conj B \prop$, that $A \conj B$ is a well-formed proposition, provided that there is evidence of the judgements $A \prop$ and $B \prop$.
+\begin{equation*}
+  \infer[{\conj}F]{A \conj B \prop}{
+    A \prop & B \prop}
+\end{equation*}
+
+We have yet to give meaning to conjunction, however; to do so, we must say how to introduce the judgement that $A \conj B$ is \emph{true}.
+As the following rule shows, a verification of $A \conj B$ consists of a proof of $A \true$ paired with a proof of $B \true$.
+\begin{equation*}
+  \infer[{\conj}I]{A \conj B \true}{
+    A \true & B \true}
+\end{equation*}
+
+We should also consider elimination rules: what may we deduce from the knowledge that $A \conj B$ is true?
+Because every proof of $A \conj B \true$ ultimately introduces that judgement from a pair of proofs of $A \true$ and $B \true$, we are justified in deducing $A \true$ and $B \true$ from any proof of $A \conj B \true$.
+\begin{mathpar}
+  \infer[{\conj}E_1]{A \true}{
+    A \conj B \true}
+  \and
+  \infer[{\conj}E_2]{B \true}{
+    A \conj B \true}
+\end{mathpar}
+
+\paragraph{Harmony.}\label{sec:conj-harmony}
+As previously mentioned, the principle of harmony says that the introduction and elimination rules fit together properly: the elimination rules are strong enough, but not too strong.
+
+If we mistakenly omitted the ${\conj}E_2$ elimination rule, then there would be no way to extract the proof of $B \true$ that was used in introducing $A \conj B \true$---the elimination rules would too weak.
+
+On the other hand, if we mistakenly wrote the ${\conj}I$ introduction rule as
+\begin{equation*}
+  \infer{A \conj B \true}{
+    A \true} \,,
+\end{equation*}
+then there would be no proof of $B \true$ present to justify deducing $B \true$ with the ${\conj}E_2$ rule---the elimination rules would be too strong.
 
 \subsubsection{Truth}\label{sec:truth}
 
@@ -120,42 +161,16 @@ Its formation rule serves as immediate evidence of the judgment $\truth \prop$, 
     }
 \end{equation*}
 
-We have yet to give meaning to truth, however; to do so, we must say what counts as a verification of $\truth$.
-The proposition $\truth$ is trivially true, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
+We have yet to give meaning to truth, however; to do so, we must say how to introduce the judgement that $\truth$ is true.
+$\truth$ is trivially true, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
 \begin{equation*}
   \infer[{\truth}I]{\truth \true}{
     }
 \end{equation*}
 
-We should also pause to consider an elimination rule: from a proof of $\truth \true$, what can we deduce?
+We should also consider an elimination rule: from a proof of $\truth \true$, what can we deduce?
 Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
 For this reason, there is no elimination rule for $\truth$.
-
-\subsubsection{Conjunction}\label{sec:conjunction}
-
-Another familiar group of propositions are the conjunctions.
-If $A$ and $B$ are propositions, then so is their conjunction, which we write as $A \conj B$; this is the content of the formation rule for conjunction.
-\begin{equation*}
-  \infer[{\conj}F]{A \conj B \prop}{
-    A \prop & B \prop}
-\end{equation*}
-
-To give meaning to conjunction, we must say what counts as a verification of $A \conj B$.
-This is done by the following introduction rule, which shows that a verification of $A \conj B$ consists of a verification of $A$ paired with a verification of $B$.
-\begin{equation*}
-  \infer[{\conj}I]{A \conj B \true}{
-    A \true & B \true}
-\end{equation*}
-
-On the flip side, what may we deduce from the knowledge that $A \conj B$ is true?
-Because is a pair of verifications of $A$ and $B$, we are justified in deducing $A \true$ and $B \true$.
-\begin{mathpar}
-  \infer[{\conj}E_1]{A \true}{
-    A \conj B \true}
-  \and
-  \infer[{\conj}E_2]{B \true}{
-    A \conj B \true}
-\end{mathpar}
 
 \subsubsection{Logical entailment}\label{sec:logical-entailment}
 
