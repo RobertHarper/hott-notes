@@ -8,7 +8,7 @@
 \usepackage{microtype}
 
 % Package for customizing page layout
-% \usepackage[a4paper,scale=0.8]{geometry}
+\usepackage[a4paper,scale=0.8]{geometry}
 
 \input{macros}
 
@@ -20,6 +20,7 @@
 % for url in bib entries
 \usepackage{url}
 
+\usepackage{parskip}
 % \setlength{\parskip}{0.1cm}
 % \setlength{\parindent}{0mm}
 
@@ -155,8 +156,9 @@ As the following rule shows, a verification of $A \conj B$ consists of a proof o
     A \true & B \true}
 \end{equation*}
 
-We should also consider elimination rules: what may we deduce from the knowledge that $A \conj B$ is true?
+What may we deduce from the knowledge that $A \conj B$ is true?
 Because every proof of $A \conj B \true$ ultimately introduces that judgement from a pair of proofs of $A \true$ and $B \true$, we are justified in deducing $A \true$ and $B \true$ from any proof of $A \conj B \true$.
+This leads to the elimination rules for conjunction.
 \begin{mathpar}
   \infer[{\conj}E_1]{A \true}{
     A \conj B \true}
@@ -179,15 +181,15 @@ then there would be no proof of $B \true$ present to justify deducing $B \true$ 
 
 \subsubsection{Truth}\label{sec:truth}
 
-One of the simplest propositions is \vocab{truth}, which we write as $\truth$.
+Another familiar and simple proposition is \vocab{truth}, which we write as $\truth$.
 Its formation rule serves as immediate evidence of the judgment $\truth \prop$, that $\truth$ is indeed a well-formed proposition.
 \begin{equation*}
   \infer[{\truth}F]{\truth \prop}{
     }
 \end{equation*}
 
-We have yet to give meaning to truth, however; to do so, we must say how to introduce the judgement that $\truth$ is true.
-$\truth$ is trivially true, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
+Once again, to give meaning to truth we must say how to introduce the judgement that $\truth$ is true.
+$\truth$ is a trivially true proposition, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
 \begin{equation*}
   \infer[{\truth}I]{\truth \true}{
     }
@@ -195,9 +197,54 @@ $\truth$ is trivially true, and so its introduction rule makes the judgment $\tr
 
 We should also consider an elimination rule: from a proof of $\truth \true$, what can we deduce?
 Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
-For this reason, there is no elimination rule for $\truth$.
+For this reason, there is no elimination rule for $\truth$, and we can see that its absence harmonizes with the introduction rule.
 
-\subsubsection{Logical entailment}\label{sec:logical-entailment}
+\paragraph{Nullary conjuction.}\label{sec:nullary-conjuction}
+An observation about $\truth$ that often proves useful is that $\truth$ behaves as a nullary conjunction---a conjunction over the empty set of conjuncts, rather than over a set of two conjuncts.
+
+This observation is reflected in the inference rules.
+Just as the introduction rule for binary conjunction has two premises (one for each of the two conjuncts), the introduction rule for truth has no premises (one for each of the no conjuncts):
+\begin{mathpar}
+  \infer[{\conj}I]{A \conj B \true}{
+    A \true & B \true}
+  \and
+  \infer[{\truth}I]{\truth \true}{
+    }
+\end{mathpar}
+Likewise, just as there are two elimination rules for binary conjunction, there are no elimination rules for truth:
+\begin{mathpar}
+  \infer[{\conj}E_1]{A \true}{
+    A \conj B \true}
+  \and
+  \infer[{\conj}E_2]{B \true}{
+    A \conj B \true}
+  \and\and
+  \text{(no ${\truth}E$ rule)}
+\end{mathpar}
+
+\subsubsection{Entailment}\label{sec:entailment}
+
+The last form of proposition in the negative fragment of \gls{IPL} is implication.
+However, to define implication, a different form of judgment is required: entailment (also known as logical consequence or a hypothetical judgment).
+Entailment is written
+\begin{equation*}
+  \underbrace{A_1 \true, \dotsc, A_n \true}_{n \geq 0} \entails A \true \,,
+\end{equation*}
+and is intended to express the idea that the judgment $A \true$ follows from $A_1 \true, \dotsc, A_n \true$.
+You can think of $A_1 \true, \dotsc, A_n \true$ as being assumptions from which the conclusion $A \true$ may be deduced.
+The metavariable $\ctx$ is typically used to stand for such a collection of assumptions.
+
+As an entailment, the judgment form satisfies several properties: reflexivity, transitivity, weakening, contraction, and permutation.
+
+\paragraph{Reflexivity.}\label{sec:reflexivity}
+If this judgment is to express logical consequence, that is, that this conclusion follows from those assumptions, then you must accept a principle of reflexivity,
+\begin{equation*}
+  A \true \entails A \true \,,
+\end{equation*}
+that an assumption is enough to conclude the same judgment.
+
+\paragraph{Transitivity.}\label{sec:transitivity}
+
 
 \subsubsection{Implication}\label{sec:implication}
 
@@ -245,6 +292,32 @@ The elimination rule captures \latin{ex falso quodlibet}: from a proof of $\fals
   \infer[{\falsehood}E]{C \true}{
     \falsehood \true}
 \end{equation*}
+
+Once again, the rules are in harmony.
+The elimination rule is very strong, but remains justified due to the absence of any introduction rule for falsehood.
+
+\paragraph{Nullary disjunction.}\label{sec:nullary-disjunction}
+We previously noted that $\truth$ behaves as a nullary conjunction.
+In the same way, $\falsehood$ behaves as a nullary disjunction.
+For a binary disjunction, there are two introduction rules, ${\disj}I_1$ and ${\disj}I_2$, one for each of the two disjuncts; for falsehood, there are no introduction rules:
+\begin{mathpar}
+  \infer[{\disj}I_1]{A \disj B \true}{
+    A \true}
+  \and
+  \infer[{\disj}I_2]{A \disj B \true}{
+    B \true}
+  \and
+  \text{(no ${\falsehood}I$ rule)}
+\end{mathpar}
+Likewise, for a binary disjunction, there is one elimination rule with a premise for the disjunction and one premise for each of the disjuncts; for falsehood, there is one elimination rule with just a premise for falsehood:
+\begin{mathpar}
+  \infer[{\disj}E]{C \true}{
+    A \disj B \true &
+    A \true \entails C \true & B \true \entails C \true}
+  \and
+  \infer[{\falsehood}E]{C \true}{
+    \falsehood \true}
+\end{mathpar}
 
 \section{Order-theoretic formulation of \gls{IPL}}\label{sec:ipl_order}
 
