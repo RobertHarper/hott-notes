@@ -61,9 +61,9 @@ well an order-theoretic formulation.  The notes conclude with a brief summary.
 
 \newacronym{HoTT}{HoTT}{Homotopy Type Theory}%
 %
-\gls{HoTT} is the subject of a very active research community that gathered in 2012 at the Institute for Advanced
-Study (IAS) to participate in the Univalent Foundations Program.  The results of the program
-have been recently published in the HoTT Book~\cite{HoTTBook2013}.
+\gls{HoTT} is the subject of a very active research community that gathered at the Institute
+for Advanced Study (IAS) in 2012 to participate in the Univalent Foundations Program.  The
+results of the program have been recently published in the HoTT Book~\cite{HoTTBook2013}.
 
 \subsection{HoTT in a nutshell}\label{subsec:hott_in_nutshell}
 
@@ -75,19 +75,24 @@ of executing a step-by-step procedure or algorithm for performing a \emph{constr
 fundamental human faculty.
 
 Adopting Brouwer's constructive viewpoint, intuitionistic theories view proofs as the
-fundamental forms of construction.  An intuitionistic (or constructive) theory and \gls{HoTT},
-in particular, is thus said to be is \emph{proof relevant}.  For \gls{HoTT} proof relevance
-means that proofs become mathematical objects~\cite{Harper2013}.  Proofs of equality correspond
-to paths in a space.
+fundamental forms of construction.  The notion of \emph{proof relevance} is thus a
+characteristic feature of an intuitionistic (or constructive\footnote{In this course,
+  intuitionism and constructivism are used interchangeably.}) approach.  In the context of
+\gls{HoTT}, proof relevance means that proofs become mathematical objects~\cite{Harper2013}.
+To fully understand this standpoint, it is necessary to draw a distinction between the notion
+of a \emph{proof} and the one of a \emph{formal proof}~\cite{Harper2013,Harper2012}.  A formal
+proof is a proof given in a fixed formal system, such as the axiomatic theory of sets, that
+arises from the application of the inductively defined rules in that system.  Whereas every
+formal proof is also a proof (assuming soundness of the system) the converse is not true.  This
+fact immediately follows from G\"{o}del's Incompleteness Theorem, which precisely states that
+there exist true propositions, for which there exist a proof, but for which there cannot be
+given a formal proof, using the rules of the formal system.
 
-The notion of proof relevance requires us to draw a fine distinction between the proofs given
-in a intuitionistic logic and the ones given in conventional mathematics.
-Harper~\cite{Harper2012} calls the former \emph{proofs} and the latter \emph{formal
-  proofs}.  Formal proofs arise from the application of the inductively defined rules in a
-fixed formal system.  According to G\"{o}del's Incompleteness Theorem, however, we know that
-there are certain propositions that are true for which there is no formal proof.  Thus, an
-intuitionistic approach defeats the adoption of a formal proof since in intuitionism true
-propositions are only those for which there exists a proof.
+Unlike conventional formally defined systems, \gls{HoTT}  does not surmise that all possible
+proofs can be fully circumscribed by the rules of the formal system.  In addition to formal
+proofs, \gls{HoTT} accepts proofs that may actually 
+
+Proofs of equality correspond to paths in a space.
 
 According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
 
@@ -128,6 +133,8 @@ What is meant by \emph{intuitionistic} logic?  One might say its slogan is ``log
 As advanced by Per Martin-L\"{o}f, a modern presentation of \gls{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
 A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
 For instance, 
+
+% [COMMENT_SB:] In the lecture this was called internal coherence rather than harmony, right?
 
 The principle of harmony is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss harmony more precisely, but we can already give an informal treatment.
 
@@ -170,7 +177,9 @@ This leads to the elimination rules for conjunction.
 \paragraph{Harmony.}\label{sec:conj-harmony}
 As previously mentioned, the principle of harmony says that the introduction and elimination rules fit together properly: the elimination rules are strong enough, but not too strong.
 
-If we mistakenly omitted the ${\conj}E_2$ elimination rule, then there would be no way to extract the proof of $B \true$ that was used in introducing $A \conj B \true$---the elimination rules would too weak.
+If we mistakenly omitted the ${\conj}E_2$ elimination rule, then there would be no way to
+extract the proof of $B \true$ that was used in introducing $A \conj B \true$---the elimination
+rules would be too weak.
 
 On the other hand, if we mistakenly wrote the ${\conj}I$ introduction rule as
 \begin{equation*}
