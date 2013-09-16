@@ -65,7 +65,7 @@ well an order-theoretic formulation.  The notes conclude with a brief summary.
 
 \section{Introduction to \acl{HoTT}}\label{sec:intro}
 
-\Ac{HoTT} is the subject of a very active research community that gathered at the Institute
+\Acf{HoTT} is the subject of a very active research community that gathered at the Institute
 for Advanced Study (IAS) in 2012 to participate in the Univalent Foundations Program.  The
 results of the program have been recently published in the \ac{HoTT} Book~\cite{HoTTBook2013}.
 
@@ -82,43 +82,26 @@ Adopting Brouwer's constructive viewpoint, intuitionistic theories view proofs a
 fundamental forms of construction.  The notion of \emph{proof relevance} is thus a
 characteristic feature of an intuitionistic (or constructive\footnote{In this course,
   intuitionism and constructivism are used interchangeably.}) approach.  In the context of
-\ac{HoTT}, proof relevance means that proofs become mathematical objects~\cite{Harper2013}.
-To fully understand this standpoint, it is necessary to draw a distinction between the notion
-of a \emph{proof} and the one of a \emph{formal proof}~\cite{Harper2013,Harper2012}.  A formal
-proof is a proof given in a fixed formal system, such as the axiomatic theory of sets, and
-arises from the application of the inductively defined rules in that system.  Whereas every
-formal proof is also a proof (assuming soundness of the system) the converse is not true.  This
-fact immediately follows from G\"{o}del's Incompleteness Theorem, which precisely states that
-there exist true propositions (with a proof), but for which there cannot be given a formal
-proof, using the rules of the formal system.  Unlike conventional formally defined systems,
-\ac{HoTT} does not surmise that all possible proofs can be fully circumscribed by the rules of
-the formal system, but accepts proofs that cannot be formalized in \ac{HoTT}.  These are
-exactly the proofs that are considered to be \emph{relevant} and, being treated as mathematical
-objects, they can be formulated internally as objects of the type theory.
+\ac{HoTT}, proof relevance means that proofs become mathematical objects~\cite{Harper2013}.  To
+fully understand this standpoint, it is necessary to draw a distinction between the notion of a
+\emph{proof} and the one of a \emph{formal proof}~\cite{Harper2013,Harper2012}.  A formal proof
+is a proof given in a fixed formal system, such as the axiomatic theory of sets, and arises
+from the application of the inductively defined rules in that system.  Whereas every formal
+proof is also a proof (assuming soundness of the system) the converse is not true.  This fact
+immediately follows from G\"{o}del's Incompleteness Theorem, which precisely states that there
+exist true propositions (with a proof), but for which there cannot be given a formal proof,
+using the rules of the formal system.  Unlike conventional formally defined systems, \ac{HoTT}
+does not surmise that all possible proofs can be fully circumscribed by its rules, but accepts
+proofs that cannot be formalized in \ac{HoTT}.  These are exactly the proofs that are
+considered to be \emph{relevant} and, being treated as mathematical objects, they can be
+formulated internally as objects of the type theory.
+
+Core of \ac{HoTT} that proofs of equations are paths in the space.
+
+Another distinguishing characteristics of \acs{HoTT} is that it adopts a \emph{synthetic},
+rather than an \emph{analytic} approach.  
 
 Proofs of equality correspond to paths in a space.
-
-According to Harper~\cite{Harper2013a,Harper2013}, \ac{HoTT}:
-
-\begin{itemize}
-
-\item is a nice way to phrase arguments in homotopy theory that avoids some of the technicalities
-  in the classical proofs by treating spaces and paths \emph{synthetically}, rather than
-  \emph{analytically}
-
-\item is a good language for \emph{mechanization} of mathematics that provides for the concise
-  formulation of proofs in a form that can be verified by a computer
-
-\item points the way towards a vast extension of the concept of computation that enables us to
-  \emph{compute with abstract geometric objects} such as spheres or toruses
-
-\item is a new \emph{foundation for mathematics} that subsumes set theory by generalizing
-  types from mere sets to arbitrary infinity groupoids, sets being but particularly simple
-  types (those with no non-trivial higher-dimensional structure).
-
-\end{itemize}
-
-\Acs{HoTT}'s most distinctive feature is its \emph{constructivity}.
 
 \subsection{\Acs{HoTT} in type theory context}\label{subsec:type_theory_context}
 
