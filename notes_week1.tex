@@ -13,14 +13,15 @@
 \input{macros}
 
 \usepackage{proof}
-\usepackage[shortcuts]{glossaries}
+\usepackage{tikz-cd}
+\usepackage[acronym, nohypertypes={acronym}, shortcuts]{glossaries}
 
 \metadata{Vonnie III}{2099/99/99}
 
 % for url in bib entries
 \usepackage{url}
 
-\usepackage{parskip}
+% \usepackage{parskip}
 % \setlength{\parskip}{0.1cm}
 % \setlength{\parindent}{0mm}
 
@@ -57,7 +58,7 @@
 These notes summarize the lectures on \ac{HoTT} given by Professor Robert
 Harper on September 9 and 11, 2013, at CMU.  They start by providing a introduction to \ac{HoTT},
 capturing its main ideas and its connection to other related type theories.  Then they present
-\ac{IPL}, giving both an inference-rule-based formulation as
+\ac{IPL}, giving both an proof-theoretic formulation as
 well an order-theoretic formulation.  The notes conclude with a brief summary.
 
 % [COMMENT_SB:] How does IPL relate to HoTT?
@@ -137,7 +138,7 @@ For instance,
 
 % [COMMENT_SB:] In the lecture this was called internal coherence rather than harmony, right?
 
-The principle of harmony is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss harmony more precisely, but we can already give an informal treatment.
+The principle of internal coherence, also known as Gentzen's principle of inversion, is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss internal coherence more precisely, but we can already give an informal treatment.
 
 % Ultimately, we are interested in judging the truth, or provability, of a proposition.
 % But first, 
@@ -151,7 +152,7 @@ Thus, in \ac{IPL}, the two most basic judgments are $A \prop$ and $A \true$:
 
 One familiar group of propositions are the conjunctions.
 If $A$ and $B$ are well-formed propositions, then so is their conjunction, which we write as $A \conj B$.
-The formation rule for conjunction serves as evidence of the judgment $A \conj B \prop$, that $A \conj B$ is a well-formed proposition, provided that there is evidence of the judgments $A \prop$ and $B \prop$.
+This is the content of the formation rule for conjunction: it serves as evidence of the judgment $A \conj B \prop$, provided that there is evidence of the judgments $A \prop$ and $B \prop$.
 \begin{equation*}
   \infer[{\conj}F]{A \conj B \prop}{
     A \prop & B \prop}
@@ -175,8 +176,8 @@ This leads to the elimination rules for conjunction.
     A \conj B \true}
 \end{mathpar}
 
-\paragraph{Harmony.}\label{sec:conj-harmony}
-As previously mentioned, the principle of harmony says that the introduction and elimination rules fit together properly: the elimination rules are strong enough, but not too strong.
+\paragraph{Internal coherence.}\label{sec:conj-coherence}
+As previously mentioned, the principle of internal coherence says that the introduction and elimination rules fit together properly: the elimination rules are strong enough, but not too strong.
 
 If we mistakenly omitted the ${\conj}E_2$ elimination rule, then there would be no way to
 extract the proof of $B \true$ that was used in introducing $A \conj B \true$---the elimination
@@ -198,11 +199,65 @@ Its formation rule serves as immediate evidence of the judgment $\truth \prop$, 
     }
 \end{equation*}
 
+Once again, to give meaning to truth we must say how to introduce the judgment that $\truth$ is true.
+$\truth$ is a trivially true proposition, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
+\begin{equation*}
+  \infer[{\truth}I]{\truth \true}{
+    }
+\end{equation*}
+
+We should also consider an elimination rule: from a proof of $\truth \true$, what can we deduce?
+Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
+For this reason, there is no elimination rule for $\truth$, and we can see that its absence is coherent with the introduction rule.
+
+\paragraph{Nullary conjunction.}\label{sec:nullary-conjunction}
+An observation about $\truth$ that often proves useful is that $\truth$ behaves as a nullary conjunction---a conjunction over the empty set of conjuncts, rather than over a set of two conjuncts.
+
+This observation is reflected in the inference rules.
+Just as the introduction rule for binary conjunction has two premises (one for each of the two conjuncts), the introduction rule for truth has no premises (one for each of the no conjuncts):
+\begin{mathpar}
+  \infer[{\conj}I]{A \conj B \true}{
+    A \true & B \true}
+  \and
+  \infer[{\truth}I]{\truth \true}{
+    }
+\end{mathpar}
+Likewise, just as there are two elimination rules for binary conjunction, there are no elimination rules for truth:
+\begin{mathpar}
+  \infer[{\conj}E_1]{A \true}{
+    A \conj B \true}
+  \and
+  \infer[{\conj}E_2]{B \true}{
+    A \conj B \true}
+  \and\and
+  \text{(no ${\truth}E$ rule)}
+\end{mathpar}
+
+\subsubsection{Entailment}\label{sec:entailment}
+
+The last form of proposition in the negative fragment of \ac{IPL} is implication.
+However, to define implication, a different form of judgment is required: entailment (also known as logical consequence or a hypothetical judgment).
+Entailment is written
+\begin{equation*}
+  \underbrace{A_1 \true, \dotsc, A_n \true}_{n \geq 0} \entails A \true \,,
+\end{equation*}
+and is intended to express the idea that the judgment $A \true$ follows from $A_1 \true, \dotsc, A_n \true$.
+You can think of $A_1 \true, \dotsc, A_n \true$ as being assumptions from which the conclusion $A \true$ may be deduced.
+The metavariable $\ctx$ is typically used to stand for such a collection of assumptions.
+
+As an entailment, the judgment form satisfies several properties: reflexivity, transitivity, weakening, contraction, and permutation.
+
+\paragraph{Reflexivity.}\label{sec:reflexivity}
+If this judgment is to express logical consequence, that is, that this conclusion follows from those assumptions, then you must accept a principle of reflexivity,
+\begin{equation*}
+  A \true \entails A \true \,,
+\end{equation*}
+that an assumption is enough to conclude the same judgment.
+
+\paragraph{Transitivity.}\label{sec:transitivity}
 
 \paragraph{Weakening.}\label{sec:weakening}
 Suppose
-
-
 
 \subsubsection{Implication}\label{sec:implication}
 
@@ -251,7 +306,7 @@ The elimination rule captures \latin{ex falso quodlibet}: from a proof of $\fals
     \falsehood \true}
 \end{equation*}
 
-Once again, the rules are in harmony.
+Once again, the rules cohere.
 The elimination rule is very strong, but remains justified due to the absence of any introduction rule for falsehood.
 
 \paragraph{Nullary disjunction.}\label{sec:nullary-disjunction}
@@ -291,7 +346,7 @@ Order-theoretically, this is expressed as the rules
     }
   \and
   \infer{A \conj B \leq B}{
-    }
+    } \,,
 \end{mathpar}
 which say that $A \conj B$ is a lower bound of $A$ and $B$.
 
@@ -299,20 +354,105 @@ The introduction rule for conjunction ensures that $C \true \entails A \conj B \
 Order-theoretically, this is expressed as the rule
 \begin{equation*}
   \infer{C \leq A \conj B}{
-    C \leq A & C \leq B}
+    C \leq A & C \leq B} \,,
 \end{equation*}
 which says that $A \conj B$ is as large as any lower bound of $A$ and $B$.
 Taken together these rules show that $A \conj B$ is the greatest lower bound, or meet, of $A$ and $B$.
 
+Graphically, these order-theoretic rules can be represented with a commuting \vocab{product diagram}, where arrows point from smaller to larger elements:
+\begin{equation*}
+  \begin{tikzcd}
+    {} &[-4ex] C \ar[bend right]{ddl}\ar[bend left]{ddr}\dar[dashed] &[-4ex] {} \\
+    {} & A \conj B \dlar\drar & {} \\
+    A & {} & B
+  \end{tikzcd}
+\end{equation*}
+
 \subsection{Truth as greatest element}\label{sec:truth-as-greatest}
 
-Truth $\truth$ should 
+The introduction rule for $\truth$ ensures that $C \true \entails \truth \true$.
+Order-theoretically, we have 
+\begin{equation*}
+  \infer{C \leq \truth}{
+    } \,,
+\end{equation*}
+which says that $\truth$ is the greatest, or final, element.
+
+In the proof-theoretic formulation of \ac{IPL}, we saw that truth $\truth$ is the nullary conjunction.
+We should expect this analogy to hold in the order-theoretic formulation of \ac{IPL} as well, and it does---the greatest element is indeed the greatest lower bound of the empty set.
 
 \subsection{Disjunction as join}\label{sec:disjunction-as-join}
 
+The introduction rules for disjunction (along with reflexivity of entailment) ensure that $A \true \entails A \disj B \true$ and $B \true \entails A \disj B \true$.
+Order-theoretically, this is expressed as the rules
+\begin{mathpar}
+  \infer{A \leq A \disj B}{
+    }
+  \and
+  \infer{B \leq A \disj B}{
+    } \,,
+\end{mathpar}
+which say that $A \disj B$ is an upper bound of $A$ and $B$.
+
+The elimination rule for disjunction (along with reflexivity of entailment) ensures that $A \disj B \true \entails C \true$ if both $A \true \entails C \true$ and $B \true \entails C \true$.
+Order-theoretically, we have the corresponding rule
+\begin{equation*}
+  \infer{A \disj B \leq C}{
+    A \leq C & B \leq C} \,,
+\end{equation*}
+which says that $A \disj B$ is as small as any upper bound of $A$ and $B$.
+Taken together these rules show that $A \disj B$ is the least upper bound, or join, of $A$ and $B$.
+
+Graphically, this is captured by a commuting \vocab{coproduct diagram}:
+\begin{equation*}
+  \begin{tikzcd}
+    A \drar\ar[bend right]{ddr} &[-4ex] {} &[-4ex] B \dlar\ar[bend left]{ddl}\\
+    {} & A \disj B \dar[dashed] & {} \\
+    {} & C & {}
+  \end{tikzcd}
+\end{equation*}
+
 \subsection{Falsehood as least element}\label{sec:falsehood-as-least}
 
+The elimination rule for falsehood (along with reflexivity of entailment) ensures that $\falsehood \true \entails C \true$.
+The order-theoretic counterpart is the rule
+\begin{equation*}
+  \infer{\falsehood \leq C}{
+    } \,,
+\end{equation*}
+which says that $\falsehood$ is the least, or initial, element.
+
+Once again, because we saw that falsehood is the nullary disjunction in the proof-theoretic formulation, we should expect this analogy to carry over to the order-theoretic formulation.
+Indeed, the least element is the least upper bound of the empty set.
+
 \subsection{Implication as exponential}\label{sec:impl-as-expon}
+
+The elimination rule for implication (along with reflexivity of entailment) ensures that $A \true, A \imp B \true \entails B \true$.
+For the order-theoretic formulation to be complete, we include the rule 
+\begin{equation*}
+  \infer{A \conj (A \imp B) \leq B}{
+    }
+\end{equation*}
+% which say that $A \conj B$ is a lower bound of $A$ and $B$.
+
+The introduction rule for implication ensures that $C \true \entails A \imp B \true$ if $A \true, C \true \entails B \true$.
+Once again, so that the order-theoretic formulation is complete, we have
+\begin{equation*}
+  \infer{C \leq A \imp B}{
+    A \conj C \leq B} \,,
+\end{equation*}
+Taken together, these rules show that $A \imp B$ is the exponential of $A$ and $B$.
+
+% The \vocab{exponential diagram} is:
+% \begin{equation*}
+%   \begin{tikzcd}
+%     C \dar[dashed] \\
+%     A \imp B
+%   \end{tikzcd}
+%   \begin{tikzcd}
+%     A \conj (A \imp B) \\
+%   \end{tikzcd}
+% \end{equation*}
 
 
 \section{Summary}\label{sec:summary}
