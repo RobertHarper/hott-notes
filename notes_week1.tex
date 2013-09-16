@@ -13,7 +13,7 @@
 \input{macros}
 
 \usepackage{proof}
-\usepackage{glossaries}
+\usepackage[shortcuts]{glossaries}
 
 \metadata{Vonnie III}{2099/99/99}
 
@@ -29,6 +29,11 @@
 \setitemize{noitemsep, topsep=0pt, leftmargin=*}
 \setenumerate{noitemsep, topsep=0pt, leftmargin=*}
 \setdescription{noitemsep, topsep=0pt, leftmargin=*}
+
+
+
+\newacronym{HoTT}{HoTT}{homotopy type theory}
+\newacronym{IPL}{IPL}{intuitionistic propositional logic}
 
 \begin{document}
 
@@ -49,25 +54,23 @@
 
 \section{Contents}\label{sec:contents}
 
-These notes summarize the lectures on Homotopy Type Theory (HoTT) given by Professor Robert
-Harper on September 9 and 11, 2013, at CMU.  They start by providing a introduction to HoTT,
+These notes summarize the lectures on \ac{HoTT} given by Professor Robert
+Harper on September 9 and 11, 2013, at CMU.  They start by providing a introduction to \ac{HoTT},
 capturing its main ideas and its connection to other related type theories.  Then they present
-Intuitionistic Propositional Logic (IPL), giving both an inference-rule-based formulation as
+\ac{IPL}, giving both an inference-rule-based formulation as
 well an order-theoretic formulation.  The notes conclude with a brief summary.
 
 % [COMMENT_SB:] How does IPL relate to HoTT?
 
-\section{Introduction to Homotopy Type Theory}\label{sec:intro}
+\section{Introduction to \acl{HoTT}}\label{sec:intro}
 
-\newacronym{HoTT}{HoTT}{Homotopy Type Theory}%
-%
-\gls{HoTT} is the subject of a very active research community that gathered at the Institute
+\Ac{HoTT} is the subject of a very active research community that gathered at the Institute
 for Advanced Study (IAS) in 2012 to participate in the Univalent Foundations Program.  The
-results of the program have been recently published in the HoTT Book~\cite{HoTTBook2013}.
+results of the program have been recently published in the \ac{HoTT} Book~\cite{HoTTBook2013}.
 
-\subsection{HoTT in a nutshell}\label{subsec:hott_in_nutshell}
+\subsection{\Acs{HoTT} in a nutshell}\label{subsec:hott_in_nutshell}
 
-\gls{HoTT} is based on Per Martin-L\"{o}f's Intuitionistic Type Theory, which provides a
+\Ac{HoTT} is based on Per Martin-L\"{o}f's Intuitionistic Type Theory, which provides a
 foundation for \emph{intuitionistic mathematics} and which is an extension of \emph{Brouwer's
   program}.  Brouwer viewed mathematical reasoning as a human activity and mathematics as a
 language for communicating mathematical concepts.  As a result, Brouwer perceives the ability
@@ -78,7 +81,7 @@ Adopting Brouwer's constructive viewpoint, intuitionistic theories view proofs a
 fundamental forms of construction.  The notion of \emph{proof relevance} is thus a
 characteristic feature of an intuitionistic (or constructive\footnote{In this course,
   intuitionism and constructivism are used interchangeably.}) approach.  In the context of
-\gls{HoTT}, proof relevance means that proofs become mathematical objects~\cite{Harper2013}.
+\ac{HoTT}, proof relevance means that proofs become mathematical objects~\cite{Harper2013}.
 To fully understand this standpoint, it is necessary to draw a distinction between the notion
 of a \emph{proof} and the one of a \emph{formal proof}~\cite{Harper2013,Harper2012}.  A formal
 proof is a proof given in a fixed formal system, such as the axiomatic theory of sets, and
@@ -87,14 +90,14 @@ formal proof is also a proof (assuming soundness of the system) the converse is 
 fact immediately follows from G\"{o}del's Incompleteness Theorem, which precisely states that
 there exist true propositions (with a proof), but for which there cannot be given a formal
 proof, using the rules of the formal system.  Unlike conventional formally defined systems,
-\gls{HoTT} does not surmise that all possible proofs can be fully circumscribed by the rules of
-the formal system, but accepts proofs that cannot be formalized in \gls{HoTT}.  These are
+\ac{HoTT} does not surmise that all possible proofs can be fully circumscribed by the rules of
+the formal system, but accepts proofs that cannot be formalized in \ac{HoTT}.  These are
 exactly the proofs that are considered to be \emph{relevant} and, being treated as mathematical
 objects, they can be formulated internally as objects of the type theory.
 
 Proofs of equality correspond to paths in a space.
 
-According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
+According to Harper~\cite{Harper2013a,Harper2013}, \ac{HoTT}:
 
 \begin{itemize}
 
@@ -114,23 +117,21 @@ According to Harper~\cite{Harper2013a,Harper2013}, HoTT:
 
 \end{itemize}
 
-HoTT's most distinctive feature is its \emph{constructivity}.
+\Acs{HoTT}'s most distinctive feature is its \emph{constructivity}.
 
-\subsection{HoTT in type theory context}\label{subsec:type_theory_context}
+\subsection{\Acs{HoTT} in type theory context}\label{subsec:type_theory_context}
 
 Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
 because the typing judgment is not decidable.
 
-\section{Intuitionistic propositional logic: ``Logic as if people matter''}\label{sec:ipl}
+\section{\Acl{IPL}}\label{sec:ipl}
 
 % [COMMENT_SB:] Explain difference between introduction and elimination rules.  Mention
 % Gentzen's rule of inversion.
 
 What is meant by \emph{intuitionistic} logic?  One might say its slogan is ``logic as if people matter'', alluding to Brouwer's principle that mathematics is a social process.
 
-\newacronym{IPL}{IPL}{intuitionistic propositional logic}%
-%
-As advanced by Per Martin-L\"{o}f, a modern presentation of \gls{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
+As advanced by Per Martin-L\"{o}f, a modern presentation of \acf{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
 A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
 For instance, 
 
@@ -141,10 +142,10 @@ The principle of harmony is that the introduction and elimination rules for a pr
 % Ultimately, we are interested in judging the truth, or provability, of a proposition.
 % But first, 
 
-Thus, in \gls{IPL}, the two most basic judgments are $A \prop$ and $A \true$:
+Thus, in \ac{IPL}, the two most basic judgments are $A \prop$ and $A \true$:
 
 
-\subsection{Negative fragment of \gls{IPL}}\label{sec:ipl-negative}
+\subsection{Negative fragment of \ac{IPL}}\label{sec:ipl-negative}
 
 \subsubsection{Conjunction}\label{sec:conjunction}
 
@@ -205,9 +206,9 @@ Suppose
 
 \subsubsection{Implication}\label{sec:implication}
 
-\subsubsection{Summary of the negative fragment of \gls{IPL}}\label{sec:summary-negative}
+\subsubsection{Summary of the negative fragment of \ac{IPL}}\label{sec:summary-negative}
 
-\subsection{Positive fragment of \gls{IPL}}\label{sec:positive}
+\subsection{Positive fragment of \ac{IPL}}\label{sec:positive}
 
 \subsubsection{Disjunction}\label{sec:disjunction}
 
@@ -276,9 +277,9 @@ Likewise, for a binary disjunction, there is one elimination rule with a premise
     \falsehood \true}
 \end{mathpar}
 
-\section{Order-theoretic formulation of \gls{IPL}}\label{sec:ipl_order}
+\section{Order-theoretic formulation of \acl{IPL}}\label{sec:ipl_order}
 
-It is also possible to give an order-theoretic formulation of \gls{IPL} because entailment is a preorder (reflexive and transitive).
+It is also possible to give an order-theoretic formulation of \ac{IPL} because entailment is a preorder (reflexive and transitive).
 We define $A \leq B$ to hold exactly when $A \true \entails B \true$.
 
 \subsection{Conjunction as meet}\label{sec:conjunction-as-meet}
