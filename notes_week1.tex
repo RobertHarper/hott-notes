@@ -8,11 +8,12 @@
 \usepackage{microtype}
 
 % Package for customizing page layout
-\usepackage[a4paper,scale=0.8]{geometry}
+\usepackage[letterpaper]{geometry}
+% \usepackage{fullpage}
 
 \input{macros}
 
-\usepackage{proof}
+\usepackage{proof-dashed}
 \usepackage{tikz-cd}
 \usepackage[acronym, nohypertypes={acronym}, shortcuts]{glossaries}
 
@@ -35,6 +36,10 @@
 
 \newacronym{HoTT}{HoTT}{homotopy type theory}
 \newacronym{IPL}{IPL}{intuitionistic propositional logic}
+
+
+\newcommand*{\refl}{\text{\textsf{refl}}}
+\newcommand*{\wkn}{\text{\textsf{wkn}}}
 
 \begin{document}
 
@@ -261,7 +266,46 @@ Suppose
 
 \subsubsection{Implication}\label{sec:implication}
 
-\subsubsection{Summary of the negative fragment of \ac{IPL}}\label{sec:summary-negative}
+With the entailment judgment in hand, we can give rules for implication.
+
+Like conjunction, if $A$ and $B$ are well-formed propositions, then so is their implication, which we write as $A \imp B$.
+\begin{equation*}
+  \infer[{\imp}F]{A \imp B \prop}{
+    A \prop & B \prop}
+\end{equation*}
+
+Once again, to give meaning to implication, we must say how to introduce the judgment $A \imp B \true$.
+To prove $A \imp B \true$, we assume $A \true$ and prove $B \true$.
+\begin{equation*}
+  \infer[{\imp}I]{A \imp B \true}{
+    A \true \entails B \true}
+\end{equation*}
+In this way, implication internalizes the entailment judgment as a proposition, while we nonetheless maintain the distinction between propositions and judgments.
+(As an aside for those familiar with category theory, the relationship between entailment and implication is analogous to the relationship between a mapping and a collection of mappings internalized as an object in some categories.)
+
+What does the elimination rule for $A \imp B$ look like?
+Because every proof of $A \imp B \true$ ultimately introduces that judgment from a proof of the entailment $A \true \entails B \true$, we might like to write the elimination rule as
+\begin{equation*}
+  \infer{A \true \entails B \true}{
+    A \imp B \true} \,.
+\end{equation*}
+This is a valid principle of reasoning, but it turns out to be useful to instead adopt an uncurried form as the actual elimination rule:
+\begin{equation*}
+  \infer[{\imp}E]{B \true}{
+    A \imp B \true & A \true} \,.
+\end{equation*}
+
+\paragraph{Internal coherence.}\label{sec:conj-coherence}
+These introduction and elimination rules are coherent.
+The elimination rule is strong enough to recover the entailment that any proof of $A \imp B \true$ ultimately uses in introduction, as the following derivation shows.
+\begin{equation*}
+  \infer[{\imp}E]{A \true \entails B \true}{
+    \infer-[\wkn]{A \true \entails A \imp B \true}{
+      A \imp B \true} &
+    \infer[\refl]{A \true \entails A \true}{
+      }}
+\end{equation*}
+On the other hand, the elimination rule is not too strong because it is just an uncurrying of the inverted introduction rule.
 
 \subsection{Positive fragment of \ac{IPL}}\label{sec:positive}
 
