@@ -67,7 +67,7 @@ have been recently published in the HoTT Book~\cite{HoTTBook2013}.
 
 \subsection{HoTT in a nutshell}\label{subsec:hott_in_nutshell}
 
-\gls{HoTT} is based on Per Martin-L\"{o}fs Intuitionistic Type Theory, which provides a
+\gls{HoTT} is based on Per Martin-L\"{o}f's Intuitionistic Type Theory, which provides a
 foundation for \emph{intuitionistic mathematics} and which is an extension of \emph{Brouwer's
   program}.  Brouwer viewed mathematical reasoning as a human activity and mathematics as a
 language for communicating mathematical concepts.  As a result, Brouwer perceives the ability
@@ -114,7 +114,7 @@ HoTT's most distinctive feature is its \emph{constructivity}.
 \subsection{HoTT in type theory context}\label{subsec:type_theory_context}
 
 Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
-because the typing judgement is not decidable.
+because the typing judgment is not decidable.
 
 \section{Intuitionistic propositional logic: ``Logic as if people matter''}\label{sec:ipl}
 
@@ -134,7 +134,7 @@ The principle of harmony is that the introduction and elimination rules for a pr
 % Ultimately, we are interested in judging the truth, or provability, of a proposition.
 % But first, 
 
-Thus, in \gls{IPL}, the two most basic judgements are $A \prop$ and $A \true$:
+Thus, in \gls{IPL}, the two most basic judgments are $A \prop$ and $A \true$:
 
 
 \subsection{Negative fragment of \gls{IPL}}\label{sec:ipl-negative}
@@ -143,13 +143,13 @@ Thus, in \gls{IPL}, the two most basic judgements are $A \prop$ and $A \true$:
 
 One familiar group of propositions are the conjunctions.
 If $A$ and $B$ are well-formed propositions, then so is their conjunction, which we write as $A \conj B$.
-The formation rule for conjunction serves as evidence of the judgement $A \conj B \prop$, that $A \conj B$ is a well-formed proposition, provided that there is evidence of the judgements $A \prop$ and $B \prop$.
+The formation rule for conjunction serves as evidence of the judgment $A \conj B \prop$, that $A \conj B$ is a well-formed proposition, provided that there is evidence of the judgments $A \prop$ and $B \prop$.
 \begin{equation*}
   \infer[{\conj}F]{A \conj B \prop}{
     A \prop & B \prop}
 \end{equation*}
 
-We have yet to give meaning to conjunction, however; to do so, we must say how to introduce the judgement that $A \conj B$ is \emph{true}.
+We have yet to give meaning to conjunction, however; to do so, we must say how to introduce the judgment that $A \conj B$ is \emph{true}.
 As the following rule shows, a verification of $A \conj B$ consists of a proof of $A \true$ paired with a proof of $B \true$.
 \begin{equation*}
   \infer[{\conj}I]{A \conj B \true}{
@@ -157,7 +157,7 @@ As the following rule shows, a verification of $A \conj B$ consists of a proof o
 \end{equation*}
 
 What may we deduce from the knowledge that $A \conj B$ is true?
-Because every proof of $A \conj B \true$ ultimately introduces that judgement from a pair of proofs of $A \true$ and $B \true$, we are justified in deducing $A \true$ and $B \true$ from any proof of $A \conj B \true$.
+Because every proof of $A \conj B \true$ ultimately introduces that judgment from a pair of proofs of $A \true$ and $B \true$, we are justified in deducing $A \true$ and $B \true$ from any proof of $A \conj B \true$.
 This leads to the elimination rules for conjunction.
 \begin{mathpar}
   \infer[{\conj}E_1]{A \true}{
@@ -188,62 +188,10 @@ Its formation rule serves as immediate evidence of the judgment $\truth \prop$, 
     }
 \end{equation*}
 
-Once again, to give meaning to truth we must say how to introduce the judgement that $\truth$ is true.
-$\truth$ is a trivially true proposition, and so its introduction rule makes the judgment $\truth \true$ immediately evident.
-\begin{equation*}
-  \infer[{\truth}I]{\truth \true}{
-    }
-\end{equation*}
 
-We should also consider an elimination rule: from a proof of $\truth \true$, what can we deduce?
-Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
-For this reason, there is no elimination rule for $\truth$, and we can see that its absence harmonizes with the introduction rule.
+\paragraph{Weakening.}\label{sec:weakening}
+Suppose
 
-\paragraph{Nullary conjuction.}\label{sec:nullary-conjuction}
-An observation about $\truth$ that often proves useful is that $\truth$ behaves as a nullary conjunction---a conjunction over the empty set of conjuncts, rather than over a set of two conjuncts.
-
-This observation is reflected in the inference rules.
-Just as the introduction rule for binary conjunction has two premises (one for each of the two conjuncts), the introduction rule for truth has no premises (one for each of the no conjuncts):
-\begin{mathpar}
-  \infer[{\conj}I]{A \conj B \true}{
-    A \true & B \true}
-  \and
-  \infer[{\truth}I]{\truth \true}{
-    }
-\end{mathpar}
-Likewise, just as there are two elimination rules for binary conjunction, there are no elimination rules for truth:
-\begin{mathpar}
-  \infer[{\conj}E_1]{A \true}{
-    A \conj B \true}
-  \and
-  \infer[{\conj}E_2]{B \true}{
-    A \conj B \true}
-  \and\and
-  \text{(no ${\truth}E$ rule)}
-\end{mathpar}
-
-\subsubsection{Entailment}\label{sec:entailment}
-
-The last form of proposition in the negative fragment of \gls{IPL} is implication.
-However, to define implication, a different form of judgment is required: entailment (also known as logical consequence or a hypothetical judgment).
-Entailment is written
-\begin{equation*}
-  \underbrace{A_1 \true, \dotsc, A_n \true}_{n \geq 0} \entails A \true \,,
-\end{equation*}
-and is intended to express the idea that the judgment $A \true$ follows from $A_1 \true, \dotsc, A_n \true$.
-You can think of $A_1 \true, \dotsc, A_n \true$ as being assumptions from which the conclusion $A \true$ may be deduced.
-The metavariable $\ctx$ is typically used to stand for such a collection of assumptions.
-
-As an entailment, the judgment form satisfies several properties: reflexivity, transitivity, weakening, contraction, and permutation.
-
-\paragraph{Reflexivity.}\label{sec:reflexivity}
-If this judgment is to express logical consequence, that is, that this conclusion follows from those assumptions, then you must accept a principle of reflexivity,
-\begin{equation*}
-  A \true \entails A \true \,,
-\end{equation*}
-that an assumption is enough to conclude the same judgment.
-
-\paragraph{Transitivity.}\label{sec:transitivity}
 
 
 \subsubsection{Implication}\label{sec:implication}
@@ -320,6 +268,42 @@ Likewise, for a binary disjunction, there is one elimination rule with a premise
 \end{mathpar}
 
 \section{Order-theoretic formulation of \gls{IPL}}\label{sec:ipl_order}
+
+It is also possible to give an order-theoretic formulation of \gls{IPL} because entailment is a preorder (reflexive and transitive).
+We define $A \leq B$ to hold exactly when $A \true \entails B \true$.
+
+\subsection{Conjunction as meet}\label{sec:conjunction-as-meet}
+
+The elimination rules for conjunction (along with reflexivity of entailment) ensure that $A \conj B \true \entails A \true$ and $A \conj B \true \entails B \true$.
+Order-theoretically, this is expressed as the rules
+\begin{mathpar}
+  \infer{A \conj B \leq A}{
+    }
+  \and
+  \infer{A \conj B \leq B}{
+    }
+\end{mathpar}
+which say that $A \conj B$ is a lower bound of $A$ and $B$.
+
+The introduction rule for conjunction ensures that $C \true \entails A \conj B \true$ if both $C \true \entails A \true$ and $C \true \entails B \true$.
+Order-theoretically, this is expressed as the rule
+\begin{equation*}
+  \infer{C \leq A \conj B}{
+    C \leq A & C \leq B}
+\end{equation*}
+which says that $A \conj B$ is as large as any lower bound of $A$ and $B$.
+Taken together these rules show that $A \conj B$ is the greatest lower bound, or meet, of $A$ and $B$.
+
+\subsection{Truth as greatest element}\label{sec:truth-as-greatest}
+
+Truth $\truth$ should 
+
+\subsection{Disjunction as join}\label{sec:disjunction-as-join}
+
+\subsection{Falsehood as least element}\label{sec:falsehood-as-least}
+
+\subsection{Implication as exponential}\label{sec:impl-as-expon}
+
 
 \section{Summary}\label{sec:summary}
 
