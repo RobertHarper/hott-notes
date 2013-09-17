@@ -32,17 +32,14 @@
 \setenumerate{noitemsep, topsep=0pt, leftmargin=*}
 \setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
-\newacronym{HoTT}{HoTT}{homotopy type theory} \newacronym{IPL}{IPL}{intuitionistic propositional logic}
+\newacronym{HoTT}{HoTT}{homotopy type theory}
+\newacronym{IPL}{IPL}{intuitionistic propositional logic}
 \newacronym{TT}{TT}{intuitionistic type theory}
 \newacronym{LEM}{LEM}{law of the excluded middle}
 \newacronym{ITT}{ITT}{intensional type theory}
 \newacronym{ETT}{ETT}{extensional type theory}
 
-\newcommand*{\refl}{\text{\textsf{refl}}}
-\newcommand*{\transi}{\text{\textsf{trans}}}
-\newcommand*{\wkn}{\text{\textsf{wkn}}}
-\newcommand*{\contract}{\text{\textsf{contract}}}
-\newcommand*{\permute}{\text{\textsf{permute}}}
+
 
 \begin{document}
 
@@ -161,22 +158,33 @@ HoTT = ITT + HIT + UA
 \end{equation*}
 
 \noindent Since types are perceived as abstract spaces in \acs{HoTT}, \acs{HoTT} gives rise to
-a intuitionistic theory of \emph{weak infinity grupoids}.
+a intuitionistic theory of \emph{weak infinity groupoids}.
 
 \section{\Acl{IPL}}\label{sec:ipl}
 
 What is meant by \emph{intuitionistic} logic?  It is a \emph{proof-relevant} logic.  One might say its slogan is ``logic as if people matter'', alluding to Brouwer's principle that mathematics is a social process in which proofs are crucial for communication.  Whenever a claim is made, it must be accompanied by a proof.
 
 As advanced by Per Martin-L\"{o}f, a modern presentation of \acf{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
-A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
-For instance, 
-
-According to Martin-L\"{o}f, the meaning of a proposition $A$ is given by the introduction rules for the judgment $A \true$.
-
-The principle of internal coherence, also known as Gentzen's principle of inversion, is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss internal coherence more precisely, but we can already give an informal treatment.
+A judgment is something that may be known, whereas a proposition is something that sensibly may be the subject of a judgment.
+For instance, the statement ``Every natural number larger than $1$ is either prime or can be uniquely factored into a product of primes\@.'' is a proposition because it sensibly may be subject to judgment.
+That the statement is in fact true is a judgment.
+Only with a proof, however, is it evident that the judgment indeed holds.
 
 Thus, in \ac{IPL}, the two most basic judgments are $A \prop$ and $A \true$:
+\begin{alignat*}{2}
+  A \prop &&\quad& \text{$A$ is a well-formed proposition} \\
+  A \true &&& \text{\begin{tabular}[t]{@{}l@{}}
+                Proposition $A$ is intuitionistically true, \\
+                i.e., has a proof.
+              \end{tabular}}
+\end{alignat*}
+The inference rules for the $\prop$ judgment are called formation rules.
+The inference rules for the $\true$ judgment are divided into classes:  \vocab{introduction rules} and \vocab{elimination rules}.
 
+Following Martin-L\"{o}f, the meaning of a proposition $A$ is given by the introduction rules for the judgment $A \true$.
+The elimination rules are dual and  describe what may be deduced from a proof of $A \true$.
+
+The principle of \vocab{internal coherence}, also known as Gentzen's principle of inversion, is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss internal coherence more precisely, but we can already give an informal treatment.
 
 \subsection{Negative fragment of \ac{IPL}}\label{sec:ipl-negative}
 
@@ -275,14 +283,27 @@ Entailment is written
 \end{equation*}
 and is intended to express the idea that the judgment $A \true$ follows from $A_1 \true, \dotsc, A_n \true$.
 You can think of $A_1 \true, \dotsc, A_n \true$ as being assumptions from which the conclusion $A \true$ may be deduced.
-The metavariable $\ctx$ is typically used to stand for such a collection of assumptions.
+The metavariable $\ctx$ is typically used to stand for such a context of assumptions.
+
+We should note that, thus far, the inference rules have been presented in a \vocab{local form} in which the context of assumptions was left implicit.
+It would also be possible to make this context explicit.
+For example, the introduction rule for conjunction in the two different forms is:
+\begin{mathpar}
+  \infer[{\conj}I]{A \conj B \true}{
+    A \true & B \true}
+  \and
+  \infer[{\conj}I]{\ctx \entails A \conj B \true}{
+    \ctx \entails A \true &
+    \ctx \entails B \true}
+\end{mathpar}
+In the remainder of these notes, we will write inference rules in local form whenever possible.
 
 As an entailment, the judgment form satisfies several properties: reflexivity, transitivity, weakening, contraction, and permutation.
 
 \paragraph{Reflexivity.}\label{sec:reflexivity}
 If the entailment judgment is to express logical consequence, that is, that a conclusion follows from some assumptions, then you must accept a principle of reflexivity,
 \begin{equation*}
-  \infer[\refl]{A \true \entails A \true}{
+  \infer[\text{\textsf{R}}]{A \true \entails A \true}{
     } \,,
 \end{equation*}
 that an assumption is enough to conclude the same judgment.
@@ -291,12 +312,12 @@ If you tried to deny this principle, the meaning of an assumption would be uncle
 \paragraph{Transitivity.}\label{sec:transitivity}
 Dual to reflexivity is a transitivity principle that states that a proof of a conclusion satisfies an assumption of the same judgment.
 \begin{equation*}
-  \infer[\transi]{C \true}{
+  \infer[\text{\textsf{T}}]{C \true}{
     A \true &
     A \true \entails C \true}
 \end{equation*}
 Transitivity is a lemma rule.
-If you prove a lemma ($A \true$), then you are justified in using it to prove a theorem that expicitly depends ($A \true \entails C \true$); taken together, they are \emph{viewed} as a direct proof of the theorem ($C \true$).
+If you prove a lemma ($A \true$), then you are justified in using it to prove a theorem that explicitly depends ($A \true \entails C \true$); taken together, they are \emph{viewed} as a direct proof of the theorem ($C \true$).
 
 Transitivity can also be thought of as proof inlining.
 Rather than pairing the lemma with the theorem that depends upon it, we could inline the lemma's proof at every point at which the theorem refers to the lemma.  The result is a truly direct proof of the theorem.
@@ -311,7 +332,7 @@ But there are also structural properties that can be denied: weakening, contract
 
 The principle of weakening says that we can add assumptions to a proof without invalidating that proof:
 \begin{equation*}
-  \infer[\wkn]{B \true \entails A \true}{
+  \infer[\text{\textsf{W}}]{B \true \entails A \true}{
     A \true}
 \end{equation*}
 Of course, the new proof is of a weaker statement, but it is nevertheless a valid proof.
@@ -323,7 +344,7 @@ In this course, we will always have the principle of weakening, however.
 \paragraph{Contraction.}\label{sec:contraction}
 The principle of contraction says that we are unconcerned about the number of copies of an assumption $A \true$; one copy is as good as two:
 \begin{equation*}
-  \infer[\contract]{A \true \entails C \true}{
+  \infer[\text{\textsf{C}}]{A \true \entails C \true}{
     A \true, A \true \entails C \true}
 \end{equation*}
 
@@ -334,7 +355,7 @@ In this course, we will always have the principle of contraction, however.
 \paragraph{Permutation.}\label{sec:permutation}
 The principle of permutation, or exchange, says that the order of assumptions does not matter; we can apply any permutation $\pi$ to the assumptions and still have a valid proof:
 \begin{equation*}
-  \infer[\permute]{\pi(\ctx) \entails C \true}{
+  \infer[\text{\textsf{P}}]{\pi(\ctx) \entails C \true}{
     \ctx \entails C \true}
 \end{equation*}
 (Note that it is difficult to state the permutation principle in local rule form.)
@@ -362,7 +383,12 @@ To prove $A \imp B \true$, we assume $A \true$ and prove $B \true$.
 In this way, implication internalizes the entailment judgment as a proposition, while we nonetheless maintain the distinction between propositions and judgments.
 (As an aside for those familiar with category theory, the relationship between entailment and implication is analogous to the relationship between a mapping and a collection of mappings internalized as an object in some categories.)
 
-What does the elimination rule for $A \imp B$ look like?
+This introduction rule for implication is the key distinction between Gentzen-style natural deduction calculus and a Hilbert-style axiomatic calculus.
+In a Hilbert presentation of \ac{IPL}, there is no separate notion of entailment, making it difficult to reason hypothetically.
+Instead, one must contort proofs to make use of several seemingly unmotivated axioms about implication.
+
+Thankfully, we will work with natural deduction and be able to reason hypothetically using the introduction rule.
+But what does the elimination rule for $A \imp B$ look like?
 Because every proof of $A \imp B \true$ ultimately introduces that judgment from a proof of the entailment $A \true \entails B \true$, we might like to write the elimination rule as
 \begin{equation*}
   \infer{A \true \entails B \true}{
@@ -373,15 +399,16 @@ This is a valid principle of reasoning, but it turns out to be useful to instead
   \infer[{\imp}E]{B \true}{
     A \imp B \true & A \true} \,.
 \end{equation*}
+This rule is sometimes referred to as \latin{modus ponens}.
 
-\paragraph{Internal coherence.}\label{sec:conj-coherence}
+\paragraph{Internal coherence.}\label{sec:imp-coherence}
 These introduction and elimination rules are coherent.
 The elimination rule is strong enough to recover the entailment that any proof of $A \imp B \true$ ultimately uses in introduction, as the following derivation shows.
 \begin{equation*}
   \infer[{\imp}E]{A \true \entails B \true}{
-    \infer[\wkn]{A \true \entails A \imp B \true}{
+    \infer[\text{\textsf{W}}]{A \true \entails A \imp B \true}{
       A \imp B \true} &
-    \infer[\refl]{A \true \entails A \true}{
+    \infer[\text{\textsf{R}}]{A \true \entails A \true}{
       }}
 \end{equation*}
 On the other hand, the elimination rule is not too strong because it is just an uncurrying of the inverted introduction rule.
@@ -577,8 +604,6 @@ Taken together, these rules show that $A \imp B$ is the exponential of $A$ and $
 %   \end{tikzcd}
 % \end{equation*}
 
-
-\section{Summary}\label{sec:summary}
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
