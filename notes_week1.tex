@@ -32,11 +32,9 @@
 \setenumerate{noitemsep, topsep=0pt, leftmargin=*}
 \setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
-
-
-\newacronym{HoTT}{HoTT}{homotopy type theory}
-\newacronym{IPL}{IPL}{intuitionistic propositional logic}
-
+\newacronym{HoTT}{HoTT}{homotopy type theory} \newacronym{IPL}{IPL}{intuitionistic
+  propositional logic} \newacronym{TT}{TT}{Intuitionistic Type Theory}
+\newacronym{LEM}{LEM}{law of the excluded middle}
 
 \newcommand*{\refl}{\text{\textsf{refl}}}
 \newcommand*{\wkn}{\text{\textsf{wkn}}}
@@ -76,12 +74,12 @@ results of the program have been recently published in the \ac{HoTT} Book~\cite{
 
 \subsection{\Acs{HoTT} in a nutshell}\label{subsec:hott_in_nutshell}
 
-\Ac{HoTT} is based on Per Martin-L\"{o}f's Intuitionistic Type Theory, which provides a
-foundation for \emph{intuitionistic mathematics} and which is an extension of \emph{Brouwer's
-  program}.  Brouwer viewed mathematical reasoning as a human activity and mathematics as a
-language for communicating mathematical concepts.  As a result, Brouwer perceives the ability
-of executing a step-by-step procedure or algorithm for performing a \emph{construction} as a
-fundamental human faculty.
+\Ac{HoTT} is based on Per Martin-L\"{o}f's \acl{TT}, which provides a foundation for
+\emph{intuitionistic mathematics} and which is an extension of \emph{Brouwer's program}.
+Brouwer viewed mathematical reasoning as a human activity and mathematics as a language for
+communicating mathematical concepts.  As a result, Brouwer perceived the ability of executing a
+step-by-step procedure or algorithm for performing a \emph{construction} as a fundamental human
+faculty.
 
 Adopting Brouwer's constructive viewpoint, intuitionistic theories view proofs as the
 fundamental forms of construction.  The notion of \emph{proof relevance} is thus a
@@ -101,12 +99,28 @@ proofs that cannot be formalized in \ac{HoTT}.  These are exactly the proofs tha
 considered to be \emph{relevant} and, being treated as mathematical objects, they can be
 formulated internally as objects of the type theory.
 
-Core of \ac{HoTT} that proofs of equations are paths in the space.
+Being based on \acl{TT}, \acs{HoTT} facilitates some form of axiomatic freedom.  This means in
+particular that there exist fewer assumptions that apply globally.  For instance, a typical
+such assumption that is missing in a intuitionistic interpretation is the \acl{LEM}.  As put
+forth by Brouwer, an assumption like the \acl{LEM} does not need to be ruled out entirely, but
+can be introduced locally, in a proof, if needed.  Whether a particular local assumption is
+needed or not is mainly determined by the actual proof (i.e., construction).  A sparing use of
+global assumptions results in proofs that are based on less assumptions and thus in stronger
+results overall.
 
 Another distinguishing characteristics of \acs{HoTT} is that it adopts a \emph{synthetic},
-rather than an \emph{analytic} approach.  
-
-Proofs of equality correspond to paths in a space.
+rather than an \emph{analytic} reasoning approach.  The differentiation goes back to Lawvere
+and is best explained by an example.  Euclidean geometry, for instance, represents a synthetic
+approach to geometry as it treats geometric figures, like triangles, lines, and circles, as
+``things'' in themselves rather than sets of points.  In an analytical approach based on the
+Cartesian coordinate system, on the other hand, geometric figures are treated as sets of points
+in the plane and thus are based on the real numbers.  Whereas traditional formulations of
+homotopy theory are analytic, \acs{HoTT} is synthetic.  The differentiation between a synthetic
+and an analytic reasoning approach is mainly relevant with regard to the approach's amenability
+to mechanized reasoning.  It turns out that synthetic approaches are easier to mechanize than
+analytical approaches.  This holds true in particular for \acs{HoTT}: since proofs of equality
+in \acs{HoTT} correspond to paths in a space, they are cleaner, shorter, and completely
+mechanizable.
 
 \subsection{\Acs{HoTT} in type theory context}\label{subsec:type_theory_context}
 
