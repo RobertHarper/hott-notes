@@ -17,7 +17,7 @@
 \usepackage{tikz-cd}
 \usepackage[acronym, nohypertypes={acronym}, shortcuts]{glossaries}
 
-\metadata{Vonnie III}{2099/99/99}
+\metadata{DeYoung and Balzer}{2013/09/09 and 2013/09/11}
 
 % for url in bib entries
 \usepackage{url}
@@ -33,13 +33,16 @@
 \setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
 \newacronym{HoTT}{HoTT}{homotopy type theory} \newacronym{IPL}{IPL}{intuitionistic propositional logic}
-\newacronym{TT}{TT}{Intuitionistic Type Theory}
+\newacronym{TT}{TT}{intuitionistic type theory}
 \newacronym{LEM}{LEM}{law of the excluded middle}
 \newacronym{ITT}{ITT}{intensional type theory}
 \newacronym{ETT}{ETT}{extensional type theory}
 
 \newcommand*{\refl}{\text{\textsf{refl}}}
+\newcommand*{\transi}{\text{\textsf{trans}}}
 \newcommand*{\wkn}{\text{\textsf{wkn}}}
+\newcommand*{\contract}{\text{\textsf{contract}}}
+\newcommand*{\permute}{\text{\textsf{permute}}}
 
 \begin{document}
 
@@ -162,21 +165,15 @@ a intuitionistic theory of \emph{weak infinity grupoids}.
 
 \section{\Acl{IPL}}\label{sec:ipl}
 
-% [COMMENT_SB:] Explain difference between introduction and elimination rules.  Mention
-% Gentzen's rule of inversion.
-
-What is meant by \emph{intuitionistic} logic?  One might say its slogan is ``logic as if people matter'', alluding to Brouwer's principle that mathematics is a social process.
+What is meant by \emph{intuitionistic} logic?  It is a \emph{proof-relevant} logic.  One might say its slogan is ``logic as if people matter'', alluding to Brouwer's principle that mathematics is a social process in which proofs are crucial for communication.  Whenever a claim is made, it must be accompanied by a proof.
 
 As advanced by Per Martin-L\"{o}f, a modern presentation of \acf{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
 A judgment is something that may be known, whereas a proposition is something that sensibly be may the subject of a judgment.
 For instance, 
 
-% [COMMENT_SB:] In the lecture this was called internal coherence rather than harmony, right?
+According to Martin-L\"{o}f, the meaning of a proposition $A$ is given by the introduction rules for the judgment $A \true$.
 
 The principle of internal coherence, also known as Gentzen's principle of inversion, is that the introduction and elimination rules for a proposition $A$ fit together properly.  The elimination rules should be strong enough to deduce all information that was used to introduce $A$ (\vocab{local completeness}), but not so strong as to deduce information that might not have been used to introduce $A$ (\vocab{local soundness}).  In a later lecture, we will discuss internal coherence more precisely, but we can already give an informal treatment.
-
-% Ultimately, we are interested in judging the truth, or provability, of a proposition.
-% But first, 
 
 Thus, in \ac{IPL}, the two most basic judgments are $A \prop$ and $A \true$:
 
@@ -245,7 +242,7 @@ We should also consider an elimination rule: from a proof of $\truth \true$, wha
 Since $\truth$ is trivially true, any such elimination rule would not increase our knowledge---we put in no information when we introduced $\truth \true$, so, by the principle of conservation of proof, we should get no information out.
 For this reason, there is no elimination rule for $\truth$, and we can see that its absence is coherent with the introduction rule.
 
-\paragraph{Nullary conjunction.}\label{sec:nullary-conjunction}
+\paragraph{The nullary conjunction.}\label{sec:nullary-conjunction}
 An observation about $\truth$ that often proves useful is that $\truth$ behaves as a nullary conjunction---a conjunction over the empty set of conjuncts, rather than over a set of two conjuncts.
 
 This observation is reflected in the inference rules.
@@ -283,16 +280,68 @@ The metavariable $\ctx$ is typically used to stand for such a collection of assu
 As an entailment, the judgment form satisfies several properties: reflexivity, transitivity, weakening, contraction, and permutation.
 
 \paragraph{Reflexivity.}\label{sec:reflexivity}
-If this judgment is to express logical consequence, that is, that this conclusion follows from those assumptions, then you must accept a principle of reflexivity,
+If the entailment judgment is to express logical consequence, that is, that a conclusion follows from some assumptions, then you must accept a principle of reflexivity,
 \begin{equation*}
-  A \true \entails A \true \,,
+  \infer[\refl]{A \true \entails A \true}{
+    } \,,
 \end{equation*}
 that an assumption is enough to conclude the same judgment.
+If you tried to deny this principle, the meaning of an assumption would be unclear.
 
 \paragraph{Transitivity.}\label{sec:transitivity}
+Dual to reflexivity is a transitivity principle that states that a proof of a conclusion satisfies an assumption of the same judgment.
+\begin{equation*}
+  \infer[\transi]{C \true}{
+    A \true &
+    A \true \entails C \true}
+\end{equation*}
+Transitivity is a lemma rule.
+If you prove a lemma ($A \true$), then you are justified in using it to prove a theorem that expicitly depends ($A \true \entails C \true$); taken together, they are \emph{viewed} as a direct proof of the theorem ($C \true$).
+
+Transitivity can also be thought of as proof inlining.
+Rather than pairing the lemma with the theorem that depends upon it, we could inline the lemma's proof at every point at which the theorem refers to the lemma.  The result is a truly direct proof of the theorem.
+
+% Transitivity should be an \vocab{admissible rule}, meaning that it need not be included as an expicit rule since it can be proved as a metatheorem about the remaining rules.
+% For transitivity, this corresponds to the computational notion of inlining.
+% Rather than having the notion of ``lemma paired with theorem'' that arises from transitivity as an explicit rule, we can instead inline the lemma's proof
 
 \paragraph{Weakening.}\label{sec:weakening}
-Suppose
+Reflexivity and transitivity are undeniable properties of entailment because they give meaning to assumptions---assumptions are strong enough to prove conclusions (reflexivity), but are only as strong as the proofs they stand for (transitivity).
+But there are also structural properties that can be denied: weakening, contraction, and permutation.
+
+The principle of weakening says that we can add assumptions to a proof without invalidating that proof:
+\begin{equation*}
+  \infer[\wkn]{B \true \entails A \true}{
+    A \true}
+\end{equation*}
+Of course, the new proof is of a weaker statement, but it is nevertheless a valid proof.
+
+Denying weakening leads, in part, to relevance logic.
+It is called relevance logic because the proofs may not contain the unnecessary, irrelevant assumptions that weakening allows.
+In this course, we will always have the principle of weakening, however.
+
+\paragraph{Contraction.}\label{sec:contraction}
+The principle of contraction says that we are unconcerned about the number of copies of an assumption $A \true$; one copy is as good as two:
+\begin{equation*}
+  \infer[\contract]{A \true \entails C \true}{
+    A \true, A \true \entails C \true}
+\end{equation*}
+
+Denying contraction (along with weakening) leads to linear logic, in which we wish to reason about the number of copies of an assumption.
+This is a powerful way to express consumable resources.
+In this course, we will always have the principle of contraction, however.
+
+\paragraph{Permutation.}\label{sec:permutation}
+The principle of permutation, or exchange, says that the order of assumptions does not matter; we can apply any permutation $\pi$ to the assumptions and still have a valid proof:
+\begin{equation*}
+  \infer[\permute]{\pi(\ctx) \entails C \true}{
+    \ctx \entails C \true}
+\end{equation*}
+(Note that it is difficult to state the permutation principle in local rule form.)
+
+Denying permutation (along with weakening and contraction) leads to ordered, or noncommutative, logic.
+It is a powerful way to express ordered structures, like lists or even formal grammars.
+In this course, we will always have the principle of permutation, however.
 
 \subsubsection{Implication}\label{sec:implication}
 
@@ -330,7 +379,7 @@ These introduction and elimination rules are coherent.
 The elimination rule is strong enough to recover the entailment that any proof of $A \imp B \true$ ultimately uses in introduction, as the following derivation shows.
 \begin{equation*}
   \infer[{\imp}E]{A \true \entails B \true}{
-    \infer-[\wkn]{A \true \entails A \imp B \true}{
+    \infer[\wkn]{A \true \entails A \imp B \true}{
       A \imp B \true} &
     \infer[\refl]{A \true \entails A \true}{
       }}
@@ -383,7 +432,7 @@ The elimination rule captures \latin{ex falso quodlibet}: from a proof of $\fals
 Once again, the rules cohere.
 The elimination rule is very strong, but remains justified due to the absence of any introduction rule for falsehood.
 
-\paragraph{Nullary disjunction.}\label{sec:nullary-disjunction}
+\paragraph{The nullary disjunction.}\label{sec:nullary-disjunction}
 We previously noted that $\truth$ behaves as a nullary conjunction.
 In the same way, $\falsehood$ behaves as a nullary disjunction.
 For a binary disjunction, there are two introduction rules, ${\disj}I_1$ and ${\disj}I_2$, one for each of the two disjuncts; for falsehood, there are no introduction rules:
