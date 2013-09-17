@@ -32,9 +32,11 @@
 \setenumerate{noitemsep, topsep=0pt, leftmargin=*}
 \setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
-\newacronym{HoTT}{HoTT}{homotopy type theory} \newacronym{IPL}{IPL}{intuitionistic
-  propositional logic} \newacronym{TT}{TT}{Intuitionistic Type Theory}
+\newacronym{HoTT}{HoTT}{homotopy type theory} \newacronym{IPL}{IPL}{intuitionistic propositional logic}
+\newacronym{TT}{TT}{Intuitionistic Type Theory}
 \newacronym{LEM}{LEM}{law of the excluded middle}
+\newacronym{ITT}{ITT}{intensional type theory}
+\newacronym{ETT}{ETT}{extensional type theory}
 
 \newcommand*{\refl}{\text{\textsf{refl}}}
 \newcommand*{\wkn}{\text{\textsf{wkn}}}
@@ -124,8 +126,39 @@ mechanizable.
 
 \subsection{\Acs{HoTT} in type theory context}\label{subsec:type_theory_context}
 
-Extensional Type Theory (ETT).  There is the conception that ETT is ``wrong''~\cite{Harper2012}
-because the typing judgment is not decidable.
+\Ac{HoTT} unites homotopy theory with type theory, by embodying Brouwer's intuitionism and
+drawing from Gentzen's proof theory (see Section~\ref{sec:ipl}).  It is based on the
+observation that \emph{types} classify the admissible forms of constructions and thus are
+programmatically sufficient to encompass all known mathematical constructions.  This section
+briefly sketches how \ac{HoTT} relates to other existing type theories.
+
+\subsubsection{\Acl{ITT}}
+
+\Acf{ITT} is a \acl{TT} that serves as the core theory for other type theories.  Other type theories
+are merely extensions of \acs{ITT}.
+
+\subsubsection{\Acl{ETT}}
+
+\Acf{ETT} extends \acs{ITT} with equality of reflection (ER) and uniqueness of identity proofs (UIP):
+
+\begin{equation*}
+ETT = ITT + ER + UIP
+\end{equation*}
+
+\noindent Since types are perceived as sets in \acs{ETT}, \acs{ETT} gives rise to a
+intuitionistic theory of sets.
+
+\subsubsection{\Acl{HoTT}}
+
+\Acs{HoTT} extends \acs{ITT} with higher inductive types (HIT) and the univalence axiom (UA):
+
+
+\begin{equation*}
+HoTT = ITT + HIT + UA
+\end{equation*}
+
+\noindent Since types are perceived as abstract spaces in \acs{HoTT}, \acs{HoTT} gives rise to
+a intuitionistic theory of \emph{weak infinity grupoids}.
 
 \section{\Acl{IPL}}\label{sec:ipl}
 
