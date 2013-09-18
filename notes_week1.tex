@@ -51,20 +51,16 @@
 
 % [COMMENT_SB:]
 
-% > We should decide on capitalization of terms like Homotopy Type Theory and Intuitionistic
-%   Propositional Logic.
-
 % > Should we have a title for inference-rule based formulation of IPL?
 
 % > Is it Brouwer's program, principle, or dictum?
 
 \section{Contents}\label{sec:contents}
 
-These notes summarize the lectures on \ac{HoTT} given by Professor Robert
-Harper on September 9 and 11, 2013, at CMU.  They start by providing a introduction to \ac{HoTT},
-capturing its main ideas and its connection to other related type theories.  Then they present
-\ac{IPL}, giving both an proof-theoretic formulation as
-well an order-theoretic formulation.  The notes conclude with a brief summary.
+These notes summarize the lectures on \ac{HoTT} given by Professor Robert Harper on September 9
+and 11, 2013, at CMU.  They start by providing a introduction to \ac{HoTT}, capturing its main
+ideas and its connection to other related type theories.  Then they present \ac{IPL}, giving
+both an proof-theoretic formulation as well an order-theoretic formulation.
 
 % [COMMENT_SB:] How does IPL relate to HoTT?
 
@@ -277,11 +273,11 @@ Likewise, just as there are two elimination rules for binary conjunction, there 
 
 The last form of proposition in the negative fragment of \ac{IPL} is implication.
 However, to define implication, a different form of judgment is required: entailment (also known as logical consequence or a hypothetical judgment).
-Entailment is written
+Entailment is written as
 \begin{equation*}
   \underbrace{A_1 \true, \dotsc, A_n \true}_{n \geq 0} \entails A \true \,,
 \end{equation*}
-and is intended to express the idea that the judgment $A \true$ follows from $A_1 \true, \dotsc, A_n \true$.
+and expresses the idea that the judgment $A \true$ follows from $A_1 \true, \dotsc, A_n \true$.
 You can think of $A_1 \true, \dotsc, A_n \true$ as being assumptions from which the conclusion $A \true$ may be deduced.
 The metavariable $\ctx$ is typically used to stand for such a context of assumptions.
 
@@ -298,7 +294,7 @@ For example, the introduction rule for conjunction in the two different forms is
 \end{mathpar}
 In the remainder of these notes, we will write inference rules in local form whenever possible.
 
-As an entailment, the judgment form satisfies several properties: reflexivity, transitivity, weakening, contraction, and permutation.
+As an entailment, the judgment form satisfies several \emph{structural properties}: reflexivity, transitivity, weakening, contraction, and permutation.
 
 \paragraph{Reflexivity.}\label{sec:reflexivity}
 If the entailment judgment is to express logical consequence, that is, that a conclusion follows from some assumptions, then you must accept a principle of reflexivity,
@@ -328,7 +324,8 @@ Rather than pairing the lemma with the theorem that depends upon it, we could in
 
 \paragraph{Weakening.}\label{sec:weakening}
 Reflexivity and transitivity are undeniable properties of entailment because they give meaning to assumptions---assumptions are strong enough to prove conclusions (reflexivity), but are only as strong as the proofs they stand for (transitivity).
-But there are also structural properties that can be denied: weakening, contraction, and permutation.
+But there are also structural properties that can be denied: weakening, contraction, and
+permutation.  Logics that deny any of these properties are called \emph{substructural logics}.
 
 The principle of weakening says that we can add assumptions to a proof without invalidating that proof:
 \begin{equation*}
@@ -482,7 +479,7 @@ Likewise, for a binary disjunction, there is one elimination rule with a premise
     \falsehood \true}
 \end{mathpar}
 
-\section{Order-theoretic formulation of \acl{IPL}}\label{sec:ipl_order}
+\section{Order-theoretic formulation of \acs{IPL}}\label{sec:ipl_order}
 
 It is also possible to give an order-theoretic formulation of \ac{IPL} because entailment is a preorder (reflexive and transitive).
 We define $A \leq B$ to hold exactly when $A \true \entails B \true$.
@@ -575,6 +572,17 @@ which says that $\falsehood$ is the least, or initial, element.
 Once again, because we saw that falsehood is the nullary disjunction in the proof-theoretic formulation, we should expect this analogy to carry over to the order-theoretic formulation.
 Indeed, the least element is the least upper bound of the empty set.
 
+\subsection{Implication as lattice}\label{subsec:lattice}
+
+The order-theoretic formulation of \acs{IPL} gives rise to a \emph{lattice} as it establishes a
+preorder with finite meets and joins.  The definition of a lattice assumed in this course may
+deviate from the one typically found in the literature, which usually considers a lattice to be
+a partial order with finite meets and joins.  In this course, we deliberately ignore the
+property of antisymmetry.  If we were to impose the property of antisymmetry on the order
+defined by entailment, then we would need to introduce equivalence classes of propositions,
+which requires associativity.  As we will see later in this course, the axiom of univalence
+provides an elegant way of dealing with equivalence of propositions.
+
 \subsection{Implication as exponential}\label{sec:impl-as-expon}
 
 The elimination rule for implication (along with reflexivity of entailment) ensures that $A \true, A \imp B \true \entails B \true$.
@@ -604,6 +612,13 @@ Taken together, these rules show that $A \imp B$ is the exponential of $A$ and $
 %   \end{tikzcd}
 % \end{equation*}
 
+As we have seen previously, the order-theoretic formulation of \acs{IPL} gives rise to a
+lattice.  Now we have just seen that it also supports exponentials.  As a result, the
+order-theoretic formulation of \acs{IPL} gives rise to a \emph{Heyting algebra}.  A Heyting
+algebra is a lattice with exponentials.  As we will see later in this course, the notion of a
+Heyting algebra is fundamental in proving completeness of \acs{IPL}.  The proof also relies on
+the notion of a \emph{complement} in a lattice.  The complement $A^*$ of $A$ in a lattice is
+the least $C$ that ``fills up'' $A$.
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
