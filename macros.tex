@@ -11,6 +11,19 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{xspace}
+\usepackage{url} % for url in bib entries
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Acronyms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[acronym, shortcuts]{glossaries}
+
+\newacronym{HoTT}{HoTT}{homotopy type theory}
+\newacronym{IPL}{IPL}{intuitionistic propositional logic}
+\newacronym{TT}{TT}{intuitionistic type theory}
+\newacronym{LEM}{LEM}{law of the excluded middle}
+\newacronym{ITT}{ITT}{intensional type theory}
+\newacronym{ETT}{ETT}{extensional type theory}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fancy page style
@@ -30,6 +43,15 @@
 
 \newcommand*{\vocab}[1]{\emph{#1}}
 \newcommand*{\latin}[1]{\textit{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Customize list enviroonments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% package to customize three basic list environments: enumerate, itemize and description.
+\usepackage{enumitem}
+\setitemize{noitemsep, topsep=0pt, leftmargin=*}
+\setenumerate{noitemsep, topsep=0pt, leftmargin=*}
+\setdescription{noitemsep, topsep=0pt, leftmargin=*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some really basic macros.
