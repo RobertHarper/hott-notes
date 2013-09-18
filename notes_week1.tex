@@ -624,11 +624,13 @@ As a result, the order-theoretic formulation of \ac{IPL} gives rise to a
 we will see later in this course, the notion of a Heyting algebra is fundamental
 in proving completeness of \ac{IPL}.  The proof also relies on the notion of a
 \vocab{complement} in a lattice.  The complement $\overline{A}$ of $A$ in a
-lattice is the least $C$ that ``fills up'' $A$:
+lattice is such that
 \begin{enumerate}
 \item $\top\leq \overline{A}\vee A$;
-\item if $\top\leq B\vee A$, then $\overline{A}\leq B$.
+\item $\bot\leq \overline{A}\wedge A$.
 \end{enumerate}
+It follows that a complement, if present, is a suitable notion of negation, but
+negation, defined via the exponential, is not necessarily a complement.
 
 
 \nocite{Pfenning2009a, Pfenning2009b}
