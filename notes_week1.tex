@@ -15,7 +15,7 @@
 
 \usepackage{proof-dashed}
 \usepackage{tikz-cd}
-\usepackage[acronym, nohypertypes={acronym}, shortcuts]{glossaries}
+\usepackage[acronym, shortcuts]{glossaries}
 
 \metadata{DeYoung and Balzer}{2013/09/09 and 2013/09/11}
 
@@ -158,7 +158,11 @@ a intuitionistic theory of \emph{weak infinity groupoids}.
 
 \section{\Acl{IPL}}\label{sec:ipl}
 
-What is meant by \emph{intuitionistic} logic?  It is a \emph{proof-relevant} logic.  One might say its slogan is ``logic as if people matter'', alluding to Brouwer's principle that mathematics is a social process in which proofs are crucial for communication.  Whenever a claim is made, it must be accompanied by a proof.
+What is meant by \emph{intuitionistic} logic?  It is a \emph{proof-relevant}
+logic.  One might say its slogan is ``logic as if people matter'', alluding to
+Brouwer's principle that mathematics is a social process in which proofs are
+crucial for communication.  Whenever a claim of truth of a proposition is made,
+it must be accompanied by a proof.
 
 As advanced by Per Martin-L\"{o}f, a modern presentation of \acf{IPL} distinguishes the notions of \vocab{judgment} and \vocab{proposition}.
 A judgment is something that may be known, whereas a proposition is something that sensibly may be the subject of a judgment.
@@ -613,13 +617,18 @@ Taken together, these rules show that $A \imp B$ is the exponential of $A$ and $
 %   \end{tikzcd}
 % \end{equation*}
 
-As we have seen previously, the order-theoretic formulation of \ac{IPL} gives rise to a
-lattice.  Now we have just seen that it also supports exponentials.  As a result, the
-order-theoretic formulation of \ac{IPL} gives rise to a \vocab{Heyting algebra}.  A Heyting
-algebra is a lattice with exponentials.  As we will see later in this course, the notion of a
-Heyting algebra is fundamental in proving completeness of \ac{IPL}.  The proof also relies on
-the notion of a \vocab{complement} in a lattice.  The complement $A^*$ of $A$ in a lattice is
-the least $C$ that ``fills up'' $A$.
+As we have seen previously, the order-theoretic formulation of \ac{IPL} gives
+rise to a lattice.  Now we have just seen that it also supports exponentials.
+As a result, the order-theoretic formulation of \ac{IPL} gives rise to a
+\vocab{Heyting algebra}.  A Heyting algebra is a lattice with exponentials.  As
+we will see later in this course, the notion of a Heyting algebra is fundamental
+in proving completeness of \ac{IPL}.  The proof also relies on the notion of a
+\vocab{complement} in a lattice.  The complement $\overline{A}$ of $A$ in a
+lattice is the least $C$ that ``fills up'' $A$:
+\begin{enumerate}
+\item $\top\leq \overline{A}\vee A$;
+\item if $\top\leq B\vee A$, then $\overline{A}\leq B$.
+\end{enumerate}
 
 
 \nocite{Pfenning2009a, Pfenning2009b}
