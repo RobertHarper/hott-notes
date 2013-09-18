@@ -482,12 +482,13 @@ Likewise, for a binary disjunction, there is one elimination rule with a premise
 \section{Order-theoretic formulation of \acs{IPL}}\label{sec:ipl_order}
 
 It is also possible to give an order-theoretic formulation of \ac{IPL} because entailment is a preorder (reflexive and transitive).
-We define $A \leq B$ to hold exactly when $A \true \entails B \true$.
+We want $A \leq B$ to hold exactly when $A \true \entails B \true$.
+We can therefore devise the order-theoretic formulation with these soundness and completeness goals in mind.
 
 \subsection{Conjunction as meet}\label{sec:conjunction-as-meet}
 
 The elimination rules for conjunction (along with reflexivity of entailment) ensure that $A \conj B \true \entails A \true$ and $A \conj B \true \entails B \true$.
-Order-theoretically, this is expressed as the rules
+To ensure completeness of the order-theoretic formulation, we include the rules
 \begin{mathpar}
   \infer{A \conj B \leq A}{
     }
@@ -531,7 +532,7 @@ We should expect this analogy to hold in the order-theoretic formulation of \ac{
 \subsection{Disjunction as join}\label{sec:disjunction-as-join}
 
 The introduction rules for disjunction (along with reflexivity of entailment) ensure that $A \true \entails A \disj B \true$ and $B \true \entails A \disj B \true$.
-Order-theoretically, this is expressed as the rules
+To ensure completeness of the order-theoretic formulation, we include the rules
 \begin{mathpar}
   \infer{A \leq A \disj B}{
     }
@@ -572,9 +573,9 @@ which says that $\falsehood$ is the least, or initial, element.
 Once again, because we saw that falsehood is the nullary disjunction in the proof-theoretic formulation, we should expect this analogy to carry over to the order-theoretic formulation.
 Indeed, the least element is the least upper bound of the empty set.
 
-\subsection{Implication as lattice}\label{subsec:lattice}
+\subsection{Order-theoretic \ac{IPL} as lattice}\label{subsec:lattice}
 
-The order-theoretic formulation of \acs{IPL} gives rise to a \emph{lattice} as it establishes a
+As seen thus far, the order-theoretic formulation of \ac{IPL} gives rise to a \vocab{lattice} as it establishes a
 preorder with finite meets and joins.  The definition of a lattice assumed in this course may
 deviate from the one typically found in the literature, which usually considers a lattice to be
 a partial order with finite meets and joins.  In this course, we deliberately ignore the
@@ -612,14 +613,16 @@ Taken together, these rules show that $A \imp B$ is the exponential of $A$ and $
 %   \end{tikzcd}
 % \end{equation*}
 
-As we have seen previously, the order-theoretic formulation of \acs{IPL} gives rise to a
+As we have seen previously, the order-theoretic formulation of \ac{IPL} gives rise to a
 lattice.  Now we have just seen that it also supports exponentials.  As a result, the
-order-theoretic formulation of \acs{IPL} gives rise to a \emph{Heyting algebra}.  A Heyting
+order-theoretic formulation of \ac{IPL} gives rise to a \vocab{Heyting algebra}.  A Heyting
 algebra is a lattice with exponentials.  As we will see later in this course, the notion of a
-Heyting algebra is fundamental in proving completeness of \acs{IPL}.  The proof also relies on
-the notion of a \emph{complement} in a lattice.  The complement $A^*$ of $A$ in a lattice is
+Heyting algebra is fundamental in proving completeness of \ac{IPL}.  The proof also relies on
+the notion of a \vocab{complement} in a lattice.  The complement $A^*$ of $A$ in a lattice is
 the least $C$ that ``fills up'' $A$.
 
+
+\nocite{Pfenning2009a, Pfenning2009b}
 \bibliographystyle{plain}
 \bibliography{hott_references}
 
