@@ -1,0 +1,238 @@
+% arara: pdflatex
+% arara: bibtex
+% arara: pdflatex
+% arara: pdflatex
+\documentclass[12pt]{article}
+
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Package for customizing page layout
+\usepackage[letterpaper]{geometry}
+% \usepackage{fullpage}
+
+\input{macros}
+
+\usepackage{proof-dashed}
+\usepackage{tikz-cd}
+\usepackage[acronym, shortcuts]{glossaries}
+
+\metadata{C.~Newstead}{2013/09/16}
+
+% for url in bib entries
+\usepackage{url}
+
+% for theorems, lemmas, etc
+\newenvironment{theorem}[1][Theorem.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{lemma}[1][Lemma.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{corollary}[1][Corollary.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+% \usepackage{parskip}
+% \setlength{\parskip}{0.1cm}
+% \setlength{\parindent}{0mm}
+
+% package to customize three basic list environments: enumerate, itemize and description.
+\usepackage{enumitem}
+\setitemize{noitemsep, topsep=0pt, leftmargin=*}
+\setenumerate{noitemsep, topsep=0pt, leftmargin=*}
+\setdescription{noitemsep, topsep=0pt, leftmargin=*}
+
+\newacronym{HoTT}{HoTT}{homotopy type theory}
+\newacronym{IPL}{IPL}{intuitionistic propositional logic}
+\newacronym{TT}{TT}{intuitionistic type theory}
+\newacronym{LEM}{LEM}{law of the excluded middle}
+\newacronym{ITT}{ITT}{intensional type theory}
+\newacronym{ETT}{ETT}{extensional type theory}
+\newacronym{DP}{DP}{disjunction property}
+
+
+
+\begin{document}
+
+\title{15-819 Homotopy Type Theory\\ Lecture Notes}
+\author{Clive Newstead}
+\date{September 16, 2013}
+
+\maketitle
+
+\section*{Foreword}
+
+These will undergo substantial revision and expansion in the coming week.
+
+Recall from last time that we can think of the judgement $A \true$ as meaning `$A$ has a proof' and of $A \postfixjudgment{false}$ as `$A$ has a refutation', or equivalently `$\neg A$ has a proof'. These atomic judgements give rise to hypothetical judgements of the form
+$$A_1 \true, A_2 \true, \dots, A_n \true \vdash A \true$$
+The inference rules of \acl{IPL} then give rise to the structure of a Heyting algebra, called the \emph{Lindenbaum algebra}.
+
+\section{Lindenbaum algebras}
+
+Recall that \acs{IPL} has the structure of a preorder, where we declare $A \le B$ if and only if $A \true \vdash B \true$. Let $T$ be some theory in \acl{IPL} and define a relation $\simeq$ on the propositions in $T$ by
+\begin{equation*}
+A \simeq B \quad \text{if and only if} \quad A \le B\ \text{and}\ B \le A
+\end{equation*}
+
+The fact that $\simeq$ is an equivalence relation follows from the more general fact if $(P, \le)$ is a preorder and a relation $\equiv$ is defined on $P$ by declaring $p \equiv q$ if and only if $p \le q$ and $q \le p$, then $\equiv$ is an equivalence relation on $P$.
+
+\begin{definition}
+The \vocab{Lindenbaum algebra} of $T$ is defined to be the collection of $\simeq$-equivalence classes of propositions in $T$. Write $A^* = [A]_{\simeq}$. The ordering on the Lindenbaum algebra is inherited from $\le$.
+\end{definition}
+
+%% [COMMENT_CN]: Reword the following theorem
+\begin{theorem}
+The judgement $\Gamma \vdash A \true$ holds if and only if $\Gamma^* \vdash A^*$ holds in every Heyting algebra.
+\end{theorem}
+\begin{proof}
+Exercise.
+\end{proof}
+
+\section{Decidability and stability}
+
+\begin{definition}
+$A \prop$ is \emph{decidable} if and only if $A \disj \neg A \true$.
+\end{definition}
+
+Decidability is what separates constructuve logic from classical logic: in classical logic, every proposition is decidable (this is precisely the \acl{LEM}), but in constructive logic, this is not so.
+
+A sensible first question to ask might be: `do decidable propositions exist?' Fortunately, the answer is affirmative.
+\begin{itemize}
+\item $\top$ and $\bot$ are decidable propositions;
+\item We would expect $m =_{\mathbb{N}} n$ to be a decidable proposition, where $=_{\mathbb{N}}$ denotes equality on the natural numbers;
+\item We would \emph{not} expect $x =_{\mathbb{R}} y$ to be a decidable proposition, where $=_{\mathbb{R}}$ denotes equality on the real numbers, because real numbers are not finite objects.
+\end{itemize}
+
+\begin{definition}
+$A \prop$ is \emph{stable} if and only if $(\neg \neg A) \imp A \true$.
+\end{definition}
+
+Again, in classical logic, every proposition is stable; in fact, the proposition $(\neg \neg A) \imp A \true$ is often taken as an axiom of treatments of classical propositional logic! A natural question to ask now is `do there exist unstable propositions?' Consider the following lemma.
+\begin{lemma}
+$\neg \neg (A \disj \neg A) \true$
+\end{lemma}
+\begin{proof}
+We must show $\neg (A \disj \neg A) \imp \bot \true$.
+
+Suppose $A \true$. We then have
+\begin{equation*}
+  \infer{\bot}{
+    \infer[{\disj}I_1]{A \vee \neg A \true}{A \true} &
+    \neg ( A \vee \neg A ) \true
+  }
+\end{equation*}
+
+So in fact $\neg A \true$. But then once again
+\begin{equation*}
+  \infer{\bot}{
+    \infer[{\disj} I_2]{A \vee \neg A \true}{\neg A \true} &
+    \neg (A \vee \neg A \true)
+  }
+\end{equation*}
+
+Hence
+\begin{equation*}
+  \infer[{\imp} I]{\neg (A \disj \neg A) \imp \bot \true}{\neg (A \disj \neg A) \true \vdash \bot}
+\end{equation*}
+\end{proof}
+
+We can think of this lemma as saying that `the \acl{LEM} is not refutable'. Presuming that there exist undecidable propositions, we obtain the following corollary.
+
+\begin{corollary}
+In \acl{IPL}, not every proposition is stable.
+\end{corollary}
+
+\section{Disjunction property}
+A theory $T$ has the \emph{\ac{DP}} if $T \vdash A \vee B$ implies $T \vdash A$ or $T \vdash B$.
+
+\begin{theorem} \label{thm:dp}
+In \acs{IPL}, if $\varnothing \vdash A \disj B \true$ then $\varnothing \vdash A \true$ or $\varnothing \vdash B \true$.
+\end{theorem}
+
+\begin{proof}[Na\"{i}ve attempt at proof.]
+The idea is to perform induction on all possible derivations $\nabla$ of $\varnothing \vdash A \disj B \true$, with the hope that somewhere along the line we'll find a derivation of $A \true$ or of $B\ true$. Our induction hypothesis is that inside $\nabla$ is enough information to deduce either $\varnothing \vdash A \true$ or $\varnothing \vdash B \true$.
+
+Since $\varnothing \vdash A \vee B \true$ cannot be obtained by assumption or from the rules, ${\conj} I$, ${\imp} I$ or ${\top} I$, we need only consider ${\disj} I_1$, ${\disj} I_2$ and the elimination rules.
+
+If $\varnothing \vdash A \vee B \true$ is obtained from ${\disj} I_1$ then
+\begin{equation*}
+  \infer[{\disj} I_1]{\varnothing \vdash A \vee B \true}{
+    \infer{A \true}{\nabla}
+  }
+\end{equation*}
+so there is a derivation $\nabla$ of $A \true$ and we're done. Likewise if $\varnothing \vdash A \vee B \true$ is obtained from ${\disj} I_2$ then there is a derivation of $B \true$.
+
+If $\varnothing \vdash A \vee B \true$ is obtained from ${\imp} E$ then the deduction takes the form
+\begin{equation*}
+  \infer[{\imp} E]{\varnothing \vdash A \vee B \true}{
+    \infer{\varnothing \vdash C \imp (A \vee B) \true}{\nabla_1} &
+    \infer{\varnothing \vdash C \true}{\nabla_2}
+  }
+\end{equation*}
+We (dubiously\footnote{In fact, this `dubious' assumption is true in constructive logic.}) assume that $\vdash C \imp (A \vee B) \true$ must have been derived in some way from $C \true \vdash (A \vee B) \true$. Suppose that this happens and that $\nabla'_1$ is a deduction of $C \true \vdash (A \vee B) \true$. We can then `substitute' $\nabla_2$ for all the occurrences of the assumption $C \true$ appearing in $\nabla'_1$ to obtain a smaller derivation $\nabla_3$ of $\varnothing \vdash A \vee B \true$. Our induction hypothesis then gives us that inside $\nabla_3$ is enough information to deduce $\varnothing \vdash A \true$ or $\varnothing \vdash B \true$.
+
+A similar approach works (we hope) for ${\wedge} E$ and ${\imp} E$, thus giving the result.
+\end{proof}
+
+\section{Admissible properties}
+The sketch proof of the previous theorem relied on transitivity of $\vdash$; namely, that the following rule is true:
+\begin{equation*}
+\infer[\mathsf{T}]{\Gamma \vdash B \true}{
+  \Gamma, A \true \vdash B \true &
+  \Gamma \vdash A \true
+}
+\end{equation*}
+This leads us naturally into a discussion of the structural properties of $\vdash$.
+
+\begin{definition}
+A deduction rule is \textit{admissible} (in \acs{IPL}) if nothing changes when it is added to the existing rules of \acs{IPL}.
+\end{definition}
+
+To be clear about which logical system we use, we may write $\vdash_{\text{IPL}}$ to denote deduction in \acs{IPL} rather than in some new logical system.
+
+The goal now is to prove that the structural rules for entailment (reflexivity, transitivity, weakening, contraction, exchange) are admissible.
+
+\begin{theorem}
+The structural properties of $\vdash_{\text{IPL}}$ are admissible.
+\end{theorem}
+\begin{proof}
+\textsf{R}, \textsf{C}, \textsf{X}: Reflexivity, contraction and exchange are all primitive notions, in that they follow instantly. For instance:
+\begin{equation*}
+\infer[{\conj} E_1]{\Gamma \vdash A \true}{
+  \infer[{\conj} I]{\Gamma \vdash A \conj A \true}{
+    \Gamma \vdash A \true
+  }
+}
+\end{equation*}
+so if we were to introduce 
+\begin{equation*}
+\infer[\mathsf{R}]{\Gamma \vdash A \true}{\Gamma \vdash A \true}
+\end{equation*}
+as a new rule, then nothing would change. (Likewise for weakening and exchange.)
+
+\textsf{W}: For weakening we use the fact that the structural rules are \emph{polymorphic} in $\Gamma$. We can thus prove that weakening is admissible by induction: if the following rules are admissible
+\begin{equation*}
+\infer{\Gamma, A \true \vdash B_1 \true}{\Gamma \vdash B_2 \true}
+\qquad \text{and} \qquad
+\infer{\Gamma, A \true \vdash B_1 \true}{\Gamma \vdash B_2 \true}
+\end{equation*}
+then we obtain
+\begin{equation*}
+\infer[{\conj} I]{\Gamma, A \true \vdash B_1 \wedge B_2 \true}{
+  \infer[\text{Ind}]{\Gamma, A \true \vdash B_1 \true}{
+    \infer[{\conj E_1}]{\Gamma \vdash B_1 \true}{\Gamma \vdash B_1 \wedge B_2 \true}
+  } & 
+  \infer[\text{Ind}]{\Gamma, A \true \vdash B_2 \true}{
+    \infer[{\conj E_2}]{\Gamma \vdash B_2 \true}{\Gamma \vdash B_1 \wedge B_2 \true}
+  }
+}
+\end{equation*}
+Likewise for the other introduction rules.
+
+\textsf{T}: The admissibility of transitivity is left as an exercise.
+\end{proof}
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
+
+\end{document}
