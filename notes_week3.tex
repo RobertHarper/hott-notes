@@ -1,0 +1,441 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper]{geometry}
+
+\input{macros}
+
+\usepackage{proof-dashed}
+\usepackage{tikz-cd}
+\usepackage{booktabs}
+
+
+
+\begin{document}
+
+\title{Week 3 Lecture Notes}
+\author{Enoch Cheung and Clive Newstead}
+\date{9/30/2013 and 10/2/2013}
+
+
+\maketitle
+
+
+\section{The $\beta$ and $\eta$ Rules}
+\subsection{Gentzen's Inversion Principles ($\beta$ rules)}
+Recall the $\beta$ rules:
+\begin{enumerate}
+\item[$\wedge_1$]$\fst\langle M,N\rangle \equiv M$
+\item[$\wedge_2$]$\snd\langle M,N\rangle \equiv N$
+\item[${\supset_1}$]$(\lambda x.M)(N)\equiv [N/x]M$
+\item[$\vee_1$]$\case(\inl(M);x.P,y.Q)\equiv [M/x]P$
+\item[$\vee_2$]$\case(\inr(M);x.P,y.Q)\equiv [M/y]Q$
+\end{enumerate}
+
+The $\beta$ rules can be expressed very compactly, and tells us that elimination rules should ``cancel out" introduction rules. The notation used here is $\inl(x)$ (inject left) to mean using the proof $x$ to prove $A$ to prove $A\vee B$, and $\inr(x)$ (inject right) to mean using the proof $x$ to prove $B$ to prove $A\vee B$. $\case(x,y,z)$ means ``if $x$, then $y$, else $z$." This also expresses the idea of dynamics of proofs, meaning that proofs can be viewed as programs.
+
+\subsection{Gentzen's Unicity Principles ($\eta$ rules)}
+Recall the $\eta$ rules we have given so far:
+
+
+\paragraph{Truth}
+\[
+\infer[\eta\top]{\Gamma\vdash M\equiv \langle \ \rangle: \top}{\Gamma\vdash M:\top}
+\]
+
+\paragraph{Conjunction}
+\[
+\infer[\eta\wedge]{\Gamma\vdash M\equiv \langle \fst(M),\snd(N)\rangle :A\wedge B }{\Gamma\vdash M:A\wedge B}
+\]
+
+\paragraph{Implication}
+\[
+\infer[\eta{\supset}]{\Gamma\vdash M\equiv \lambda x.Mx: A\supset B}{M:A\supset B}
+\]
+
+The $\eta$ rules on the other hand takes a little bit more to write out, and expresses uniqueness (up to equivalence) of proofs of certain types.
+
+The $\eta$ conjunction rule can be expressed another way:
+\[
+\infer[\eta\wedge]{\Gamma\vdash \langle P,Q\rangle\equiv M :A\wedge B }{\Gamma\vdash M:A\wedge B & \Gamma\vdash \fst(M)\equiv P:A & \Gamma\vdash \snd(M)\equiv Q:B}
+\]
+This time we give equivalent proof terms $P,Q$ to $\fst(M)$ and $\snd(N)$. This corresponds to the product diagram (where $A\wedge B$ corresponds to the product $A\times B$):
+\[
+  \begin{tikzcd}
+     {} & C \arrow[bend right]{ddl}{(\beta)}[swap]{P} \arrow[bend left]{ddr}{Q}[swap]{(\beta)}\dar[dashed]{\langle P,Q\rangle} & {} \\
+     {} & A \times B \arrow{dl}{\fst}\arrow{dr}[swap]{\snd} & {}\\
+    A & {} & B
+  \end{tikzcd}
+\]
+which says that given any object $C$ with maps $P:C\to A$ and $Q:C\to B$, there exists a unique map $\langle P,Q\rangle:C\to A\times B$ such that the $\beta$ rules make each cell commute, meaning $P\equiv \fst(\langle P,Q\rangle)$ and $Q\equiv \snd(\langle P,Q\rangle)$.
+
+The $\eta$ rule, on the other hand, gives uniqueness of the $\langle P,Q\rangle$ map, expressed as
+\[
+  \begin{tikzcd}
+     {} & C \arrow[bend right]{ddl}{(\beta)}[swap]{P} \arrow[bend left]{ddr}{Q}[swap]{(\beta)}\arrow[bend right]{d}{(\eta)}[swap]{M}\arrow[bend left]{d}{\langle P,Q\rangle} & {} \\
+     {} & A \times B \arrow{dl}{\fst}\arrow{dr}[swap]{\snd} & {}\\
+    A & {} & B
+  \end{tikzcd}
+\]
+where the $\eta$ rule maks the center cell commute, meaning that given any map $M:C\to A\times B$ such that $\fst\circ M\equiv P$ and $\snd\circ M\equiv Q$, we have $M\equiv \langle P,Q\rangle$, expressing the uniqueness of the $\langle P,Q\rangle$ map.
+
+While $\eta$ rules gives the uniqueness of the product map, one can ask whether the product object $A\times B$ is unique. In a Heyting algebra, we can show that if $A\wedge'B$ has the same properties (being a greatest lower bound of $A$ and $B$) as $A\wedge B$, then:
+\[
+A\wedge B\leq A\wedge' B \qquad A\wedge B\geq A\wedge'B
+\]
+
+If we think of them as objects, then we have maps $F:A\times B\to A\times'B$ and $G:A\times B\to A\times'B$ such that $F\circ G= \id$ and $G\circ F=\id$, which gives $A\times B\cong A\times' B$. With the Univalence axiom, we identify equivalence things as being equal, so we can say that $A\times B=A\times' B$.
+
+\subsection{$\eta$ rule for Disjunction $\vee$}
+
+We wish to give the $\eta$ rule for $\vee$, but if we were to attempt to naively define it as we did before for $M:A\vee B$, then we might force $M$ to be a proof of $A$ or $B$, because a proof of $A$ also proves $A\vee B$, but forcing proofs of $A$ or a proof of $B$ to be identified with a proof of $A\vee B$  would not make sense.
+
+We will take inspiration from Shannon expansions, specifically the concept of case analysing to give two different proofs. As a toy example, we consider a proof of $\top\vee\top$
+\begin{align*}
+\inl(\langle\ \rangle)&=\mathsf{true}	\\
+\inr(\langle\ \rangle)&=\mathsf{false}	\\
+\langle\ \rangle&:\top\vee \top	\\
+\case(M;P,Q)&= ``\text{if $M$ then $P$ else $Q$}": \top\vee\top
+\end{align*}
+where we look at the variable $M$ and decide to use $P$ or $Q$ (here $P$, $Q$ does not have an input because there is no data for proof of $\top$ anyways). The is an example of a Binary Decision Diagram (BDD), because we are making a decision when examining the variable $M$ and branching to two cases.
+
+In general, we can imagine a much bigger BDD which has many variables examined sequentially, and look at the Shannon expansion at some variable $M$ in the middle. The idea here is that $M=\textsf{true}$ and $M=\textsf{false}$ will lead to two different subtrees. We write
+\[
+[M/z]P\equiv \text{if $M$ then $[\mathsf{true}/z]P$ else $[\mathsf{false}/z]P$}
+\]
+where when we look at the variable $M$ which $P$ uses, there are two cases: the case where $M$ is true, which gives $[\mathsf{true}/z]P$ and the case where $M$ is false which gives $[\mathsf{false}/z]P$. The point is that $[\mathsf{true}/z]P$ and  $[\mathsf{false}/z]P$ do not have $M$ as a variable, so $M$ is fixed at a value.
+
+Another notation for this is
+\[
+P_z \equiv \text{if $z$ then $[\mathsf{true}/z]P$ else $[\mathsf{false}/z]P$}
+\]
+
+To write the $\eta$ rule for $\vee$, we will describe what happens when a proof $P:C$ uses a proof term $z:A\vee B$, meaning that the $C$ follows from $A\vee B$. Now suppose we have a proof $M:A\vee B$, and we want to look at what happens when we make $P:C$ include $M:A\vee B$ by doing the substitution $[M/z]P:C$.
+\[
+\infer[\eta{\vee}]{\Gamma\vdash [M/z]P\equiv \case(M;x.[\inl(x)/z]P,y.[\inr(y)/z]P):C}{\Gamma\vdash M:A\vee B & \Gamma,z:A\vee B\vdash P:C}
+\]
+
+This can be thought of as a ``generalized Shannon expansion," where the Shannon expansion can be recovered as a special case
+\[
+M\equiv \case(M;x.\inl(x);y.\inr(y))
+\]
+
+\subsection{Coproduct}
+In the category theoretical view, the disjunction $A\vee B$ corresponds to the coproduct $A+B$, with $\inl:A\to A+B$ and $\inr:B\to A+B$ being the canonical injections.
+
+To give some intuitions about the coproduct, if we were in the category of sets, we can think of $A+B=A\sqcup B=(\{0\}\times A)\cup (\{1\}\times B)$ as a disjoint union, then $\inl,\inr$ would be the canonical embeddings $\inl:a\mapsto (0,a)$ and $\inr:b\mapsto (1,b)$. If $A,B$ are already disjoint, then we can let $A+B=A\cup B$ and $\inl,\inr$ would be the inclusion maps $\inl:a\mapsto a$ and $\inr:b\mapsto b$.
+
+The $\beta$ rule for $\vee$ gives the following commutative diagram:
+\[
+\begin{tikzcd}
+A\drar{\inl}\arrow[bend right]{ddr}{(\beta)}[swap]{P}  & {} & B\dlar[swap] {\inr}\arrow[bend left]{ddl}{Q}[swap]{(\beta)}	\\
+{} & A+B\dar[dashed]{\{P,Q\}} & {}	\\
+{} & C & {}
+\end{tikzcd}
+\]
+Where given any object $C$ with maps $P:A\to C$ and $Q:B\to C$, there exists a unique map $\{P,Q\}:A+B\to C$ that is the copair of maps $P,Q$, which in our context corresponds to
+\[
+\{P,Q\} \approx \case(-;x.P,y.Q)
+\]
+
+The $\beta$ rule makes the diagram commute, meaning that the composition of maps $P \equiv  \{P,Q\}\circ \inl$ and $Q\equiv \{P,Q\}\circ \inr$. Written another way:
+\begin{align*}
+\case(\inl(-);x.P,y.Q) \equiv [-/x]P	\\
+\case(\inr(-);x.P,y.Q) \equiv [-/x]Q
+\end{align*}
+
+The $\eta$ rule expresses uniqueness, which is demonstrated by the following diagram
+\[
+\begin{tikzcd}
+A\drar{\inl}\arrow[bend right]{ddr}{(\beta)}[swap]{P}  & {} & B\dlar[swap] {\inr}\arrow[bend left]{ddl}{Q}[swap]{(\beta)}	\\
+{} & A+B\dar[bend right]{(\eta)}[swap]{M}\dar[bend left]{\{P,Q\}} & {}	\\
+{} & C & {}
+\end{tikzcd}
+\]
+where given a map $M:A+B\to C$ such that $M\circ \inl \equiv P$ and $M\circ \inr \equiv Q$, the map is in fact equivalent to $M\equiv \{P,Q\}$, so the $\eta$ rule makes the center cell commute.
+
+Just as we have done for $\eta{\wedge}$, we can rewrite the $\eta{\vee}$ rule by explicitly naming $P:Q\to C$ and $Q:B\to C$ as follows
+\[
+\inferrule*[right=$\eta{\vee}$]{\Gamma,z:A+B\vdash M:C	\\\\	\Gamma,x:A\vdash[\inl(x)/z]M\equiv P:C \\\\ \Gamma,y:B\vdash [\inr(y)/z]M\equiv Q:C}{\Gamma,z:A+B\vdash M\equiv \case(z;x.P,y.Q):C}
+\]
+
+\subsection{Definitional equality vs. Propositional equality}
+
+Our different treatments of $\beta$ rules and $\eta$ rules above suggests that there is something fundamentally different between equivalence given by $\beta$ rules and equivalence given by $\eta$ rules. Indeed, there is a distinction which we will make more clear later. For now, note that
+
+\begin{center}
+\begin{tabular}{cc  @{\qquad} cc @{\qquad} cc}
+$\beta$ rules & Analytical (``self-evident")	&  Definitional equality\\
+$\eta$ rules & Synthetic (``require proof")	&  Propositional equality
+\end{tabular}
+\end{center}
+
+The $\beta$ rules can be thought of as self-evident, or analytical, because it just says that our notation such as $\fst,\snd,\langle -,-\rangle,\inl,\inr,\case$ should behave the way we expect them to. On the other hand, the $\eta$ rules are not so obvious, and expresses the equivalence of two things that behaves the same way, so they are synthetic, or requires proof instead of being self-evident.
+
+The notion of equality produced by $\beta$ rules is called definitional equality, or judgemental equality, which is more basic. The notion of equality produced by $\eta$ rules is called propositional equality, which has to be expressed by a type (so it is typical).
+
+
+\section{Natural numbers}
+
+We'd like to capture the idea of definition by recursion. We will do so in two ways. First we will implement the natural numbers syntactically as a type, denoted $\Nat$---it is a ubiquitous example of an inductively defined type. Then we will implement the natural numbers in a category theoretic context, as a so-called \ac{NNO}, denoted $\mathbb{N}$.
+
+\subsection{Syntactic definition: $\Nat$}
+The type $\Nat$ has two introduction rules:
+\begin{equation*}
+\infer[\Nat{\text{-}}I_0]{\Gamma \vdash 0 : \Nat}{}, \qquad
+\infer[\Nat{\text{-}}I_s]{\Gamma \vdash s(M) : \Nat}{\Gamma \vdash M : \Nat}
+\end{equation*}
+and one elimination rule, which can be thought of as a \texttt{for} loop or a recursion:
+\begin{equation*}
+\infer[\Nat{\text{-}}E]{\Gamma \vdash \rec(P, x.Q)(M):A}{
+    \Gamma \vdash M : \Nat &
+    \Gamma \vdash P : A &
+    \Gamma, x : A \vdash Q : A
+}
+\end{equation*}
+We call $\rec$ the \emph{recursor}.
+
+We can think of $0$ as being zero and $s$ as being the successor operation, which takes a natural number $n$ to its successor $n+1$.
+
+The $\beta$-rules for $\Nat$ are what they `should be':
+\begin{equation*}
+\infer[\beta{\text{-}}\Nat_0]{\Gamma \vdash \rec(P,Q)(0) \equiv P : A}{\Gamma \vdash P : A & \Gamma \vdash Q : A}
+\end{equation*}
+\begin{equation*}
+\infer[\beta{\text{-}}\Nat_s]{\Gamma \vdash \rec(P,Q)(s(M)) \equiv [\rec(P,Q)(M)/x]Q : A}{\Gamma \vdash P : A & \Gamma \vdash Q : A}
+\end{equation*}
+
+The $\eta$-rule for the \acs{NNO} is somewhat ugly:
+\begin{equation*}
+\infer[\eta{\text{-}}\Nat]{
+    \Gamma, z : \Nat \vdash M \equiv \rec(P,Q)(z) : A
+}{
+    \Gamma, z : \Nat \vdash M : A
+    & \Gamma, z : \Nat \vdash [s(z)/z]M \equiv [M/x]Q
+    & \Gamma \vdash [0/z]M \equiv P : A
+}
+\end{equation*}
+It says that `if something behaves like the recursor, then it is the recursor'.
+
+Given $n \in \mathbb{N}$, define the numeral $\bar n = \underbrace{s(s(\cdots s}_{n\ \text{times}}(0) \cdots ))$. With a slight abuse of notation, the $\beta$ then tells us that
+\begin{equation*}
+\rec(P,Q)(\bar n) \equiv \underbrace{Q(Q(\cdots Q}_{n\ \text{times}}(P) \cdots))
+\end{equation*}
+That is, $\rec(P,Q)(0) \equiv P$ and $\rec(P,Q)(\overline{n+1}) \equiv Q(\rec(P,Q)(\bar n))$. This is precisely a definition by recursion.
+
+A special case of this is when $P=0$ and $Q$ is the successor operation. Then
+\begin{equation*}
+z : \Nat \vdash \rec(0,s.s(y))(z) \equiv z : \Nat
+\end{equation*}
+This is what we'd expect: if you apply the successor operation to $0$ $n$ times then what you obtain is $n$.
+
+Another consequence of the $\eta$ rule is a \emph{commuting conversion}:
+\begin{equation*}
+    \Gamma, z : \Nat \vdash [\rec(0,y.s(y))(z)/z]M \equiv \rec([0/z]M, y.[s(y)/z]M)(z)
+\end{equation*}
+This has importance for proof theory.
+
+\subsection{Category theoretic definition: NNO}
+Fix a category $\mathcal{C}$ and suppose that $\mathcal{C}$ has a terminal object $1$. A \acl{NNO} in $\mathcal{C}$ is an object $\mathbb{N}$ equipped with arrows $0 : 1 \to \mathcal{C}$ and $s : \mathcal{C} \to \mathcal{C}$ satisfying the following univeral property:
+%\begin{center}\begin{tikzpicture}[node distance=2cm]
+%  \node (1) {$1$};
+%  \node (N1) [right of=1] {$\mathbb{N}$};
+%  \node (N2) [right of=N1] {$\mathbb{N}$};
+%  \node (A1) [below of=N1] {$A$};
+%  \node (A2) [below of=N2] {$A$};
+%  \draw[->] (1) to node {$0$} (N1);
+%  \draw[->] (N1) to node {$s$} (N2);
+%  \draw[->] (1) to node {$P$} (A1);
+%  \draw[->] (A1) to node {$Q$} (A2);
+%  \draw[->, dashed] (N1) to node {${^{\exists !}}r$} (A1);
+%  \draw[->, dashed] (N2) to node {${^{\exists !}}r$} (A2);
+%\end{tikzpicture}\end{center}
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+1\rar{0}\drar[swap]{P} & \mathbb{N}\rar{s}\dar[dashed]{{\exists!}r} & \mathbb{N}\dar[dashed]{{\exists!}r}	\\
+{} & A\rar{Q} & A
+\end{tikzcd}
+\]
+
+That is, given any morphism $P : 1 \to A$ and $Q : A \to A$ there exists a unique morphism $r = \rec(P,Q) : \mathbb{N} \to A$ such that
+\begin{equation*}
+\rec(P,Q) \circ 0 = P \quad \text{and} \quad \rec(P,Q) \circ s = Q \circ \rec(P,Q)
+\end{equation*}
+These two equations correspond precisely with the $\beta$ rules for $\Nat$.
+
+The $\eta$ rule corresponds with the uniqueness: if $M : \mathbb{N} \to A$ satisfies $M \circ s = Q \circ M$ and $M \circ 0 = P$ then $M = \rec(P,Q)$.
+
+\subsubsection*{Concrete example} In the category of sets, take $\mathbb{N}$ to be the set of natural numbers. The terminal object is any singleton $\{ * \}$, and we can define $0 : \{ * \} \to \mathbb{N}$ by $0(*)=0 \in \mathbb{N}$ and $s : \mathbb{N} \to \mathbb{N}$ by $s(n)=n+1$. Then the triple $(\mathbb{N},0,s)$ defines a natural numbers object: if $P \in A$ and $Q : A \to A$ then we can define $\rec(P,Q) : \mathbb{N} \to A$ by
+$$\rec(P,Q)(0) = P \quad \text{and} \quad \rec(P,Q)(n+1)=Q(\rec(P,Q)(n))$$
+It is then clear that the above diagram commutes, and we can prove that $\rec(P,Q)$ is the unique such function by induction on its argument.
+
+\subsubsection*{\acs{NNO} as an initial algebra}
+There is an equivalent definition of a \acl{NNO} as an \emph{initial algebra}.
+
+Given an endofunctor (i.e.\ a functor $F$ from a category $\mathcal{C}$ to itself), an $F$-\emph{algebra} is a pair $(A, \alpha)$, where $A$ is an object in the category and $\alpha : F(A) \to A$ is a morphism.
+
+A \emph{homomorphism of $F$-algebras} $f : (A, \alpha) \to (B, \beta)$ is a map $f : A \to B$ making the following square commute:
+%\begin{center}\begin{tikzpicture}[node distance=2cm]
+%  \node (FA)  {$F(A)$};
+%  \node (FB) [right of=FA] {$F(B)$};
+%  \node (A) [below of=FA] {$A$};
+%  \node (B) [below of=FB] {$B$};
+%  \draw[->] (FA) to node {$\alpha$} (A);
+%  \draw[->] (FB) to node {$\beta$} (B);
+%  \draw[->] (FA) to node {$F(f)$} (FB);
+%  \draw[->] (A) to node {$f$} (B);
+%\end{tikzpicture}\end{center}
+\[
+\begin{tikzcd}[column sep=normal,row sep=large]
+F(A)\rar{F(f)}\dar{\alpha} & F(B)\dar{\beta}	\\
+A\rar{f} & B
+\end{tikzcd}
+\]
+That is, $f$ respects $\alpha$ and $\beta$ in the only way it can.
+
+An \emph{initial $F$-algebra} is an $F$-algebra $(I, \iota)$ such that given any other $F$-algebra $(A, \alpha)$ there exists a unique $F$-algebra homomorphism $(I, \iota) \to (A, \alpha)$.
+
+With these definitions in mind, a natural numbers object is precisely an initial $F$-algebra, where $F$ is the functor $1 + (-)$.
+
+To see how this functor acts on morphisms, consider the more general scenario of having morphisms $f : A \to A'$ and $g : B \to B'$. Then we have morphisms
+\begin{equation*}
+\inl \circ f : A \to A'+B' \quad \text{and} \quad \inr \circ g : B \to A' + B'
+\end{equation*}
+Then the universal property of the coproduct gives rise to a map
+\begin{equation*}
+f + g = \{ \inl \circ f, \inr \circ g \} : A+B \to A'+B'
+\end{equation*}
+
+What this means more concretely is as follows. A natural numbers object is an object $\mathbb{N}$ equipped with a morphism $\{0,s\} : 1 + \mathbb{N} \to \mathbb{N}$ such that if $\{P,Q\} : 1 + A \to A$ is another morphism then there is a unique morphism $\rec(P,Q) : \mathbb{N} \to A$ such that $\{P,Q\} \circ (1 + \rec(P,Q)) = \rec(P,Q) \circ \{ 0,s \}$.
+
+\section{Intensional and extensional equality}
+
+We can implement addition by
+\begin{equation*}
+p = \lambda x \lambda y\, \rec(x, z.s(z))(y)
+\end{equation*}
+Given numerals $\bar m$ and $\bar n$ it is clear that $p\, \bar m\, \bar n = \overline{m+n}$, so this definition does implement $+$.
+
+We could have recursed on $x$ instead of $y$. Indeed, we can define $q = \lambda x \lambda y\, pyx$.
+
+Again we can prove that $q\, \bar m\, \bar n = \overline{m+n}$, so $q$ is another implementation of addition.
+
+Despite this fact, we will not in general be able to prove
+\begin{equation*}
+x : \Nat, y : \Nat \vdash pxy \equiv qxy
+\end{equation*}
+This seems odd: for every $m, n \in \mathbb{N}$ (in the `real world') we can prove that $p\, \bar m\, \bar n = q\, \bar m\, \bar n$. If we had a principle of induction then we'd be able to deduce that $pxy=qxy$ generically. However, we have no such principle!
+
+Morally this should not be the case: that is, $p$ and $q$ are not \emph{definitionally equal}. This illustrates the distinction between \emph{intensional equality} (a.k.a.\ \emph{definitional equality}) and \emph{extensional equality}. This distinction is very important in computer science and philosophy: it captures the idea of two programmes having the same input--output behaviour but different algorithms.
+
+\textbf{Extensional equality.} We can think of the \emph{extension} of a function as being its graph, i.e.\ a set of ordered pairs of the form $(\mathsf{input},\mathsf{output})$. Two programmes may have the same input/output behaviour without being the same programme. In Frege's terminology, two types are extensionally equal if they have the same \emph{reference}.
+
+We cannot expect extensional equality to be computable; for instance, extensional equality of elements of type $(\mathbb{N} \to \mathbb{N}) \to (\mathbb{N} \to \mathbb{N})$ already has high quantifier complexity.
+
+\textbf{Intensional equality.} We can think of the \emph{intension} of a function as being its description, or an algorithm that computes the function. Thus two functions that are intensionally equal must be extensionally equal, but the converse is not true. Intensional equality is synthetic. In Frege's terminology, two types are intensionally equal if they have the same \emph{sense}.
+
+\subsection{Equality in type theory}
+Recall Martin--L\"{o}f's distinction between judgements and propositions. With this in mind:
+\begin{itemize}
+\item Intensional equality is an inductively defined judgement;
+\item Extensional equality is a proposition: it may be subject to judgement.
+\end{itemize}
+For example, the following is a proposition:
+\begin{equation*}
+pxy =_{\Nat} qxy
+\end{equation*}
+It requires proof. We will attempt to develop a way of saying that, to prove this, it is sufficient to prove for each $m,n \in \mathbb{N}$ that $p\, \bar m\, \bar n = q\, \bar m\, \bar n$.
+
+Under our propositions-as-types correspondence, we conclude that extensional equality `is' a family of types. For instance,
+\begin{equation} \label{eq:equalityAsType}
+x : \Nat, y : \Nat \vdash x =_{\Nat} y \type
+\end{equation}
+We'll write the type $x =_{\Nat} y$ as $\Id{\Nat}(x,y)$ to emphasise that we really want to think of it as a type and not a proposition.
+
+Instantiating by substitution from \ref{eq:equalityAsType} gives
+\begin{equation*}
+\infer{\Gamma \vdash \Id{\Nat}(M,N) \type}{\Gamma \vdash M : \Nat & \Gamma \vdash N : \Nat}
+\end{equation*}
+But we needn't stop at $\Nat$; we may replace it by an arbitrary type $A$ (which may itself---usefully---be an identity type!). For instance, given $x : \Nat$ we may obtain a new type $\Seq(x)$, which can be thought of as the sequences of $\Nat$s of length $x$:
+\begin{equation*}
+\infer{\Gamma \vdash \Seq(x) : \type}{\Gamma \vdash x : \Nat}
+\end{equation*}
+Observe the following fact: given $m,n \in \mathbb{N}$, it is true that
+\begin{equation*}
+\Seq(p\, \bar m\, \bar n) \equiv \Seq(q\, \bar m\, \bar n)
+\end{equation*}
+because $p\, \bar m\, \bar n \equiv q\, \bar m\, \bar n$. However we cannot generalise to
+\begin{equation*}
+\Seq(pxy) \equiv \Seq(qyx)
+\end{equation*}
+because $\Seq(pxy)$ and $\Seq(qyx)$ are not definitionally equivalent.
+But they \emph{are} related in some way. Later, we will come to define what we mean by `related' here. A good guess might be along the lines of `isomorphism', but this will turn out to be far too strong. What we need is some kind of `equivalence'. This equivalence will tie itself to both the notion of a homotopy and that of a categorical equivalence.
+
+\section{Dependent types: setup}
+
+Dependent types are \emph{families} of types. Atomic judgements are of the form
+\begin{alignat*}{2}
+& \text{contexts / closed types:} && \Gamma \context \\
+&&& \Gamma \equiv \Gamma' \\
+& \text{open types / families of types:} \hspace{10pt} && \Gamma \vdash A \type \\
+&&& \Gamma \vdash A \equiv A' \\
+& \text{elements of types:} && \Gamma \vdash M : A \\
+&&& \Gamma \vdash M \equiv M' : A
+\end{alignat*}
+The symbol $\equiv$ denotes what we will interpret as \emph{definitional equality}. We denote the \emph{empty context} by $\cdot$ when we need to. The introduction rules for contexts are:
+\begin{equation*}
+\infer{\cdot \context}{}
+\hspace{50pt}
+\infer{\Gamma, x:A \context}{\Gamma \context & \Gamma \vdash A \type}
+\end{equation*}
+Thus we have some notion of \emph{dependence}; it allows us to make sense of expressions like $x : \Nat, y : \Seq(x) \vdash \cdots$, which was impossible before.
+\begin{equation*}
+\infer{\cdot \equiv \cdot \context}{}
+\hspace{50pt}
+\infer{\Gamma, x : A \equiv \Gamma', x : A'}{\Gamma \equiv \Gamma' & \Gamma \vdash A \equiv A'}
+\end{equation*}
+The following rule corresponds with reflexivity:
+\begin{equation*}
+\infer{\Gamma, x:A, \Delta \vdash x:A}{}
+\end{equation*}
+The following rules (one for each judgement $J$) correspond with weakening:
+\begin{equation*}
+\infer{\Gamma, x:A, \Delta \vdash J}{\Gamma, \Delta \vdash J & \Gamma \vdash A \type}
+\end{equation*}
+
+\textbf{Exercise.} What are the corresponding rules for exchange and contraction?
+
+The following rule, called \emph{substitution} or \emph{instantiation}, corresponds with transitivity:
+\begin{equation*}
+\infer{\Gamma[M/x]\Delta \vdash [M/x]J}{\Gamma, x:A, \Delta \vdash J & \Gamma \vdash M : A}
+\end{equation*}
+
+The following rules together are called \emph{functionality}
+\begin{equation*}
+\infer{\Gamma [M/x] \Delta \vdash [M/x]N \equiv [M'/x]N : [M/x]B}{\Gamma, x:A, \Delta \vdash N:B & \Gamma \vdash M \equiv M' : A}
+\end{equation*}
+\begin{equation*}
+\infer{\Gamma [M/x] \Delta \vdash [M/x]B \equiv [M'/x]B}{\Gamma, x:A, \Delta \vdash B \type & \Gamma \vdash M \equiv M' : A}
+\end{equation*}
+Finally, the following rules are \emph{type equality}, which tell us that definitionally equal types classify the same things:
+\begin{equation*}
+\infer{\Gamma \vdash M : A'}{\Gamma \vdash M:A & \Gamma \vdash A \equiv A'} \hspace{50pt}
+\infer{\Gamma \vdash M \equiv M' : A}{\Gamma \vdash M \equiv M' : A & \Gamma \vdash A \equiv A'}
+\end{equation*}
+
+%%% REFERENCES APPEAR HERE %%%
+
+\subsection*{Identity types}
+Given a type $A$ and elements $M:A$ and $N:A$ we can form an \emph{identity type} $\Id{A}(M,N)$. The formation rule for $\Id{}$ is thus:
+\begin{equation*}
+\infer[\Id{}\text{-}F]{\Gamma \vdash \Id{A}(M,N)}{\Gamma \vdash A \type & \Gamma \vdash M : A & \Gamma \vdash N : A}
+\end{equation*}
+It will be useful in \acs{HoTT} to consider the case when $A$ is itself an identity type, i.e. we have the type
+$$\Id{\Id{A}(A,B)}(\alpha, \beta)$$
+This extends to any (finite) dimension.
+
+We also have an $\Id{}$-introduction rule, which tells us that any element $M$ of a type $A$ is in some way `related' to itself. Formally:
+\begin{equation*}
+\infer[\Id{}\text{-}I]{\Gamma \vdash \refl{A}(M) : \Id{A}(M,M)}{\Gamma \vdash A : M}
+\end{equation*}
+
+$\Id{}$-elimination will follow next week.
+\end{document}

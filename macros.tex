@@ -24,6 +24,7 @@
 \newacronym{LEM}{LEM}{law of the excluded middle}
 \newacronym{ITT}{ITT}{intensional type theory}
 \newacronym{ETT}{ETT}{extensional type theory}
+\newacronym{NNO}{NNO}{natural numbers object}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fancy page style
@@ -69,6 +70,8 @@
 }
 \newcommand*{\prop}{\postfixjudgment{prop}}
 \newcommand*{\true}{\postfixjudgment{true}}
+\newcommand*{\type}{\postfixjudgment{type}}
+\newcommand*{\context}{\postfixjudgment{ctx}}
 
 
 \newcommand*{\truth}{\top}
@@ -102,3 +105,18 @@
 }
 %%% Transport (covariant)
 \newcommand{\trans}[2]{\ensuremath{{#1}_{*}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
+% Natural numbers objects
+\newcommand{\Nat}{\mathsf{Nat}}
+\newcommand{\rec}{\ensuremath{\mathsf{rec}}\xspace}
+% Sequence
+\newcommand{\Seq}{\ensuremath{\mathsf{Seq}}\xspace}
+% Identity type
+\newcommand{\Id}[1]{\ensuremath{\mathsf{Id}_{#1}}\xspace}
+% Reflection
+\newcommand{\refl}[1]{\ensuremath{\mathsf{refl}_{#1}}\xspace}
+
+% fst,snd,case,id
+\renewcommand*{\fst}{\textsf{fst}}
+\renewcommand*{\snd}{\textsf{snd}}
+\DeclareMathOperator{\case}{\textsf{case}}
+\newcommand*{\id}{\textsf{id}}
