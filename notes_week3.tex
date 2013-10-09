@@ -227,11 +227,13 @@ z : \Nat \vdash \rec(0,s.s(y))(z) \equiv z : \Nat
 \end{equation*}
 This is what we'd expect: if you apply the successor operation to $0$ $n$ times then what you obtain is $n$.
 
+\begin{comment}
 Another consequence of the $\eta$ rule is a \emph{commuting conversion}:
 \begin{equation*}
     \Gamma, z : \Nat \vdash [\rec(0,y.s(y))(z)/z]M \equiv \rec([0/z]M, y.[s(y)/z]M)(z)
 \end{equation*}
 This has importance for proof theory.
+\end{comment}
 
 \subsection{Category theoretic definition: NNO}
 Fix a category $\mathcal{C}$ and suppose that $\mathcal{C}$ has a terminal object $1$. A \acl{NNO} in $\mathcal{C}$ is an object $\mathbb{N}$ equipped with arrows $0 : 1 \to \mathcal{C}$ and $s : \mathcal{C} \to \mathcal{C}$ satisfying the following univeral property:
