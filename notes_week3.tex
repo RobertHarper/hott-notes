@@ -6,7 +6,7 @@
 \usepackage{proof-dashed}
 \usepackage{tikz-cd}
 \usepackage{booktabs}
-
+\usepackage{amsmath}
 
 
 \begin{document}
@@ -22,13 +22,13 @@
 \section{The $\beta$ and $\eta$ Rules}
 \subsection{Gentzen's Inversion Principles ($\beta$ rules)}
 Recall the $\beta$ rules:
-\begin{enumerate}
-\item[$\wedge_1$]$\fst\langle M,N\rangle \equiv M$
-\item[$\wedge_2$]$\snd\langle M,N\rangle \equiv N$
-\item[${\supset_1}$]$(\lambda x.M)(N)\equiv [N/x]M$
-\item[$\vee_1$]$\case(\inl(M);x.P,y.Q)\equiv [M/x]P$
-\item[$\vee_2$]$\case(\inr(M);x.P,y.Q)\equiv [M/y]Q$
-\end{enumerate}
+\begin{align*}
+  \wedge_1 & : \fst\langle M,N\rangle \equiv M \\
+  \wedge_2 & : \snd\langle M,N\rangle \equiv N  \\
+  \supset_1 & : (\lambda x.M)(N)\equiv [N/x]M \\
+  \vee_1 & : \case(\inl(M);x.P,y.Q)\equiv [M/x]P \\
+  \vee_2 & : \case(\inr(M);x.P,y.Q)\equiv [M/y]Q 
+\end{align*}
 
 The $\beta$ rules can be expressed very compactly, and tells us that elimination rules should ``cancel out" introduction rules. The notation used here is $\inl(x)$ (inject left) to mean using the proof $x$ to prove $A$ to prove $A\vee B$, and $\inr(x)$ (inject right) to mean using the proof $x$ to prove $B$ to prove $A\vee B$. $\case(x,y,z)$ means ``if $x$, then $y$, else $z$." This also expresses the idea of dynamics of proofs, meaning that proofs can be viewed as programs.
 
