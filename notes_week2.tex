@@ -1,0 +1,501 @@
+% arara: pdflatex
+% arara: bibtex
+% arara: pdflatex
+% arara: pdflatex
+\documentclass[12pt]{article}
+
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{booktabs}
+
+% Package for customizing page layout
+\usepackage[letterpaper]{geometry}
+% \usepackage{fullpage}
+
+\input{macros}
+
+\usepackage{proof-dashed}
+\usepackage{tikz-cd}
+\usepackage[acronym,shortcuts]{glossaries}
+
+\metadata{C.~Newstead, E.~Cheung}{2013/09/16, 2013/09/18}
+
+% for url in bib entries
+\usepackage{url}
+
+% for theorems, lemmas, etc
+\newenvironment{theorem}[1][Theorem.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{lemma}[1][Lemma.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{corollary}[1][Corollary.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition.]{\begin{trivlist}\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+% \usepackage{parskip}
+% \setlength{\parskip}{0.1cm}
+% \setlength{\parindent}{0mm}
+
+% package to customize three basic list environments: enumerate, itemize and description.
+\usepackage{enumitem}
+\setitemize{noitemsep, topsep=0pt, leftmargin=*}
+\setenumerate{noitemsep, topsep=0pt, leftmargin=*}
+\setdescription{noitemsep, topsep=0pt, leftmargin=*}
+
+\newacronym{DP}{DP}{disjunction property}
+
+
+
+\begin{document}
+
+\title{15-819 Homotopy Type Theory\\ Week 2 Lecture Notes}
+\author{Clive Newstead and Enoch Cheung}
+\date{9/16/2013 and 9/18/2013}
+
+\maketitle
+
+\section*{Foreword}
+
+These will undergo substantial revision and expansion in the coming week.
+
+Recall from last time that we can think of the judgement $A \true$ as meaning `$A$ has a proof' and of $A \postfixjudgment{false}$ as `$A$ has a refutation', or equivalently `$\neg A$ has a proof'. These atomic judgements give rise to hypothetical judgements of the form
+$$A_1 \true, A_2 \true, \dots, A_n \true \vdash A \true$$
+The inference rules of \acl{IPL} then give rise to the structure of a Heyting algebra, called the \emph{Lindenbaum algebra}.
+
+\section{Lindenbaum algebras}
+
+Recall that \acs{IPL} has the structure of a preorder, where we declare $A \le B$ if and only if $A \true \vdash B \true$. Let $T$ be some theory in \acl{IPL} and define a relation $\simeq$ on the propositions in $T$ by
+\begin{equation*}
+A \simeq B \quad \text{if and only if} \quad A \le B\ \text{and}\ B \le A
+\end{equation*}
+
+The fact that $\simeq$ is an equivalence relation follows from the more general fact if $(P, \le)$ is a preorder and a relation $\equiv$ is defined on $P$ by declaring $p \equiv q$ if and only if $p \le q$ and $q \le p$, then $\equiv$ is an equivalence relation on $P$.
+
+\begin{definition}
+The \vocab{Lindenbaum algebra} of $T$ is defined to be the collection of $\simeq$-equivalence classes of propositions in $T$. Write $A^* = [A]_{\simeq}$. The ordering on the Lindenbaum algebra is inherited from $\le$.
+\end{definition}
+
+%% [COMMENT_CN]: Reword the following theorem
+\begin{theorem}
+The judgement $\Gamma \vdash A \true$ holds if and only if $\Gamma^* \vdash A^*$ holds in every Heyting algebra.
+\end{theorem}
+\begin{proof}
+Exercise.
+\end{proof}
+
+\section{Decidability and stability}
+
+\begin{definition}
+$A \prop$ is \emph{decidable} if and only if $A \disj \neg A \true$.
+\end{definition}
+
+Decidability is what separates constructuve logic from classical logic: in classical logic, every proposition is decidable (this is precisely the \acl{LEM}), but in constructive logic, this is not so.
+
+A sensible first question to ask might be: `do decidable propositions exist?' Fortunately, the answer is affirmative.
+\begin{itemize}
+\item $\top$ and $\bot$ are decidable propositions;
+\item We would expect $m =_{\mathbb{N}} n$ to be a decidable proposition, where $=_{\mathbb{N}}$ denotes equality on the natural numbers;
+\item We would \emph{not} expect $x =_{\mathbb{R}} y$ to be a decidable proposition, where $=_{\mathbb{R}}$ denotes equality on the real numbers, because real numbers are not finite objects.
+\end{itemize}
+
+\begin{definition}
+$A \prop$ is \emph{stable} if and only if $(\neg \neg A) \imp A \true$.
+\end{definition}
+
+Again, in classical logic, every proposition is stable; in fact, the proposition $(\neg \neg A) \imp A \true$ is often taken as an axiom of treatments of classical propositional logic! A natural question to ask now is `do there exist unstable propositions?' Consider the following lemma.
+\begin{lemma}
+$\neg \neg (A \disj \neg A) \true$
+\end{lemma}
+\begin{proof}
+We must show $\neg (A \disj \neg A) \imp \bot \true$.
+
+Suppose $A \true$. We then have
+\begin{equation*}
+  \infer{\bot}{
+    \infer[{\disj}I_1]{A \vee \neg A \true}{A \true} &
+    \neg ( A \vee \neg A ) \true
+  }
+\end{equation*}
+
+So in fact $\neg A \true$. But then once again
+\begin{equation*}
+  \infer{\bot}{
+    \infer[{\disj} I_2]{A \vee \neg A \true}{\neg A \true} &
+    \neg (A \vee \neg A \true)
+  }
+\end{equation*}
+
+Hence
+\begin{equation*}
+  \infer[{\imp} I]{\neg (A \disj \neg A) \imp \bot \true}{\neg (A \disj \neg A) \true \vdash \bot}
+\end{equation*}
+\end{proof}
+
+We can think of this lemma as saying that `the \acl{LEM} is not refutable'. Presuming that there exist undecidable propositions, we obtain the following corollary.
+
+\begin{corollary}
+In \acl{IPL}, not every proposition is stable.
+\end{corollary}
+
+\section{Disjunction property}
+A theory $T$ has the \emph{\ac{DP}} if $T \vdash A \vee B$ implies $T \vdash A$ or $T \vdash B$.
+
+\begin{theorem} \label{thm:dp}
+In \acs{IPL}, if $\varnothing \vdash A \disj B \true$ then $\varnothing \vdash A \true$ or $\varnothing \vdash B \true$.
+\end{theorem}
+
+\begin{proof}[Na\"{i}ve attempt at proof.]
+The idea is to perform induction on all possible derivations $\nabla$ of $\varnothing \vdash A \disj B \true$, with the hope that somewhere along the line we'll find a derivation of $A \true$ or of $B\ true$. Our induction hypothesis is that inside $\nabla$ is enough information to deduce either $\varnothing \vdash A \true$ or $\varnothing \vdash B \true$.
+
+Since $\varnothing \vdash A \vee B \true$ cannot be obtained by assumption or from the rules, ${\conj} I$, ${\imp} I$ or ${\top} I$, we need only consider ${\disj} I_1$, ${\disj} I_2$ and the elimination rules.
+
+If $\varnothing \vdash A \vee B \true$ is obtained from ${\disj} I_1$ then
+\begin{equation*}
+  \infer[{\disj} I_1]{\varnothing \vdash A \vee B \true}{
+    \infer{A \true}{\nabla}
+  }
+\end{equation*}
+so there is a derivation $\nabla$ of $A \true$ and we're done. Likewise if $\varnothing \vdash A \vee B \true$ is obtained from ${\disj} I_2$ then there is a derivation of $B \true$.
+
+If $\varnothing \vdash A \vee B \true$ is obtained from ${\imp} E$ then the deduction takes the form
+\begin{equation*}
+  \infer[{\imp} E]{\varnothing \vdash A \vee B \true}{
+    \infer{\varnothing \vdash C \imp (A \vee B) \true}{\nabla_1} &
+    \infer{\varnothing \vdash C \true}{\nabla_2}
+  }
+\end{equation*}
+We (dubiously\footnote{In fact, this `dubious' assumption is true in constructive logic.}) assume that $\vdash C \imp (A \vee B) \true$ must have been derived in some way from $C \true \vdash (A \vee B) \true$. Suppose that this happens and that $\nabla'_1$ is a deduction of $C \true \vdash (A \vee B) \true$. We can then `substitute' $\nabla_2$ for all the occurrences of the assumption $C \true$ appearing in $\nabla'_1$ to obtain a smaller derivation $\nabla_3$ of $\varnothing \vdash A \vee B \true$. Our induction hypothesis then gives us that inside $\nabla_3$ is enough information to deduce $\varnothing \vdash A \true$ or $\varnothing \vdash B \true$.
+
+A similar approach works (we hope) for ${\wedge} E$ and ${\imp} E$, thus giving the result.
+\end{proof}
+
+\section{Admissible properties}
+The sketch proof of the previous theorem relied on transitivity of $\vdash$; namely, that the following rule is true:
+\begin{equation*}
+\infer[\mathsf{T}]{\Gamma \vdash B \true}{
+  \Gamma, A \true \vdash B \true &
+  \Gamma \vdash A \true
+}
+\end{equation*}
+This leads us naturally into a discussion of the structural properties of $\vdash$.
+
+\begin{definition}
+A deduction rule is \textit{admissible} (in \acs{IPL}) if nothing changes when it is added to the existing rules of \acs{IPL}.
+\end{definition}
+
+To be clear about which logical system we use, we may write $\vdash_{\text{IPL}}$ to denote deduction in \acs{IPL} rather than in some new logical system.
+
+The goal now is to prove that the structural rules for entailment (reflexivity, transitivity, weakening, contraction, exchange) are admissible.
+
+\begin{theorem}
+The structural properties of $\vdash_{\text{IPL}}$ are admissible.
+\end{theorem}
+\begin{proof}
+\textsf{R}, \textsf{C}, \textsf{X}: Reflexivity, contraction and exchange are all primitive notions, in that they follow instantly. For instance:
+\begin{equation*}
+\infer[{\conj} E_1]{\Gamma \vdash A \true}{
+  \infer[{\conj} I]{\Gamma \vdash A \conj A \true}{
+    \Gamma \vdash A \true
+  }
+}
+\end{equation*}
+so if we were to introduce 
+\begin{equation*}
+\infer[\mathsf{R}]{\Gamma \vdash A \true}{\Gamma \vdash A \true}
+\end{equation*}
+as a new rule, then nothing would change. (Likewise for contraction and exchange.)
+
+\textsf{W}: For weakening we use the fact that the structural rules are \emph{polymorphic} in $\Gamma$. We can thus prove that weakening is admissible by induction: if the following rules are admissible
+\begin{equation*}
+\infer{\Gamma, A \true \vdash B_1 \true}{\Gamma \vdash B_2 \true}
+\qquad \text{and} \qquad
+\infer{\Gamma, A \true \vdash B_1 \true}{\Gamma \vdash B_2 \true}
+\end{equation*}
+then we obtain
+\begin{equation*}
+\infer[{\conj} I]{\Gamma, A \true \vdash B_1 \wedge B_2 \true}{
+  \infer[\text{Ind}]{\Gamma, A \true \vdash B_1 \true}{
+    \infer[{\conj E_1}]{\Gamma \vdash B_1 \true}{\Gamma \vdash B_1 \wedge B_2 \true}
+  } & 
+  \infer[\text{Ind}]{\Gamma, A \true \vdash B_2 \true}{
+    \infer[{\conj E_2}]{\Gamma \vdash B_2 \true}{\Gamma \vdash B_1 \wedge B_2 \true}
+  }
+}
+\end{equation*}
+Likewise for the other introduction rules.
+
+\textsf{T}: The admissibility of transitivity is left as an exercise.
+\end{proof}
+
+
+
+\section{Proof Terms}
+
+We wish to study propositions along with their proof as mathematical objects. In the type theoretic framework, we can use the notation $M:A$ where $A$ is a proposition and $M$ is a proof of $A$. We will see that this corresponds to the category theoretic notion of a mapping $M:A\to B$. Another important notion is  the identity of proofs, which will be denoted $M\equiv N:A$ where $M,N$ are equivalent proofs of $A$. This will correspond in the category theoretic contex to two maps form $A$ to $B$ being equal $M=N:A\to B$.
+
+\subsection{Proof Terms as Variables}
+
+We can combine the idea of keeping track of proofs with our previous notion of entailment. If $A_1,\dots,A_n$ entails $A$, meaning that $A_1,\dots, A_n\vdash A$, there will be a proof $M$ of $A$ that uses the propositions $A_1,\dots,A_n$. Thus, we will write
+\[
+x_1:A_1,\dots, x_n:A_n \vdash M:A
+\] 
+where each $x_i:A_i$ is a proof term. We can think of the proof terms $x_1,\dots,x_n$ as hypothesise for the proof, but what we really want is for them to behave as variables. $M$ then uses the variables $x_1,\dots,x_n$ to prove $A$, so $M$ would encapsulate the grammar a proof that uses variables $x_1,\dots,x_n$.
+
+
+
+
+Instead of proving a proposition $A$ from nothing, most of the time $A$ will rely on other propositions $A_1,\dots, A_n$.
+
+\subsection{Structural Properties of Entailment with Proof Terms}
+
+Now that we have proof terms, we can see how they act as variables by examining their interaction with the structural properties of entailment. We will also keep track of other assumptions/context $\Gamma,\Gamma'$ to demonstrate that the structural properties will hold in the presence of assumptions.
+
+\paragraph{Reflexivity / Variables Rule}
+Reflexivity tells us that $A$ should entail $A$, so now that we have a variable $x:A$ that proves $A$, the variable should be carried through. We can think of this as the variables rule.
+\begin{equation*}
+  \infer[\text{\textsf{R/V}}]{\Gamma, x:A,\Gamma' \entails x:A}{
+    } \,
+\end{equation*}
+
+
+\paragraph{Transitivity / Substitution}
+Transitivity tells us that if $A$ is true and $B$ follows from $A$, then $B$ is true. In terms of proofs, if we have a proof $N:A$ and a proof $N:B$ which uses a variable $x$ that is supposed to prove $A$, then we can substitute the proof $M:A$ into $N:B$ to prove $B$. Since we are substituting $M$ into $x$ inside $N$, we denote this substitution $[M/x]N:B$.
+\begin{equation*}
+  \infer[\text{\textsf{T/S}}]{\Gamma,\Gamma'\entails [M/x]N:B}{
+    \Gamma,x:A,\Gamma' \entails N:B &
+    \Gamma \entails A}
+\end{equation*}
+
+\paragraph{Weakening}
+\begin{equation*}
+  \infer[\text{\textsf{W}}]{\Gamma,\Gamma' \entails M:A}{
+    \Gamma \entails M:A}
+\end{equation*}
+
+\paragraph{Contraction}
+If $N:B$ follows from $A$ using two different proofs $x:A, y:A$ for $A$, can just pick one $z=x$ or $z=y$ as the proof of $z:A$ and use it in the instances of variables $x,y$ in $N:B$
+\begin{equation*}
+  \infer[\text{\textsf{C}}]{\Gamma,z:A,\Gamma' \entails [z,z/x,y]N:B}{
+  \Gamma,x:A,y:A,\Gamma'\entails N:B}
+\end{equation*}
+
+\paragraph{Exchange}
+\begin{equation*}
+  \infer[\text{\textsf{X}}]{\Gamma,y:B,x:A,\Gamma' \entails N:C}{
+  \Gamma,x:A,y:B,\Gamma'\entails N:C}
+\end{equation*}
+
+\subsection{Negative Fragment of IPL with Proof Terms}
+
+We want to look at what happens to the Negative Fragment of IPL when we consider proof terms. Here are the important ones:
+
+\paragraph{Truth Introduction} Truth is trivially true, so we have
+\begin{equation*}
+  \infer[\top I]{\Gamma\entails \langle\ \rangle:\top}{
+  }
+\end{equation*}
+
+\paragraph{Conjunction Introduction} We combine the proofs $M:A$ and $N:B$ into $\langle M,N\rangle : A\wedge B$
+\begin{equation*}
+  \infer[\wedge I]{\Gamma\entails \langle M,N \rangle:A\wedge B}{
+  \Gamma\entails M:A
+  & \Gamma\entails N:B}
+\end{equation*}
+
+\paragraph{Conjunction Elimination} We can recover from a proof $M:A\wedge B$ proofs of $A$ and $B$
+\begin{mathpar}
+  \infer[\wedge E_1]{\Gamma\entails \operatorname{fst}(M):A}{
+	\Gamma\entails M:A\wedge B}
+\and
+	\infer[\wedge E_2]{\Gamma\entails \operatorname{snd}(M):B}{\Gamma\entails M:A\wedge B}
+\end{mathpar}
+
+\paragraph{Implication Introduction} If we have a proof $M:B$ that uses $x:A$ as a variable, then we can consider $\lambda x.M$ as a function that maps $x$ a variable to a proof of B that uses $x$, which proves that $B\supset A$
+\begin{equation*}
+  \infer[{\supset} I]{\Gamma \entails \lambda x.M:A\supset B}{\Gamma,x:A \entails M:B}
+\end{equation*}
+
+\paragraph{Implication Elimination} By applying an actual proof $N:A$ to the function described above, we obtain a proof $M(N):B$
+\begin{equation*}
+  \infer[{\supset} E]{\Gamma \entails M(N):B}{\Gamma \entails M:A\supset B & \Gamma\entails N:A}
+\end{equation*}
+
+\section{Identity of Proofs}
+
+\subsection{Definitional Equality}
+
+We want to think about when two proofs $M:A$ and $M':A$ are the same. We will introduce an equivalence relation called \emph{definitional equality} that respects the proof rules, denoted $M\equiv M':A$. We want definitional equality $\equiv$ to be the least congruence containing (closed under) the $\beta$ rules. We will define what this means:
+
+A \emph{congruence} is an equivalence relation that respects our operators. Being an equivalence relation that it is reflexive ($M\equiv M:A$), symmetric ($M\equiv N:A$ implies that $N\equiv M:A$), and transitive ($M\equiv N:A$ and $N\equiv M':A$ implies that $M\equiv M':A$).
+
+For the equivalence relation to respect our operators basically means that if $M\equiv M':A$, then that their image under any operator should be equivalent. In other words, we should be able to replace $M$ with $M'$ everywhere. For example
+\[
+\infer[]{\Gamma\entails \operatorname{fst}(M)\equiv\operatorname{fst}(M'):A}{\Gamma \entails M\equiv M':A\wedge B}
+\]
+
+There can be many congruences that contains the $\beta$ rules. Given two congruences $\equiv$ and $\equiv'$, we say $\equiv$ is finer than $\equiv'$ if ${{M\equiv' N}:A}$ implies that $M\equiv N:A$. The least congruence that contains the proof rules is the finest congruence that contains the $\beta$ rules. We will define the $\beta$ rules in the next section.
+
+We will give a more explicit definition to definitional equality later.
+
+\subsection{Gentzen's Inversion Principle}
+
+Gentzen's Inversion Principle captures the idea that ``elim is post-inverse to intro," which is the informal notion that the elimination rules should cancel the introduction rules, modulo definitional equality. The following are the $\beta$ rules for the negative fragment of IPL:
+
+\paragraph{Conjunction}
+When we introduce a conjunction, we combine proofs $M:A$ and $N:B$ to produce a proof $\langle M,N\rangle :A\wedge B$. When we eliminate a conjunction, we retrieve $M:A$ or $N:B$. We do not want this process to alter our original $M$ or $N$
+\[
+\infer[\beta\wedge_1]{\Gamma\vdash \operatorname{fst}(\langle M,N\rangle)\equiv M:A}{\Gamma\vdash M:A & \Gamma\vdash N:B}
+\]
+
+\[
+\infer[\beta\wedge_2]{\Gamma\vdash \operatorname{snd}(\langle M,N\rangle)\equiv N:A}{\Gamma\vdash M:A & \Gamma\vdash N:B}
+\]
+
+\paragraph{Implication}
+When we introduce an implication, we convert a proof $M:B$ which uses some variable $x:A$ to a function which uses a variable $x$ to produce a proof of $B$. When we eliminate implication, we apply the proof of $A\supset B$ to $N:A$ to produce a proof of $B$.
+\[
+\infer[\beta{\supset}]{\Gamma\vdash(\lambda x.M)(N)\equiv [N/x]M:B}{\Gamma,x:A\vdash M:B & \Gamma\vdash N:A}
+\]
+
+\subsection{Gentzen's Unicity Principle}
+
+Gentzen's Unicity Princples on the other hand captures the idea that ``intro is post-inverse to elim.'' Another way to think about it is that there should be only one way modulo definitional equivalence to prove something, which is the way we have described. They are the $\eta$ rules, which are the following
+
+\paragraph{Truth}
+\[
+\infer[\eta\top]{\Gamma\vdash M\equiv \langle \ \rangle: \top}{\Gamma\vdash M:\top}
+\]
+
+\paragraph{Conjunction}
+\[
+\infer[\eta\wedge]{\Gamma\vdash M\equiv \langle \operatorname{fst}(M),\operatorname{snd}(N)\rangle :A\wedge B }{\Gamma\vdash M:A\wedge B}
+\]
+
+\paragraph{Implication}
+\[
+\infer[\eta{\supset}]{\Gamma\vdash M\equiv \lambda x.Mx: A\supset B}{M:A\supset B}
+\]
+
+\section{Proposition as Types}
+
+
+
+There is a correspondence between propositions and types:
+\begin{center}
+  \begin{tabular}{@{} cc @{}}
+    \toprule
+    Propositions & Types \\ 
+    \midrule
+    $\top$ & $1$ \\ 
+    $A\wedge B$ & $A\times B$ \\ 
+    $A\supset B$ & function $A\to B$ or $B^A$ \\ 
+    $\bot$ & $0$ \\ 
+    $A\vee B$ & $A+B$\\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+For now, note that meets like $\top$ and $A\wedge B$ corresponds to products like $1$ and $A\times B$, and joins like $\bot$ and $A\vee B$ corresponds to coproducts like $0$ and $A+B$. This correspondence should become more apparent as we go along. We will now introduce the objects on the right column.
+
+
+\section{Category Theoretic Approach}
+
+In a Heyting Algebra, we have a preorder $A\leq B$ when $A$ implies $B$. However, we now wish to keep track of proofs, so if $M$ is a proof from $A$ to $B$, we want to think of it as a map $M:A\to B$.
+
+\paragraph{Identity} There should be an identity map
+\[
+\operatorname{id}:A\to A
+\]
+
+\paragraph{Composition} We should be able to compose maps
+\[
+\infer[]{f\circ g:A\to B}{g:B\to C & f:A\to B}
+\]
+
+\paragraph{Coherence Conditions} The identity map and composition of maps should behave like functions
+\begin{align*}
+\operatorname{id}_B\circ f &=f:A\to B	\\
+f\circ \operatorname{id}_A &=f:A\to B	\\
+f\circ(g\circ h) &= (f\circ g)\circ h: A\to D
+\end{align*}
+
+Now we can think about objects in the category that corresponds to propostions given in the correspondence.
+
+\paragraph{Terminal Object}
+$1$ is the terminal object, also called the final object, which corresponds to $\top$. For any object $A$ there is a unique map $A\to 1$. This corresponds to $\top$ being the the greatest object in a Heyting Algebra, meaning that for all $A$, $A\leq 1$).
+
+Existence:
+\[
+\langle \ \rangle:A\to 1
+\]
+
+Uniqueness:
+\[
+\infer[\eta\top]{M=\langle \ \rangle:A\to 1}{M:A\to 1}
+\]
+
+\paragraph{Product} For any objects $A$ and $B$ there is an object $C=A\times B$ that is the \emph{product} of $A$ and $B$, which corresponds to the join $A\wedge B$. The product $A\times B$ has the following universal property:
+\begin{equation*}
+  \begin{tikzcd}
+    {} & D \arrow[bend right]{ddl}[swap]{M} \arrow[bend left]{ddr}{N}\dar[dashed]{\langle M,N\rangle} & {} \\
+    {} & A \times B \dlar{\text{fst}}\drar[swap]{\text{snd}} & {} \\
+    A & {} & B
+  \end{tikzcd}
+\end{equation*}
+where the diagram commutes.
+
+First, the existence condition means that there are maps
+\begin{align*}
+\operatorname{fst}&:A\times B\to A	\\
+\operatorname{snd}&:A\times B\to B
+\end{align*}
+
+The universal property says that for every object $D$ such that $M:D\to A$ and $N:D\to B$, there exists a unique map $\langle M,N\rangle: D\to A\times B$ such that
+\[
+\infer[]{\langle M,N\rangle: D\to A\times B}{M:D\to A & N:D\to B}
+\]
+and the diagram communtes meaning
+\begin{align*}
+\operatorname{fst}\circ\langle M,N\rangle = M:D\to A 	\qquad (\beta {\times_1})		\\
+\operatorname{snd}\circ\langle M,N\rangle = N:D\to B 	\qquad (\beta {\times_2})	
+\end{align*}
+
+Furthermore, the map $\langle M,N\rangle:D\to A\times B$ is unique in the sense that
+\[
+\infer[\eta\times]{P=\langle M,N\rangle : D\to A\times B}{P:D\to A\times B & \operatorname{fst}\circ P=M:D\to A & \operatorname{snd}\circ P=N:D\to B}
+\]
+so in other words $\langle\operatorname{fst}\circ P,\operatorname{snd}\circ P\rangle =P$.
+
+Another way to say the above is
+\begin{align*}
+\langle \operatorname{fst},\operatorname{snd}\rangle &= \operatorname{id}	\\
+\langle M,N\rangle\circ P &= \langle M\circ P,N\circ P\rangle
+\end{align*}
+
+\paragraph{Exponentials}
+Given objects $A$ and $B$, an exponential $B^A$ (which corresponds to $A\supset B$) is an object with the following universal property:
+\[
+\begin{tikzcd}
+C \arrow[dashed]{dd}[swap]{\lambda(h)}&{C\times A}\arrow{ddrr}{h} \arrow[dashed]{dd}[swap]{\lambda(h)\times \operatorname{id}_A} &&\\
+&& {}	&{}\\
+B^A&{B^A\times A}\arrow{rr}[swap]{\operatorname{ap}} &{}&{B}
+\end{tikzcd}
+\]
+such that the diagram commutes.
+
+This means that there exists a map $\operatorname{ap}:B^A\times A\to B$ (application map) that corresponds to implication elimination.
+
+The universal property is that for all object $C$ that has a map $h:C\times A\to B$, there exists a unique map $\lambda(h):C\to B^A$ such that
+\[
+(\lambda(h)\times \operatorname{id}_A )\circ \operatorname{ap}=h:C\times A\to B
+\]
+This means that the diagram commutes. Another way to express the induced map is $\lambda(h)\times \operatorname{id}_A = \langle \lambda(h)\circ\operatorname{fst},\operatorname{snd}\rangle$.
+
+The map $\lambda(h):C\to B^A$ is unique, meaning that
+\[
+\infer[\eta]{g=\lambda(h):C\to B^A}{\operatorname{ap}\circ(g\times \operatorname{id_A})=h:C\times A\to B}
+\]
+
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
+
+\end{document}
