@@ -1,0 +1,215 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper]{geometry}
+
+\input{macros}
+
+\usepackage{proof-dashed}
+\usepackage{tikz-cd}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+
+\begin{document}
+
+\title{Week 4 Lecture Notes}
+\author{Jason Koenig}
+\date{10/7/2013 and 10/9/2013}
+
+
+\maketitle
+
+
+\section{Dependent Types}
+\subsection{Structural Foundation}
+
+Dependent types are \emph{families} of types. Recall from last week the structural setup, which differs from IPL in that we need to express \emph{dependency} between terms and types in the context and the preceeding terms. Atomic judgements are of the form
+\begin{alignat*}{2}
+& \text{contexts / closed types:} && \Gamma \context \\
+&&& \Gamma \equiv \Gamma' \\
+& \text{open types / families of types:} \hspace{10pt} && \Gamma \vdash A \type \\
+&&& \Gamma \vdash A \equiv A' \\
+& \text{elements of types:} && \Gamma \vdash M : A \\
+&&& \Gamma \vdash M \equiv M' : A
+\end{alignat*}
+The symbol $\equiv$ denotes what we will interpret as \emph{definitional equality}. We denote the \emph{empty context} by $\cdot$ when we need to. The introduction rules for contexts are:
+\begin{equation*}
+\infer{\cdot \context}{}
+\hspace{50pt}
+\infer{\Gamma, x:A \context}{\Gamma \context & \Gamma \vdash A \type}
+\end{equation*}
+Thus we have some notion of \emph{dependence}; it allows us to make sense of expressions like $x : \Nat, y : \Seq(x) \vdash \cdots$, which was impossible before.
+\begin{equation*}
+\infer{\cdot \equiv \cdot \context}{}
+\hspace{50pt}
+\infer{\Gamma, x : A \equiv \Gamma', x : A'}{\Gamma \equiv \Gamma' & \Gamma \vdash A \equiv A'}
+\end{equation*}
+The following rule corresponds with reflexivity:
+\begin{equation*}
+\infer{\Gamma, x:A, \Delta \vdash x:A}{}
+\end{equation*}
+The following rules (one for each judgement $J$) correspond with weakening:
+\begin{equation*}
+\infer{\Gamma, x:A, \Delta \vdash J}{\Gamma, \Delta \vdash J & \Gamma \vdash A \type}
+\end{equation*}
+
+\textbf{Exercise.} What are the corresponding rules for exchange and contraction?
+
+The following rule, called \emph{substitution} or \emph{instantiation}, corresponds with transitivity:
+\begin{equation*}
+\infer{\Gamma[M/x]\Delta \vdash [M/x]J}{\Gamma, x:A, \Delta \vdash J & \Gamma \vdash M : A}
+\end{equation*}
+
+The following rules together are called \emph{functionality}
+\begin{equation*}
+\infer{\Gamma [M/x] \Delta \vdash [M/x]N \equiv [M'/x]N : [M/x]B}{\Gamma, x:A, \Delta \vdash N:B & \Gamma \vdash M \equiv M' : A}
+\end{equation*}
+\begin{equation*}
+\infer{\Gamma [M/x] \Delta \vdash [M/x]B \equiv [M'/x]B}{\Gamma, x:A, \Delta \vdash B \type & \Gamma \vdash M \equiv M' : A}
+\end{equation*}
+Finally, the following rules are \emph{type equality}, which tell us that definitionally equal types classify the same things:
+\begin{equation*}
+\infer{\Gamma \vdash M : A'}{\Gamma \vdash M:A & \Gamma \vdash A \equiv A'} \hspace{50pt}
+\infer{\Gamma \vdash M \equiv M' : A'}{\Gamma \vdash M \equiv M' : A & \Gamma \vdash A \equiv A'}
+\end{equation*}
+
+
+\subsection{Negative Dependent Types}
+In dependent type theory, the negative types need to be generalized to express dependency. The type $\top$ does not change. There are new forms for $\conj$ and $\disj$, however:
+
+\begin{center}
+\begin{tabular}{c c c c c}
+IPL & Type & & Dependent Type & Quantifier\\\hline
+$A \conj B$ & $A \times B$ & $\;\;\to\;\;$ & $\Sigma x: A. B$ & $\exists x:A.B$ \\
+$A \supset B$ & $B^A$ or $A\rightarrow B$ & $\;\;\to\;\;$ & $\Pi x:A .B$ & $\forall x:A.B$ \\
+\end{tabular}
+\end{center}
+
+Before we present the rules governing these types, it is good to get some intuition for what they represent. The dependent type $\Sigma x:A.B$, called the \emph{sum}, \emph{dependent product}, or \emph{sigma-type}. Here unfortunately terminology becomes muddled, as $\Sigma$ properly generalizes the product. The $\Sigma$ type corresponds to (constructive) existential quantification, $\exists x:A.B$.
+
+The type $\Pi x:A.B$ is called the \emph{dependent product} (ambiguously with with above), or \emph{pi-type}. This generalizes functions from $A \to B$ in that the type of the result of an application can depend on exactly which value the function is applied to. This corresponds to universal quantification $\forall x:A.B$.
+
+\paragraph{Example:} We can form complex types from these connectives and the families we have seen. For example, we can form the type $\Pi x:\Nat. \Sigma y:\Nat. \Id{\Nat}(y, \text{succ}(x))$. By the types-propositions correspondence, this is the proposition $\forall x:\Nat. \exists y:\Nat. y =_\Nat \text{succ}(x)$, i.e. for every natural number, there is a successor. We can think of the as inhabited by proofs that the proposition is true. We can also think of elements of this type as terms which take a natural number $x$, and produce a term which is a proof that that particular natural has a successor.
+
+\paragraph{Example:} A less logical example is the type $\Pi x: \Nat. \text{Seq}(x)$. This represents the type of functions which result in a length $n$ sequence when applied to the value $n$, as one might do if ``allocating" a sequence. This might be useful when programming, as the type encodes more information about a value than a non-dependent type could.
+
+One important aspect of the quantifier view of these types is that they generalize classical logic in that they merge domains of quantification and proposition. In classical logic, and especially first order logic, these are completely distinct. With the identification of propositions and types, we can quantify not just over data (such as Nat), but also over proofs of propositions by letting $A$ be a ``proposition"-ish type like $\Id{\Nat}(x,y)$.
+
+This identification of dependent types with quantifiers only holds if you take the quantifiers as \emph{constructive}. An element of type $\Sigma x:A.B$ consists of a \emph{pair} $\left<x,y\right>$ such that x is an witness of the existential, and $y$ is a proof that that element means the condition. A constructive existential requires there actually to be an explicit element, which the proof must give on its own. This means one cannot use certain kinds of proofs from classical logic. Some of these proofs roughly show: $(\forall x. P) \imp \bot$, so they conclude that $\exists x. P$, but nowhere in the proof can we actually find such an $x$. Similarly, but less counterintuitively, a proof of an universal quantifier is a map from elements to proofs for those specific elements, i.e. a function. We cannot prove $\forall x.P$ by showing $(\exists x.P) \imp \bot$.
+
+The idea with constructivity is then that if you have proved $(\forall x. P) \imp \bot$, then just let that be the proof. Constructivity amounts to a certain carefulness, where we avoid the classical convention that $\neg \exists \iff \forall$ and $\neg \forall \iff \exists$. By making this distinction, we get not only the ability to regard proofs as programs, but also the rich structure of HoTT, which would otherwise collapse.
+
+\subsubsection{Pi-types}
+The formation and introduction rules for pi-types are:
+\begin{equation*}
+\infer[\Pi\text{-F}]{\Gamma \vdash \Pi x :A.B \type}{\Gamma \vdash A \type & \Gamma, x:A \vdash B \type} \hspace{50pt}
+\infer[\Pi\text{-I}]{\Gamma \vdash \lambda x:M : \Pi x :A.B}{\Gamma, x:A \vdash M : B}
+\end{equation*}
+Note that the introduction form is almost the same except that $x$ is bound when forming the type $B$. The introduction rule is exactly the same as in IPL, except that the type $B$ depends on $x$ like $M$ does. This dependency of $B$ motivates the elimination rule:
+
+\begin{equation*}
+\infer[\Pi\text{-E}]{\Gamma \vdash M N : [N/x]B}{\Gamma \vdash M:\Pi x:A. B & \Gamma \vdash N:A}
+\end{equation*}
+which is the same as IPL except for the substitution of $N$, the actual argument, into the result type. Thus the result type can vary with the actual argument, which cannot happen in regular type theory.
+
+We also have the $(\beta)$ and $(\eta)$ rules:
+\begin{alignat*}{1}
+(\lambda x.M) N \equiv [N/x]M &\hspace{10pt} (\beta)\\
+(\lambda x.M x) \equiv M &\hspace{10pt} (\eta) \hspace{10pt} (\text{when}\; x\; \text{not free in} \;M)
+\end{alignat*}
+
+\subsubsection{Sigma-types}
+The formation and introduction rules for sigma-types are:
+\begin{equation*}
+\infer[\Sigma\text{-F}]{\Gamma \vdash \Sigma x :A.B \type}{\Gamma \vdash A \type & \Gamma, x:A \vdash B \type} \hspace{50pt}
+\infer[\Sigma\text{-I}]{\Gamma \vdash \left<M,N\right> : \Sigma x :A.B}{\Gamma \vdash M:A & \Gamma, x:A \vdash N : [M/x]B}
+\end{equation*}
+The addition here is that the second component can depend on the first. The elimination rules are what one expects, with the addition of the dependence of the type of second component.
+\begin{equation*}
+\infer[\Sigma\text{-E}_1]{\Gamma \vdash \fst(M) : A}{\Gamma \vdash M: \Sigma x:A.B} \hspace{50pt}
+\infer[\Sigma\text{-E}_2]{\Gamma \vdash \snd(M) : [\fst(M)/x]B}{\Gamma \vdash M: \Sigma x:A.B}
+\end{equation*}
+
+
+The $(\beta)$ and $(\eta)$ rules are the familiar:
+\begin{alignat*}{1}
+\fst(\left<M,N\right>) \equiv M &\hspace{10pt} (\beta_1)\\
+\snd(\left<M,N\right>) \equiv N &\hspace{10pt} (\beta_2)\\
+\left<\fst(M),\snd(M)\right> \equiv M &\hspace{10pt} (\eta)\\
+\end{alignat*}
+
+\subsection{Positive Dependent Types}
+With the positive types, the dependency does not affect the form of the types, but rather their elimination forms. The issue arises because we need a ``join point'' in the elimination. For example, $C$ is the join point in the elimination of $\disj$ in IPL because it needs to hold in both cases:
+\begin{equation*}
+\infer[\disj\text{-E}_\text{IPL}]{\Gamma \vdash \case(M,x.N,y.P) : C}{\Gamma, x:A \vdash N: C & \Gamma, y:B \vdash P: C & \Gamma \vdash M: A+B}
+\end{equation*}
+In IPL, there is no issue with not making $C$ dependent because types are fixed: there is nothing that can vary about $C$ in either branch. In dependent type theory, this is no longer the case.
+\subsubsection{Sum Types}
+To motivate why we need dependency in $C$, we consider the sum (i.e. disjunction). First we introduce the booleans, a simple case of the $(+)$ type. Let us define the boolean type $2$ as $1+1$, where $1$ is the unit type, and the values $\ttrue=\inl(\left<\right>):2$ and $\ffalse=\inr(\left<\right>):2$.
+
+Consider the rather trivial proposition (written as a type) $\Pi x:2. (\Id{2}(x,\ffalse)) + (\Id{2}(x,\ttrue))$. In order to prove this, we need to perform a case analysis on $x$. In particular, the proposition we actually prove is different in each case: 
+\begin{enumerate}
+\item False case: prove $(\Id{2}(\ffalse,\ffalse)) + (\Id{2}(\ffalse,\ttrue))$ by left injection of reflexivity
+\item True case: prove $(\Id{2}(\ttrue,\ffalse)) + (\Id{2}(\ttrue,\ttrue))$ by right injection of reflexivity.
+\end{enumerate}
+We see than if we case analyze on $x$, then the actual proposition we need to prove in each case is the goal we are trying to prove, specialized to the particular case we are in. The following rule codifies this:
+% Is there a way to make this smaller? Stack the premises or something? It trails off the page...
+\begin{equation*}
+\infer[\disj\text{-E}]{\Gamma \vdash \case[z.C](M,x.N,y.P) : [M/z]C}{\Gamma, x:A \vdash N: [\inl(x)/z]C & \Gamma, y:B \vdash P: [\inr(y)/z]C & \Gamma \vdash M: A+B & \Gamma, z: A+B \vdash C \type}
+\end{equation*}
+
+In the case(...) construct, the part $[z.C]$ is called the \emph{motive}, because it is the motivation for performing the case analysis in the first place. What is different here from IPL is that $C$ is parametric in $z:A+B$. The reason that this is necessary is that we need to be able to substitute the actual case we are analyzing (either inl or inr) in each branch into the type, so that our proof can vary. The case analysis proves $C$ specialized to $M$, which is the term $M$ flowing into the \emph{type} $C$. The parametricity in $z$ allows this dependency.
+
+We can specialize this rule to the booleans, to obtain a new construct if:
+\begin{equation*}
+\infer[\disj\text{-E}]{\Gamma \vdash \caseif[z.C](M,N,P) : [M/z]C}{\Gamma \vdash N: [\ttrue /z]C & \Gamma \vdash P: [\ffalse/z]C & \Gamma \vdash M: 2 & \Gamma, z: 2 \vdash C \type}
+\end{equation*}
+where the terms $N$ and $P$ do not bind any variables because by $(\eta)$, the variables in the $\disj\text{-E}$ rule are both just the null tuple, and thus don't actually need to be bound.
+
+This presentation seems justified in the logical interpretation, but in programming it can lead to some unexpected results. In most programming languages, $\caseif(x, 17, tt)$ would not be well typed, as the true branch has type Nat and the false branch has type 2. With the tools of dependent type theory, however, we can give this term a type. If we posit the existence of conditionals in the type level, which we have not formalized yet, we can imagine the typing:
+\begin{equation*}
+\caseif(M,17,\ttrue) : \caseif(M,\Nat,2)
+\end{equation*}
+for some suitable if construct at the type level, and noting that the ``2" is a type name, not $s(s(z))$. Even though the two branches have different simple types, $\caseif(M,\Nat,2)$ represents a join point for the two expressions. In normal programming languages, the join point type is not allowed to depend on any term, let alone the actual branch that was taken. This example then seems ill-typed, but in fact $17:\caseif(\ttrue,\Nat,2)$ and $\ttrue:\caseif(\ffalse,\Nat,2)$, which are the critical premises in the $\disj\text{-E}$ rule. This kind of construct is important when encoding $A+B$ using sigma types.
+
+Finally, we can take some $\beta$ and $\eta$ rules as well, which mirror the non-dependent case. Here we omit the motive as it plays no role in the rules:
+\begin{alignat*}{4}
+&\case(\inl(M), x.N, y.P) \equiv [M/x]N && \quad && \beta_1 \\
+&\case(\inr(M), x.N, y.P) \equiv [M/y]P && \quad && \beta_2 \\
+&\case(M, x.[\inl(x)/z]P, y.[\inr(y)/z]P) \equiv [M/z]P && \quad && \eta
+\end{alignat*}
+
+\subsubsection{Natural Numbers}
+
+Like sum types, there is a relatively straightforward generalization of the elimination rule for naturals in terms of a recursor augmented with a motive:
+\begin{equation*}
+\infer[\Nat\text{-E}]{\Gamma \vdash \rec[z.C](M,N,x.y.P) : [M/z]C}{\Gamma \vdash M:\Nat & \Gamma,z:\Nat \vdash C \type & \Gamma \vdash N: [0/z]C & \Gamma, x:\Nat,y:[x/z]C \vdash P: [s(x)/z]C}
+\end{equation*}
+Just as in the sum case, we can interpret the recursor as a proof of $C$ for the specific natural $M$, given $N$ which is a proof for zero and $P$ which proves $C$ for the successor of some natural. In G\"{o}del's T, we could show that omitting the variable $x:Nat$ was possible because in the presence of products we could add it if necessary. In this formulation, however, the type of $y$ is a proof of $C$ for some natural, so we need to give that natural a name to form the type.
+
+We also have the ($\beta$) and ($\eta$) rules as expected:
+\begin{alignat*}{5}
+\rec[z.C](0, N, x.y.P) \equiv N && \quad \beta_1 \\
+\rec[z.C](s(M), N, x.y.P) \equiv [M,\rec[z.C](M, N, x.y.P)/x,y]P && \quad \beta_2 \\
+\infer{M\equiv \rec[z.C](w,N,x.y.P)}{[0/w]M\equiv N & [s(w)/w]M \equiv [w,M/x,y]P} && \quad \eta
+\end{alignat*}
+
+We note that the $\eta$ rule is still not sufficient to prove the non-trivial equivalence, as we still can't induct over $\equiv$. But we can use the recursor to prove things inductively about naturals using identity types. For example, we can show as an exercise:
+\begin{equation*}
+\Pi x:\Nat.\Pi y:\Nat.\left(\Id{\Nat}(s(x),s(y)) \rightarrow \Id{\Nat}(x,y)\right)
+\end{equation*}
+using the $\eta\text{-}\Nat$ rule to perform the induction.
+
+%% TODO: Find a good place to put this. It doesn't seem to fit here.
+\subsubsection{Sigma elimination}
+We can characterize the sigma type elimination without \fst{} and \snd{} using a ``degenerate form'' of pattern matching where we have only one case:
+\begin{equation*}
+\infer[\Sigma\text{-E}]{\Gamma \vdash \casesplit[z.C](M, x.y.P) : [M/z]C}{\Gamma \vdash M : \Sigma x:A.B & \Gamma, z:\Sigma x:A.B \vdash C \type & \Gamma, x:A, y:B \vdash P : [\left<x,y\right>/z]C}
+\end{equation*}
+
+We can take the following beta rule:
+\begin{alignat*}{5}
+\casesplit[z.C](\left<M_1,M_2\right>, x.y.P) \equiv [M_1,M_2/x,y]P && \quad (\beta)
+\end{alignat*}
+
+We leave as an exercise showing that one can implement $\casesplit$ from \fst{} and \snd{}. We can also show the converse, that \fst{} and \snd{} are definable in terms of $\casesplit$, but not with the tools we have so far.
+\end{document}
