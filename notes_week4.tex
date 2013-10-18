@@ -193,11 +193,14 @@ We also have the ($\beta$) and ($\eta$) rules as expected:
 \infer{M\equiv \rec[z.C](w,N,x.y.P)}{[0/w]M\equiv N & [s(w)/w]M \equiv [w,M/x,y]P} && \quad \eta
 \end{alignat*}
 
+\begin{comment}
+  % Favonia: The above eta-rule is "too strong" in the sense that you can do induction.
 We note that the $\eta$ rule is still not sufficient to prove the non-trivial equivalence, as we still can't induct over $\equiv$. But we can use the recursor to prove things inductively about naturals using identity types. For example, we can show as an exercise:
 \begin{equation*}
 \Pi x:\Nat.\Pi y:\Nat.\left(\Id{\Nat}(s(x),s(y)) \rightarrow \Id{\Nat}(x,y)\right)
 \end{equation*}
 using the $\eta\text{-}\Nat$ rule to perform the induction.
+\end{comment}
 
 %% TODO: Find a good place to put this. It doesn't seem to fit here.
 \subsubsection{Sigma elimination}
