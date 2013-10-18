@@ -100,8 +100,6 @@
 \newcommand{\pair}{\ensuremath{\mathsf{pair}}\xspace}
 \newcommand{\tuple}[2]{(#1,#2)}
 \newcommand{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
-\newcommand{\fst}{\ensuremath{\proj1}\xspace}
-\newcommand{\snd}{\ensuremath{\proj2}\xspace}
 %%% Path concatenation
 \newcommand{\concat}{%
   \mathchoice{\mathbin{\raisebox{0.5ex}{$\displaystyle\centerdot$}}}%
@@ -122,8 +120,8 @@
 \newcommand{\refl}[1]{\ensuremath{\mathsf{refl}_{#1}}\xspace}
 
 % fst,snd,case,id
-\renewcommand*{\fst}{\textsf{fst}}
-\renewcommand*{\snd}{\textsf{snd}}
+\newcommand*{\fst}{\textsf{fst}}
+\newcommand*{\snd}{\textsf{snd}}
 \DeclareMathOperator{\case}{\textsf{case}}
 \DeclareMathOperator{\caseif}{\textsf{if}}
 \DeclareMathOperator{\casesplit}{\textsf{split}}
