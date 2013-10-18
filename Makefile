@@ -3,8 +3,8 @@ PDF=$(TEX:.tex=.pdf)
 
 all:${PDF}
 
-${PDF}:%.pdf:%.tex
-	latexmk -pdf $^
+${PDF}:%.pdf:%.tex macros.tex
+	latexmk -pdf $<
 
 clean:
 	rm -rf ${PDF}
