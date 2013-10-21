@@ -219,7 +219,7 @@ $\vdash e : \Pi_{x:A} \Sigma_{y:B} C(x,y) \rightarrow
   \Sigma_{f : A \rightarrow B} . \Pi_{x:A} C(x, f(x))$.
 \end{toc}
 
-The proof, provided in \cite{MartinLof73}, involves finding a derivation of:
+The proof, provided in \cite{MartinLof80}, involves finding a derivation of:
 \begin{equation*}
 F :  \Pi_{x:A} \Sigma_{y:B} C(x,y) \vdash \lambda F . <\lambda x . \mathsf{fst} F(x) , \lambda x . \mathsf{snd} F(x)> : \Sigma_{f : A \rightarrow B} . \Pi_{x:A} C(x, f(x))
 \end{equation*}
@@ -398,11 +398,11 @@ Proving this requires showing that $ap$ preserves identity, inversion
 and composition.  That is,
 
 \begin{thm}
-For a function $f : A \rightarrow B$ and paths $p : x =_A y$, $q : x =_A y$
+For a function $f : A \rightarrow B$ and paths $p : x =_A y$, $q : y =_A z$
 \begin{tabular}{l l}
-1) & $\Ap_f(\refl{}(M)) \equiv \refl{}(f(M))$ \\
+1) & $\Ap_f(\refl{}(x)) \equiv \refl{}(f(x))$ \\
 2) & $\Ap_f(p^{-1}) = ap_f(p)^{-1}$ \\
-3) & $\Ap_f(p \centerdot q) =_{Id_B(fx, fy)} ap_f(p) \centerdot ap_f(q)$ \\
+3) & $\Ap_f(p \centerdot q) =_{\Id{a}(x, z)} ap_f(p) \centerdot ap_f(q)$ \\
 \end{tabular}
 \end{thm}
 
