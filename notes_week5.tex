@@ -1,0 +1,434 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper]{geometry}                                              
+                                                                                
+\input{macros}                                                                  
+                                                                                
+\usepackage{proof-dashed}                                                       
+\usepackage{tikz-cd}                                                            
+\usepackage{amsmath}                                                            
+\usepackage{lmodern}                                                            
+\usepackage{microtype}                                                          
+
+\metadata{Nathan Fulton}{2013/10/14 and 2013/10/16}
+
+% Definitions specific to these notes.
+\newcommand{\suc}{\mathsf{succ}}
+\newcommand{\Ap}{\mathsf{ap}}
+\newcommand{\UU}{\ensuremath{\mathcal{U}}\xspace} % From the book macros
+\newcommand{\Bool}{\mathsf{Bool}}
+
+\newtheorem*{toc}{Theorem of Choice}
+\newtheorem*{foe}{Failure of Extensionality}
+\newtheorem*{hedberg}{Hedberg's Theorem}
+\newtheorem{thm}{Theorem}
+\newtheorem{eg}{Example}
+\newtheorem*{remark}{Remark}
+
+\begin{document}
+\title{15-819 Homotopy Type Theory Lecture Notes} 
+\author{Nathan Fulton}
+\date{October 9 and 11, 2013}
+
+\maketitle
+
+\section{Contents}\label{sec:contents}
+
+These notes summarize and extend two lectures from Bob Harper's Homotopy Type Theory course.  
+The cumulative hierarchy of type universes, Extensional Type theory, the $\infty$-groupoid
+structure of types and iterated identity types are presented.
+
+\section{Motivation and Overview}\label{sec:oview}
+
+Recall from previous lectures the definitions of functionality and transport.
+Functionality states that functions preserve identity; that is, domain elements
+equal in their type map to equal elements in the codomain.
+Transportation states the same for type families.  Traditionally, this means
+that if $a =_A a'$, then $B[a] \true$ iff $B[a'] \true$.  In proof-relevant
+mathematics, this logical equivalence is generalized to a statement about
+identity in the family: if $a =_A a'$, then $B[a] =_B B[a']$.
+
+Transportation can be thought of in terms of functional extensionality.
+Unfortunately, extensionality fails in ITT.  One way to recover 
+extensionality, which comports with traditional mathematics, is to reduce all 
+identity to reflexivity.  This approach, called Extensional Type theory (ETT), 
+provides a natural setting for set-level mathematics.
+
+The HoTT perspective on ETT is that the path structure of types need not 
+be limited to that of strict sets.
+The richer path structure of an $\infty$-groupoid is induced by the induction
+principle for identity types.
+Finding a type-theoretic description of this behavior (that is, introduction,
+elimination and computation rules which comport with Gentzen's Inversion
+Principle) is an open problem.
+
+
+\section{The Cumulative Hierarchy of Universes}\label{sec:universe}
+
+In previous formulations of ITT, we used the judgement $A \type $ 
+when forming types.
+In this setting, many types are natural to write down but impossible to form.
+As a running example for the section, consider the following:
+$\caseif{M,\overline{17},\ttrue} : \caseif{M, \Nat, \Bool}$.
+Assuming the well-formedness of the type, elimination rules behave as expected:
+$\overline{17} : \caseif{\ttrue, \Nat, \Bool} \equiv \Nat$
+and $\ttrue : \caseif{\ffalse, \Nat, \Bool} \equiv \Bool$.
+
+Forming this type is not possible using the current formation rule for 
+$\mathsf{\overline{if}}$.
+Type universes address this shortcoming by generalizing type 
+formation rules.  A recursively generated cumulative hierarchy of universes 
+($\UU_i$) is introduced.  Instead of defining type formation in terms of a judgement
+$A \type$, formation rules state the relative location of relevant 
+types in the hierarchy; that is, judgements that $A \type$ are replaced with
+judgements of the form $A : \UU_i$.
+
+The definition of type universes includes three new rules\footnote{See A1.1 and 
+A2.3 of the HOTT book for discussion.}
+
+\begin{equation*}
+  \infer[\UU\text{-intro}]{\ctx \vdash \UU_i : \UU_{i+1}}{\ctx \mathsf{ctx}}  
+  \hspace{50pt}
+  \infer[\UU\text{-cumul}]{\ctx \vdash A : \UU_{i+1}}{\ctx \vdash A : \UU_i}
+  \hspace{50pt}
+  \infer[\UU\text{-}\equiv]{A \equiv B : \UU_{i+1}}{A \equiv B : \UU_i}
+\end{equation*}
+
+The $\UU\text{-intro}$ rule introduces an unbounded hierarchy of universes, each of which
+inhabits the next universe.
+The second rule states that these universes are cumulative, and the third 
+ensures that equality is preserved in higher universes.  The
+$\UU\text{-}\equiv$ rule is a derived rule in the HoTT book presentation.
+
+In addition to these rules, every type formation rule establishes relative
+positions of relevant types.  For example\footnote{See appendix 2 of \cite{HoTTBook2013} for a full formulation}:
+
+\begin{equation*}
+\begin{split}
+  \infer[\UU\text{Id-F}]{Id_A{M,N} : \UU_i}{A : \UU_i & M,N : A}
+  \hspace{50pt}
+  \infer[\UU \Pi\text{-F}]{\Pi_{x:A}B : \UU_i}{A : \UU_i & x:A \vdash B : \UU_i}
+  \\
+  \infer[\UU 1\text{-F}]{1 : \UU_i}{\ctx \mathsf{ctx}}
+  \hspace{50pt}
+  \infer[\UU 0\text{-F}]{0 : \UU}{\ctx \mathsf{ctx}}
+  \hspace{50pt}
+  \infer[\UU+\text{-F}]{A + B : \UU}{A:\UU & B:\UU}
+\end{split}
+\end{equation*}
+
+The addition of universes to ITT solves the problem identified by the running
+example.
+As the example suggests, these hierarchies increase the expressiveness of ITT.
+This is established by identifying a statement that cannot be proven only in
+the presence of universes.
+
+\paragraph{example:} 
+Jan Smith established that without universes, it is not provable that
+$\suc(-) \not = 0$ \cite{Smith84}.  However, in Martin-L\"{o}f's Type Theory, 
+it is provable that $n : \mathsf{Nat}$, $\suc(n) \not \equiv 0$\footnote{See
+page 86 of Programming in Martin-L\"{o}f's Type Theory \cite{PMLTT}.}.  
+In fact, Smith proved that \emph{any} negation of an equivalence cannot be
+proven without universes.
+
+\paragraph{exercise:} Show that the operators $\mathsf{fst}$ and $\mathsf{snd}$ 
+can be defined from $\mathsf{split}$.
+
+\subsection{Typical Ambiguity}
+
+In the examples above, subscripts on each universe create significant
+notational overhead.  Therefore, these indices are elided whenever intent
+is obvious.  When implemented with pen and paper, this is called 
+\textbf{typical ambiguity}.  Its mechanization in Coq is referred to as 
+\textbf{universe polymorphism}.
+
+\subsection{Alternatives to the Hierarchy}
+
+The introduction of an infinite hierarchy of universes complicates the theory.
+An uninitiated reader might wonder whether an infinite, cumulative hierarchy is 
+really necessary.
+This section presents three alternatives.  
+The first alternative works, but has some disadvantages.
+The other two alternatives have significant problems, demonstrating that the
+complexity induced by type universes is essential to a consistent and
+sufficiently expressive definition of ITT.
+
+\subsubsection{Large Elimination}
+
+Intensional Type Theory can be consistently formulated without a hierarchy.
+The approach, called Large Elimination, rules the correct types into
+the theory by hand.  In the case of the running example, the rule would be:
+
+\[
+  \infer[\text{LE-If}]{\caseif{M, A, B} \type}
+    {M : Bool & A \type & B \type}
+\]
+
+Similar rules must be provided for each type formation rule.
+The universal approach is preferred because it is less ad hoc \textemdash 
+ large elimination requires the addition of new rules for each affected type.
+
+\subsubsection{A Single Universe}
+
+The running example may be addressed without introducing a recursively
+defined hierarchy of universes.  One alternative is to replace the $\UU$ rules
+above with a single universe.  In this case, the important choice is whether
+$\UU : \UU$.
+
+If the universe is not self-inclusive, The formulation problem discussed above 
+re-emerges.  For instance, the type $\caseif{M,\UU,\UU \rightarrow \UU}$
+is not formable without a recursively defined hierarchy.
+The same observation applies at the top of any finite hierarchy.
+
+\subsubsection{The Inconsistent Approach}
+
+An insightful reader might observe that this problem can be
+resolved by patching the single universe system with a rule which allows the 
+universe to contain itself:
+
+\[
+  \infer[\UU\text{-inconsistent}]{\ctx \vdash \UU : \UU}{}
+\]
+
+This system allows the formation of $\caseif{M,\UU,\UU \rightarrow \UU}$.
+However, it also destroys the consistency of the theory.
+
+\paragraph{Exercise:} Reproduce the Burali-Forte Paradox within a system
+equipped with U-cumul-inconsistent\footnote{This formulation of the paradox
+is due to Girard 1972, and is referred to as Girard's Paradox.}.
+
+
+\section{Proof-relevance and Extensionality}\label{sec:extensionality}
+
+Martin-L\"{o}f's Type Theory is significant because it introduces the notion of
+\emph{proof relevance}.  Intuitively, this expresses the idea that proofs can be
+treated as mathematical objects.
+
+\subsection{The Theorem of Choice}
+
+It is well-known that the Axiom of Choice is independent of the axioms of 
+set theory.  However, choice can be derived in ITT.  The derivation provides an 
+excellent example of proof relevance in action.
+
+The theorem of choice
+states that if $x C y$ is total, then there must exist a function ($f$) which
+associates each $x$ with a chosen $y = f(x)$.  We can state this formally
+in ITT.
+
+\begin{toc}
+$\vdash e : \Pi_{x:A} \Sigma_{y:B} C(x,y) \rightarrow
+  \Sigma_{f : A \rightarrow B} . \Pi_{x:A} C(x, f(x))$.
+\end{toc}
+
+The proof, provided in \cite{MartinLof73}, involves finding a derivation of:
+\begin{equation*}
+F :  \Pi_{x:A} \Sigma_{y:B} C(x,y) \vdash \lambda F . <\lambda x . \mathsf{fst} F(x) , \lambda x . \mathsf{snd} F(x)> : \Sigma_{f : A \rightarrow B} . \Pi_{x:A} C(x, f(x))
+\end{equation*}
+
+In the proof, $F$ is both an assumption and a mathematical object (namely, a product).
+Therefore, the proof may rely upon not only the inhabitation of the type of $F$, but
+also $F$ itself.
+
+\paragraph{Note:} In future lectures, banana brackets will be used to recover
+a more traditional reading of $F$ by suppressing the ability to use it as a piece
+of data in the proof.  For now, the significant observation is that proof
+irrelevance can be recovered within ITT.
+
+\subsection{Failure of Extensionality}
+
+Marin-L\"{o}f demonstrated that the Axiom of Extensionality fails in ITT; in ITT,
+it is not the case that if $p : Id_A(M, N)$ for closed $M, N, A$, then $M \equiv N : A$.
+
+Extensional Type theory (ETT) addresses the failure of extensionality in ITT by endowing the theory
+with the principle of equality of reflection.
+Concretely, ETT introduces two new rules which reduce identity to equivalence.
+Therefore, all identity paths on a type are the reflexive path.
+
+\begin{equation*}
+  \infer[\text{Eq-Refl}]{\ctx \vdash M \equiv N : A}{\ctx \vdash p : Id_A(M,N)}
+  \hspace{50pt}
+  \infer[\text{UIP}]{\ctx \vdash p \equiv \refl{}(M) : Id_A(M,M)}{p : Id_A(M, N)}
+\end{equation*}
+
+The first rule, equality of reflection, states that proof of an identification
+is sufficient to show judgemental equality in the type.
+The second rule, Uniqueness of Identity Proofs, states that any path is the reflexive path.
+
+Although extensionality does not hold generally for ITT, uniqueness of identity
+proofs may be recovered for a large class of types.  
+
+\begin{hedberg}
+Any set with decidable identities has collapsed identity sets 
+\cite{Hedberg98}\footnote{There is a Coq proof by Nicolai Kraus online: \href{http://www.cs.nott.ac.uk/~ngk/hedberg\_direct.v}{http://www.cs.nott.ac.uk/{\textasciitilde}ngk/hedberg\_direct.v}}.
+\end{hedberg}
+
+\subsubsection{ETT vs ITT}
+
+The essential difference between ETT and ITT is the algebraic structure of
+types.  ETT reduces all identity paths to reflexivity.  As a result, the path
+structure of types in ETT is homotopically discrete.  
+ITT admits a much richer path structure on types: two
+paths $p : Id_A(A,B)$ and $q : Id_A(B,C)$ may by equal but not trivially equal.
+
+The two other major differences between ETT and ITT are decidability of type
+checking and fitness for set-level mathematics.  
+
+The UIP rules introduces proof search as a valid mode of operation for the 
+type checker.  Therefore, type checking is not decidable in 
+ETT\footnote{Type checking for ITT is decidable}. 
+Decidability is not an important criterion for two reasons.  First,
+the standard mode of operation in a mechanized ETT (e.g. NuPRL) does not result
+in proof search.  Second, type checking in ITT quickly becomes intractable.
+
+A more important secondary distinction between ETT and ITT is fitness for set-
+level mathematics.  Types in ETT have the structure of an h-set; 
+therefore, set-level mathematics is much nicer in NuPRL than in Coq. Whereas extensionality
+and transport come for free in NuPRL, Coq users must induce this structure by
+programming in terms of a setoid.  However, the convienance of ETT comes at a cost: 
+the path structure of its types in necessarily limited due to Hedberg's Theroem.
+
+Just as proof-relevant mathematics subsumes proof-irrelevant mathematics as a 
+special case, the $\infty$-groupoid structure of types in ITT may be
+forgotten so that ETT is recovered as a special case.  In fact, this is 
+essentially what happens with Setoid in Coq.
+
+\section{Algebraic Structure of Identity Types}\label{sec:structure}
+
+Recall that the induction principle for identity types states that for
+$x,y :A $, there exists an identity type $x =_A y$.  Furthermore, proving a
+property for these elements and a path $p : x = _A y$ consists of proving the
+property in the reflexive case (that is, for $x, x, \refl{x}$).
+
+The full implications of this principle were not understood when it was 
+first introduced.  A realization central to Homotopy Type Theory
+is that the induction principle for identity types
+gives rise to an entire hierarchy of iterated identity types.
+That is, due J, we can form the type $p =_{\Id{A}(x,y)} q$ and so on.
+Homotopy Type Theory is so-called, in part, because these types form the
+same structure as iterated homotopies: that of an $\infty-$groupoid.
+
+Whereas the universes provide a mechanism for reasoning about size in an
+iterative fashion, the iterated identities provide an account of dimension.
+In the example above, $x$ and $y$ are start and end points.  The first identity 
+corresponds to a path between the elements.  Paths between $p,q : \Id{\Id{A}(x,y)}$
+are homotopies, or 2-dimensional paths.  Each iteration corresponds to an increase
+in dimension\footnote{Dimension is also referred to as homotopy level.}.
+
+Before proceeding with a presentation of the groupoid axioms in terms of 
+ITT, it is useful to recall the derivable equivalence relation:
+
+\noindent
+\begin{tabular}{l l}
+(1) & $id_A(M) := \refl{A}(M) : Id_A(M,M)$ \\
+(2) & $p : Id_A(M,N) \vdash p^{-1} : Id_A(N,M)$ \\
+(3) & $p : Id_A(M,N), q : id_A(N,P) \vdash p \centerdot q : Id_A(M, P)$ 
+\end{tabular}
+
+The second and third are theorems provable by path induction, since
+composition and inversion are both defined in terms of J.  Therefore, we may
+read identity types propositionally as witnesses of an equivalence, and 
+computationally as abstract daata types upon which we may operate.
+The two notations for identity types, $x =_A y$ and $\Id{A(x,y)}$, 
+typically elucidate the intended reading.
+While the former reading comports with more traditional interpretations of
+equality, the latter gives rise to the iterated identity types.
+
+\begin{remark}
+Despite the correspondence with classical (analytic) homotopy theory,
+maps should be thought of synthetically.  As a result, path concatenation
+is not defined in terms of function composition; hence, the $\centerdot$
+notation.
+\end{remark}
+
+\subsection{The Groupoid Laws}
+
+The groupoid laws may be forumated as coherence theorems, each proven by path
+induction using J:
+
+\begin{tabular}{l l}
+inv-right  & $p \centerdot p_{-1} =_{Id_A(M,M)} \id(M)$ \\
+inv-left   & $p^{-1} \centerdot p =_{Id_A(N,N)} \id(N)$ \\
+unit-right & $p \centerdot id(N) =_{Id_A(M,N)} p$ \\
+unit-left  & $id(M) \centerdot p =_{Id_A(M,N)} p$ \\
+assoc      & 
+  $(p \centerdot q) \centerdot r =_{Id_A(M, P)} p \centerdot (q \centerdot r)$
+\end{tabular}
+
+Before proceeding an explanation of how these are proven, some motivation
+may be helpful.  Consider the following diagram for the associativity theorem:
+
+\begin{equation*}
+  \begin{tikzcd}
+  A \arrow{r} \arrow[bend left]{rr} 
+      \arrow[bend left]{rrr}[name=T,below]{}
+      \arrow[bend right]{rrr}[name=B]{}
+    & B \arrow{r} \arrow[bend right]{rr}
+    & C \arrow{r}
+    & D
+    \arrow[Rightarrow, to path=(T) -- (B)]{}
+  \end{tikzcd}
+\end{equation*}
+
+This diagram illuminates the weak nature of the path structure: 
+associativity holds only because it holds at yet higher type.
+Iterated identity types are given structure by this higher coherence.
+
+\begin{thm}
+The groupoid laws hold.
+\end{thm}
+
+Full proofs are available in chapter 2 of \cite{HoTTBook2013}. We outline
+portions of the argument here for the sake of later discussion.
+For the first inverse theorem, perform path induction on $p$.  It suffices to consider
+that $p = \refl{x}$.  We have by the definition of $\refl{x}^{-1}$ that
+$\refl{x} \centerdot \refl{x}^{-1} = \refl{x}$.  The other inverse argument follows
+similarly.  The cases for the unit theorems and associativity are similar.  Each follows
+by path induction on $p$, considering the case where $p = \refl{x}$.
+
+\subsection{Maps preserve structure}
+
+Given this structure, it is natural to ask whether mappings preserve the 
+groupoid structure.  Recall that $\Ap$ preserves identities.
+
+\begin{thm}
+If $f : A \rightarrow B$ and $p : M =_A M'$ then $\Ap_f(p) : f M =_B f M'$.
+\end{thm}
+
+Mappings preserve not just identity, but the entire groupoid structure.
+Proving this requires showing that $ap$ preserves identity, inversion
+and composition.  That is,
+
+\begin{thm}
+For a function $f : A \rightarrow B$ and paths $p : x =_A y$, $q : x =_A y$
+\begin{tabular}{l l}
+1) & $\Ap_f(\refl{}(M)) \equiv \refl{}(f(M))$ \\
+2) & $\Ap_f(p^{-1}) = ap_f(p)^{-1}$ \\
+3) & $\Ap_f(p \centerdot q) =_{Id_B(fx, fy)} ap_f(p) \centerdot ap_f(q)$ \\
+\end{tabular}
+\end{thm}
+
+\paragraph{Exercse:} Prove that maps preserve functoriality.
+A formal proof will be included in a coming revision of these notes.
+
+
+\subsection{Does Homotopy Type Theory have a Computational Interpretation?}
+
+In the sketch of the groupoid proofs, the general case of $p$ is reduced to
+the case of $\refl{x}$.  Currently, this is justified
+by a categorical model.  This is not natural or desirable because the 
+distinguishing characteristic
+of type theory is its computational content characterized by Gentzen's Inversion
+Principle.
+The model-based justification is insufficient, in part, because it does not provide
+a way of \emph{running} HoTT programs.
+The constructivity of Homotopy Type Theory is important because Hedberg's Theorem
+collapses the dimensional tower developed in this section. However, determining
+whether there is a computational interpretation of Homotopy Type theory is
+a principle open problem.
+
+%\section{Conclusion}
+%These notes have introduced a cumulative hierarchy of universes and an infinite tower of iterated identities.
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
+
+\end{document}
