@@ -215,4 +215,61 @@ We can take the following beta rule:
 \end{alignat*}
 
 We leave as an exercise showing that one can implement $\casesplit$ from \fst{} and \snd{}. We can also show the converse, that \fst{} and \snd{} are definable in terms of $\casesplit$.
+
+
+\section{Identity Types}
+With this background, we can begin to talk meaningfully about the identity type. We say that the type $\Id{A}(M,N)$ is the identity type of $M$ and $N$ in $A$, where $A \type$, $M:A$, and $N:A$. We can think of terms of this type as \emph{proofs} that $M$ and $N$ are equal as elements of $A$. Crucially, we need dependence to even form this type. The formation rule is:
+\[\infer[\Id{}\text{-F}]{\Gamma \entails \Id{A}(M,N) \type}{\Gamma \entails A\type & \Gamma \entails M:A & \Gamma \entails N:A}\]
+This type may also be written $M =_A N$. Confusingly, it may also be referred to as ``propositional equality," to distinguish it from definitional equality. The simplest element of this type is a proof of reflexivity, which has the introduction rule: 
+\[\infer[\Id{}\text{-I}]{\Gamma \entails \refl{A}(M): \Id{A}(M,M)}{\Gamma \entails M:A}\]
+
+The elimination rule is:
+\[\infer[\Id{}\text{-E}]{\Gamma \entails \J[x.y.z.C](P,x.Q): [M,N,P/x,y,z]C}
+    {\Gamma \entails P:\Id{A}(M,N) & \Gamma,x{:}A,y{:}A,z{:}\Id{A}(x,y) \entails C \type & \Gamma, x{:}A\entails Q:[x,x,\refl{A}(x)/x,y,z]C}\]
+
+One way to think of the identity type for a particular $A$ is as an inductively generated family of types, where the induction is taken simultaneously over the two terms and the proof that they are equal (corresponding to $x$, $y$, and $z$ in the rule). This view leads us to call the elimination rule \emph{path induction}, where elements of type $\Id$ are ``paths." Then $M$ and $N$ are the \emph{endpoints} of this path. We call this an induction because we can prove $C$ for any two endpoints and proof of their equality if we can prove $C$ generically for some endpoint using $Q$. We need to consider a generic $x$ in $Q$ because the whole family $\Id{A}$ is inductively generated at once, so we can't fix the endpoints $M$ and $N$ while proving the ``inductive step." Further, because we only have one introduction rule, we can reason based on the fact that every path is just reflexivity, so $Q$ can make this assumption.
+
+$\J$ also admits a $\beta$-like rule:
+\begin{alignat*}{5}
+\J[x.y.z. C](\refl{A}(M); x.Q) \equiv [M/x]Q : [M,M,\refl{A}(M)/x,y,z]C && \quad (\beta)
+\end{alignat*}
+
+\subsection{Identity Types as Equivalence Relations}
+If $\Id$ is supposed to be equality, then we would like it to satisfy the three conditions of an equivalence relation: reflexivity, symmetry, and transitivity. Reflexivity is already part of the definition, but the other two properties are not part of the definition. We would like \emph{proofs} that identity types satisfy these properties. Because we are working in a proof-relevant system, these proofs can also be viewed as enriched functional programs. Symmetry states that $x=y \implies y=x$, so a proof of symmetry is a simply map from $\Id{A}(x,y)$ to $\Id{A}(y,x)$. We can write the type of such a map formally as $\Pi x,y{:}A.\, \Id{A}(x,y) \to \Id{A}(y,x)$ (which is shorthand for $\Pi x,y{:}A.\, \Pi p{:}\Id{A}(x,y).\, \Id{A}(y,x)$). A proof of symmetry is just a \emph{program} which has this type:
+\[\text{sym}_A := \lambda x{:}A. \lamda y{:}A. \lambda p{:}\Id{A}(x,y). \J[x.y.z.\Id{A}(y,x)](p;x.\refl{A}(x))\]
+The construction of symmetry is a function (using three $\lambda$'s) whose body just immediately invokes path induction. The motive just states the overall conclusion, and the proof $Q$ is just the only way we have to generate elements of $\Id{A}$. The reason this proof is simple is any path is just reflexivity. The relation defined by the identity type is effectively the diagonal relation which only relates things to themselves, about which it is easy to prove symmetry.
+
+Transitivity is more involved. Here we have not one, but two equality proofs, but $\J$ will only let us inspect one at a time. Like symmetry, we write $\text{trans}_{A}$ as a map from elements and proofs of their equality to another proof of equality:
+\begin{alignat*}{2}
+\text{trans}_A := &\lambda x,y,z{:}A.\, \lambda u:\Id{A}(x,y).\, \lambda v{:}\Id{A}(y,z). \\
+                  &\quad(\J[m.n.u.\, \Id{A}(n,z)\to\Id{A}(m,z)](u;m.\lambda v. v))(v)
+\end{alignat*}
+The way to understand this is that we need to inductively define a function, which will show that if $y$ is equal to $z$, then $x$ is equal to $z$. Then we can apply this function to the proof $v$, and obtain the desired result. For $Q$, we see that the motive degenerates to $\Id{A}(m,z)\to\Id{A}(m,z)$, so we can just write the identity function.
+
+These specific proofs of symmetry and transitivity induce a kind of $\beta$-like behavior for definitional equality. In particular, due to the $\beta$ rule for $\J$, we see that 
+
+\[\text{sym}_A(M)(M)(\refl{A}(M)) \equiv \refl{A}(M)\]
+
+Further,
+\[\text{trans}_A(X)(X)(Z)(\refl{A}(X))(Q) \equiv Q\]
+because the induction $\J$ is defined on $u$, and thus when $u$ is a reflexivity the whole $\J$ term reduces to the identity function. This definitional equivalence depends on the \emph{how} we proved $\text{trans}_A$. For example, a different proof might not make the same equivalences, which can introduce dependencies between a proof and the exact definition of its lemmas. From a programming perspective, this is anti-modular.
+
+\subsection{Simple Functionality}
+In addition being an equivalence relation, we might hope that maps respect equality. Suppose we have a map $F$ from $A$ to $B$ (so $x{:}A\entails F:B$). In the non-dependent case, $B$ will not depend on $x$, so we can can ask for some term to satisfy:
+\[x,y{:}A, u{:}\Id{A}(x,y) \entails \_ : \Id{B}(F x, F y)\]
+
+We introduce the term $\textsf{ap} F u$ to be the lifting of $F$ from a map between terms to a map between paths. $\textsf{ap}$ may also be known as the ``functorial action." We can define $\textsf{ap}$ using a path induction as:
+\[\textsf{ap}\; F\; u := \J[x.y._.\Id{B}(F x, F y)](u; x. \refl{B}(F x))\]
+
+\subsection{Transportation}
+If we have a dependent map, then the above is no longer sufficient. In this case, we have that $z{:}A\entails B\type$ and $x{:}A\entails F:B$ as before. Crucially different is that $B$ may depend on $x$, so $F x$ and $F y$ won't even necessarily have the same type! Thus we can't even form $\Id{B}(F x, F y)$. If $x \defeq y$, then we would know that the two destination types are the same by substitution, but we only have that $x$ is equal to $y$ \emph{propositionally}. We would expect that $B[x]$ and $B[y]$ to be \emph{related} in some way, as but we do not go as far as to say the two spaces are the same.
+
+%add display map, fibration diagram
+What we will do is say that if two elements $x$ and $y$ have a path $p$ in $A$ between $x$ and $y$ (i.e. $p:\Id{A}(x,y)$), then there is a lifting of this path, $p_*$, to act as a transport map between $[x/z]B$ and $[y/z]B$. Here $A$ is the ``base space," and all $B$ taken over every element of $A$ is known as the ``total space." $B$ for some $z$ is known as a fiber.
+
+We introduce the transport $\textsf{tr}$, with the following specification:
+\[x,y{:}A,\, p{:}\Id{A}(x,y)\entails \textsf{tr}[z.B](p):[x/z]B\to[y/z]B\]
+Informally, this says that a transport, which is specified by a total space ($z.B$) and a path $p$, takes elements from the fiber associated with the start of the path to the end-of-path fiber. We can define transport to be:
+\[\textsf{tr}[z.B](p) := \J[m.n.\_.[m/z]B\to[n/z]B](p;m.\lambda w.w)\]
+Because the motive is $[m/z]B\to[n/z]B$, we can use the identity function inside $\J$ as them motive will become $[m/z]B\to[m/z]B$. Outside, however, because $p:\Id{A}(x,y)$, this will become $[x/z]B\to[y/z]B$. The intuition here is that because the two elements $x$ and $y$ are ``equal," we don't need anything more than a glorified identity function to transport between the induced fibers.
 \end{document}
