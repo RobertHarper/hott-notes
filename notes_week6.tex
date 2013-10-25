@@ -82,7 +82,49 @@ can prove theorems about this type like:
 %
 [TODO : Draw diagrams? Give terms for the correlation lemmas?]
 
-\section{Equivalence}
+\section{Equivalence of Types}
+
+We start by informally recalling some notions of equivalence that are commonly
+used in mathematics:
+
+\begin{enumerate}
+
+\item \emph{Biconditional propositions}: Given two propositions $p$ and $q$
+such that $p \imp q$ and $q \imp p$, we might wish to say that $p = q$,
+because these two propositions are logically equivalent. In classical logic,
+this makes sense, because $p$ and $q$ are both either equal to true or equal
+false. To quote Whitehead and Russell~\cite[p.115]{Whitehead63}:
+
+\begin{quotation}
+
+When each of two propositions implies the other, we say that the two are
+\emph{equivalent}, which we write ``$p \jdeq q$'' \dots It is obvious that two
+propositions are equivalent when, and only when, both are true or both are
+false\dots
+
+We shall give the name of a \emph{truth-function} to a function
+$f(p)$ whose argument is a proposition, and whose truth-value
+depends only upon the truth-value of its argument. All the functions
+of a proposition with which we shall be specially concerned will be
+truth-functions, \emph{i.e.} we shall have
+%
+\begin{equation*}
+p \jdeq q \ . \imp \ . f(p) \jdeq f(q) . 
+\end{equation*}
+%
+\end{quotation}
+
+This means that for Whitehead and Russell, if $p$ and $q$ are logically
+equivalent, then they are indiscernible. However, in the proof relevant setting
+of type theory, this is not the case, because these types classify particular
+pieces of data.  Although terms of the type $f : p \to q$ and $g : q \to p$
+give us ways to interconvert proofs of $p$ and $q$, a proof of $p$ is not by
+itself a proof of $q$.  Moreover, it need not even be the case that $f$ and $g$
+are inverses of each other.
+
+\item \emph{Isomorphic sets}
+
+\end{enumerate}
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
