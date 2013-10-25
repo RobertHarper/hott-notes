@@ -1,0 +1,90 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper]{geometry}                                              
+                                                                                
+\input{macros}                                                                  
+                                                                                
+\usepackage{proof-dashed}                                                       
+\usepackage{tikz-cd}                                                            
+\usepackage{amsmath}                                                            
+\usepackage{lmodern}                                                            
+\usepackage{microtype}                                                          
+
+\metadata{Robert Lewis and Joseph Tassarotti}{2013/10/21 and 2013/10/23}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{eg}{Example}
+\newcommand{\ap}{\mathsf{ap}}
+\newcommand{\apd}{\mathsf{apd}}
+\newcommand{\tr}{\mathsf{tr}}
+\newtheorem*{remark}{Remark}
+
+\begin{document}
+\title{15-819 Homotopy Type Theory Lecture Notes} 
+\author{Robert Lewis and Joseph Tassarotti}
+\date{October 21 and 23, 2013}
+
+\maketitle
+
+\section{Paths-over-Paths}\label{}
+
+Recall that last time we explored the higher groupoid structure of types, and
+showed that for non-dependent maps, $\ap$ preserves this structure.  Now, in
+the case where we have a dependent function $f : \Pi x: A.B$, we would like to
+similarly state that $f$ maps equals to equals, so that given a path $p :
+\Id{A}(M,N)$, there is some map which takes $p$ gives a path between $f M$ and
+$f N$. However, because $f$ is dependent, $f M : [M/x]B$ and $f N : [N/x] B$.
+Although these types are related, they are not equal, so we cannot talk about
+propositional equality between $f M$ and $f N$.
+
+In earlier lectures, we defined $\tr[x.B]p : [M/x] B \to [N/x] B$, often
+written as $p_*$, which lifts the path $p$ to a mapping between the fibers
+$[M/x] B$ and $[N/x] B$. Since $p_*(f M)$ and $f N$ share the same type, we can
+meaningfully talk about equality between them. We can now define a map $\apd_f
+: \Pi p: \Id{A}(M, N). \Id{[N/x]B}(p_* (f M), f N)$ by
+%
+\[ \apd_f p := \J[m.n.z. \Id{[n/x]B}(z_{*}(f m), f n)](p ; m. \refl{[m/x]B}(m)) \]
+%
+
+This has the appropriate type because when the path is simply $\refl{A}(M)$, we
+have that $(\refl{A}(M))_* \jdeq \refl{[M/x]B}(f M)$ Now, since $p_*^{-1}$
+gives a map between the fibers going the other way, we could just as well have
+defined an analogous term $\apd_f' : Id{A}(M, N) \to \Id{[M/x]B}(f M,
+p_*^{-1}(f N))$. Moreover, we have that
+%
+\[
+\begin{array}{lcl}
+\ap_{p_*^{-1}} (\apd_f p) &:& \Id{[M/x]B}(p_*^{-1} (p_* (f M)), p_*^{-1} (f N))  \\
+                          & &  \ \ \jdeq \Id{[M/x]B}(f M, p_*^{-1} (f N)) \\
+\\
+\ap_{p_*} (\apd_f p^{-1}) &:& \Id{[N/x]B}(p_* (f M)), p_* (p_*^{-1} (f N))) \\
+                          & &  \ \ \jdeq \Id{[N/x]B}(p_* (f M), f N) \\
+
+\end{array}
+\]
+%
+which shows that these two theorems imply one another. 
+
+The lack of symmetry in the types of $\apd_f$ and $\apd_f'$ is somewhat awkward
+when developing machine checked proofs. It's more convenient to define a
+symmetric notation, $f(M) =_p^{x. B} f(N) \defeq Id{[N/x]B}(p_* (f M), f N)$,
+which we read as ``$f(M)$ and $f(N)$ are correlated by $p$" . This corresponds
+to the type of paths \emph{over} the path $p$. Using this notation, we 
+can prove theorems about this type like:
+
+
+\[
+\begin{array}{lcl}
+\text{sym}_{\text{corr}} & : & Q =_p^{x.B} R \ \to \ R =_{p^{-1}}^{x.B} Q \\
+\\
+\text{trans}_{\text{corr}} & : & Q =_p^{x.B} R \ \to R =_q^{x.B} S \to Q =_{p \concat q}^{x.B} S 
+\end{array}
+\]
+%
+[TODO : Draw diagrams? Give terms for the correlation lemmas?]
+
+\section{Equivalence}
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
+
+\end{document}
