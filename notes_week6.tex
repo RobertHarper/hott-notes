@@ -158,6 +158,27 @@ of equivalence.
 
 \end{enumerate}
 
+Now, we turn to the question of equivalences of types. Applying our na\"ive
+intuition of regarding types as sets, we might say that types are isomorphic
+precisely when there is a bijection between them. In ITT, this will work for
+types corresponding to first order data, but we encounter problems when
+considering functions.
+
+More precisely, to show that $A \to B$ is isomorphic to $C \to D$, we need to
+construct functions $F: (A \to B) \to (C \to D)$ and $G: (C \to D) \to (A \to
+B)$ such that for all $f : A \to B$ and $g : C \to D$, $G(F(f)) = f$ and
+$F(G(g)) = g$. In a set-theoretic setting, it would suffice to show that for
+all $x \in A$, $G(F(f))(x) = f(x)$, and similarly for $F \circ G$. However, in
+ITT we lack function extensionality, this is not enough. We need to show that
+$G \circ F$ maps $f$ precisely back to itself.  One might try to resolve this
+by quotienting by extensionality or adding in an axiom of extensionality.
+
+However, the problem becomes even more difficult when considering universes.
+We would need to show that for each type $A$ in the universe, $G(F(A)) = A$.
+Just as with functions, where we were really interested in showing that $G
+\comp F$ mapped a function to something that was extensionally equivalent, here
+we want $G(F(A))$ to itself be isomorphic to $A$ not equal.
+
 \bibliographystyle{plain}
 \bibliography{hott_references}
 
