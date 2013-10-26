@@ -16,7 +16,13 @@
 \newcommand{\ap}{\mathsf{ap}}
 \newcommand{\apd}{\mathsf{apd}}
 \newcommand{\tr}{\mathsf{tr}}
+\newcommand{\iseq}{\mathsf{isequiv}}
+\newcommand{\qinv}{\mathsf{qinv}}
+\newcommand{\happ}{\mathsf{happly}}
+\newcommand*{\comp}{\mathbin{\circ}}
+
 \newtheorem*{remark}{Remark}
+\newtheorem*{proposition}{Proposition}
 
 \begin{document}
 \title{15-819 Homotopy Type Theory Lecture Notes} 
@@ -176,8 +182,151 @@ by quotienting by extensionality or adding in an axiom of extensionality.
 However, the problem becomes even more difficult when considering universes.
 We would need to show that for each type $A$ in the universe, $G(F(A)) = A$.
 Just as with functions, where we were really interested in showing that $G
-\comp F$ mapped a function to something that was extensionally equivalent, here
+\circ F$ mapped a function to something that was extensionally equivalent, here
 we want $G(F(A))$ to itself be isomorphic to $A$ not equal.
+
+\section{Basic Properties of Equivalence}\label{sec:equiv}
+
+As discussed, there are situations where we would like to distinguish between identical
+(or equal) types and \emph{equivalent} types, written $A\simeq B$.
+
+
+ For a function $f:A \to B$, we define an \emph{equivalence} between $A$ and $B$ by
+  $$\iseq(f)\defeq (\Sigma g: B\to A.f\comp g \sim \id_B)\times (\Sigma h: B\to A.h\comp f \sim \id_A).$$
+  
+ The proposition expressing that two types $A$ and $B$ are equivalent is
+  $$A\simeq B\defeq \Sigma f: A\to B.\iseq(f).$$
+  
+Since we are in a proof-relevant setting, the information that $A\simeq B$ consists of five
+things:
+\begin{itemize}
+ \item A function $f:A\to B$
+ \item A function $g: B\to A$
+ \item A proof $\alpha: \Pi y:B.f(g(y)) =_B y$
+ \item A function $h: B\to A$
+ \item A proof $\beta: \Pi x:A.h(f(x)) =_A x$
+\end{itemize}
+  
+ We will also be interested in the notion of a \emph{quasi-inverse}:
+  $$\qinv(f)\defeq \Sigma g:B\to A.(f\comp g\sim \id_B \times g\comp f\sim \id_A).$$
+  
+As one might hope, the notions of equivalence and quasi-inverse are very closely related.
+One can prove the following properties:
+
+\begin{enumerate}
+ \item For every $f:A\to B$, there is a function $\qinv(f) \to \iseq(f)$.
+ \item For every $f:A\to B$, there is a function $\iseq(f) \to \qinv(f)$.
+\end{enumerate}
+
+This means that the two notions are logically equivalent: a function is an equivalence
+if and only if it has a quasi-inverse. In addition, we can show that $\iseq(f)$ 
+expresses an HPROP: that is, up to higher homotopy, there is only one proof of this fact.
+This will become important later.
+
+
+\subsection{Homotopy Equivalence}
+
+When we write $\sim$ above, we mean ``homotopic to.'' We define this by
+$$ H: f\sim_{A\to B} g \defeq \Pi x:A.\Id{B} (f x, g x).$$
+
+Roughly, this means that ``for all $x:A$, $f x =_B g x$. But actually there is something more
+going on: $H$ is \emph{dependently functorial} in $x:A$. $H$ respects paths between inhabitants
+in $A$ and $B$. This property is also called \emph{naturality}; we can say that $H$ is
+a sort of polymorphism in $x:A$. 
+
+%DIAGRAM HERE!
+
+\subsection{Function Extensionality}
+
+We can use this definition of homotopy equivalence to introduce the axiom of function
+extensionality. First, we define the map
+$$ \happ: f =_{A\to B} g \to f\sim_{A\to B} g$$
+
+The axiom of FUNEXT says that the above map is an equivalence: if we have a proof
+of $f \sim_{A\to B} g$, we may assume that we have a proof of $f =_{A\to B} g$. This is not
+necessarily provable without the axiom. For example, in the natural number type,
+$\lambda x.0+x \sim_{N\to N} \lambda x.x$, but since addition was defined inductively on the
+second argument, we cannot find a path between them.
+
+\subsection{Exercises}
+The following propositions are left as exercises, with the first one begun for explanatory
+purposes:
+
+\begin{enumerate}
+ \item Show that $\id_A: A\to A$ is an equivalence.
+ 
+ To do this, we need four pieces of information:
+ \begin{enumerate}
+  \item $g: A\to A$. Take this to be $\id_A$.
+  \item A proof $\alpha: \Pi y:A. \id_A(g (y)) =_A y$.
+  \item $h: A\to A$. Again, take this to be $\id_A$.
+  \item A proof $\beta: \Pi x:A. h(\id_A(x)) =_A x$.
+ \end{enumerate}
+
+ \item If $f: A\to B$ is an equivalence, then there is $f^{-1}: B\to A$ (given by the quasi-inverse
+ of $f$) that is also an equivalence.
+ 
+ \item If $f: A\to B$ and $g: B\to C$ are equivalences, then so is $g\comp f: A\to C$.
+\end{enumerate}
+
+
+
+\section{Structure of Paths in Types}
+
+We want to examine the paths inside certain types. For the negative types, this will be
+relatively simple. For the positive types, it will be much harder. There are many outstanding
+open problems within the positive types.
+
+\subsection{Product Types}
+We start by examining the paths in $\Id{A\times B}(\_,\_)$. 
+
+There is a function $f$ such that
+$$f: \Id{A\times B}(x,y) \to (\Id{A}(\pi_1 x, \pi_1 y) \times \Id{B}(\pi_2 x,\pi_2 y)).$$
+
+Specifically,
+
+$$f\defeq \lambda p.\langle \ap_{\pi_1} (p) , \ap_{\pi_2} (p) \rangle$$
+
+Roughly speaking, if $x =_{A\times B} y$, then $\pi_1 x =_A \pi_1 y$ and $\pi_2 x =_B \pi_2 y$.
+
+\begin{proposition} $f$ is an equivalence:
+ $\Id{A\times B}(x,y) \simeq \Id{A}(\pi_1 x, \pi_1 y) \times \Id{B}(\pi_2 x, \pi_2 y)$ 
+\end{proposition}
+
+\begin{proof}
+ As noted in Section 2, it suffices to produce a quasi-inverse for $f$. We need to construct three objects:
+ \begin{enumerate}
+  \item $g: ( \Id{A}(\pi_1 x, \pi_1 y) \times \Id{B}(\pi_2 x, \pi_2 y) ) \to \Id{A\times B} (x,y)$
+  \item $\alpha: g(f(p)) =_{\Id{A\times B} (x,y)} p$
+  \item $\beta: f(g(q)) =_{\Id{A}(x,y)\times \Id{B}(x,y)} q$
+ \end{enumerate}
+ We construct these as follows:
+ \begin{enumerate}
+  \item We define two auxiliary functions
+  $$\pair \defeq \lambda x \lambda y \langle x, y \rangle : A\to B\to A\times B$$
+  and
+  $$\ap2_f: \Id{}(x,x') \to \Id{}(y,y') \to \Id{}(f x y, f x' y')$$ %Should we fill this out more?
+  
+  Using these, we can then define
+  $$g\defeq \lambda \langle p,q \rangle .\ap2_\pair p q$$.
+  
+  \item To define $\alpha$, it suffices (by FUNEXT) to show:
+  \begin{itemize}
+   \item $\eta: \Pi p(\ap2_\pair (\ap_{\pi_1}(p), \ap_{\pi_2}(p)) = p)$
+   \item $\beta_1: \Pi p \Pi q (\ap_{\pi_1} (\ap2_\pair p q) = p)$
+   \item $\beta_2: \Pi p \Pi q (\ap_{\pi_2} (\ap2_\pair p q) = q)$
+  \end{itemize}
+
+  By path induction, we need to show that
+  $$x:A\times B \entails R:(\ap2_\pair(\ap_{\pi_1}(\refl{}(x)),\ap_{\pi_2}(\refl{}(x))))=\refl{}(x)$$
+  
+  %This needs to be finished!
+ \end{enumerate}
+
+
+\end{proof}
+
+\subsection{Coproduct Types}
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
