@@ -122,7 +122,39 @@ give us ways to interconvert proofs of $p$ and $q$, a proof of $p$ is not by
 itself a proof of $q$.  Moreover, it need not even be the case that $f$ and $g$
 are inverses of each other.
 
-\item \emph{Isomorphic sets}
+\item \emph{Isomorphic sets}: In set theory, we say that two sets $A$ and $B$
+are \emph{isomorphic} if there is a bijection between them. That is, there are
+functions $f : A \to B$ and $g : B \to A$ such that $g(f(a)) = a$ and $f(g(b))
+= b$. In many contexts, it is not relevant for us to distinguish between
+isomorphic sets. However, in ZF set theory, just because two sets are
+isomorphic does not mean they are indiscernible, so we cannot regard them
+as equal.
+
+This is a larger symptom of the fact that although ZF set theory lets us encode
+the structures of mathematics, it does not support abstraction. Propositions
+like $0 \in 1$ are perfectly well-formed, and are even true for most encodings
+of the natural numbers as sets. As de Bruijn points out~\cite{deBruijn95},
+these artifacts of a particular encoding contradict the way we conceptually
+think of mathematics\footnote{A portion of this passage is quoted in
+\cite{Lamport99}, which contains an interesting discussion about some
+advantages and disadvantages of types and sets.}:
+%
+\begin{quotation}
+In our mathematical culture we have learned to keep things apart. If we have a
+rational number and a set of points in the Euclidean plane, we cannot even
+imagine what it means to form the intersection. The idea that both might have
+been coded in ZF with a coding so crazy that the intersection is \emph{not
+empty} seems to be ridiculous\dots
+
+A very clear case of thinking in terms of types can be found in Hilbert's
+axiomatization of geometry. He started by saying that he assumes there are
+certain things which will be called \emph{points} and certain things to be
+called \emph{lines}. Nothing is said about the nature of these things.
+\end{quotation}
+%
+Type theory rules out statements like $0 \in 1$ as ill-formed. As we shall see,
+this same facility for abstraction allows us to give a more suitable treatment
+of equivalence.
 
 \end{enumerate}
 
