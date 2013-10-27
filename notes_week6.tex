@@ -23,6 +23,8 @@
 
 \newtheorem*{remark}{Remark}
 \newtheorem*{proposition}{Proposition}
+\newtheorem*{exercise}{Exercise}
+\newtheorem*{lemma}{Lemma}
 
 \begin{document}
 \title{15-819 Homotopy Type Theory Lecture Notes} 
@@ -187,8 +189,8 @@ we want $G(F(A))$ to itself be isomorphic to $A$ not equal.
 
 \section{Basic Properties of Equivalence}\label{sec:equiv}
 
-As discussed, there are situations where we would like to distinguish between identical
-(or equal) types and \emph{equivalent} types, written $A\simeq B$.
+As discussed, there are situations where we would like to distinguish between 
+identical (or equal) types and \emph{equivalent} types, written $A\simeq B$.
 
 
  For a function $f:A \to B$, we define an \emph{equivalence} between $A$ and $B$ by
@@ -197,8 +199,8 @@ As discussed, there are situations where we would like to distinguish between id
  The proposition expressing that two types $A$ and $B$ are equivalent is
   $$A\simeq B\defeq \Sigma f: A\to B.\iseq(f).$$
   
-Since we are in a proof-relevant setting, the information that $A\simeq B$ consists of five
-things:
+Since we are in a proof-relevant setting, the information that $A\simeq B$ 
+consists of five things:
 \begin{itemize}
  \item A function $f:A\to B$
  \item A function $g: B\to A$
@@ -263,8 +265,8 @@ purposes:
   \item A proof $\beta: \Pi x:A. h(\id_A(x)) =_A x$.
  \end{enumerate}
 
- \item If $f: A\to B$ is an equivalence, then there is $f^{-1}: B\to A$ (given by the quasi-inverse
- of $f$) that is also an equivalence.
+ \item If $f: A\to B$ is an equivalence, then there is $f^{-1}: B\to A$ (given by 
+ the quasi-inverse of $f$) that is also an equivalence.
  
  \item If $f: A\to B$ and $g: B\to C$ are equivalences, then so is $g\comp f: A\to C$.
 \end{enumerate}
@@ -290,11 +292,12 @@ $$f\defeq \lambda p.\langle \ap_{\pi_1} (p) , \ap_{\pi_2} (p) \rangle$$
 Roughly speaking, if $x =_{A\times B} y$, then $\pi_1 x =_A \pi_1 y$ and $\pi_2 x =_B \pi_2 y$.
 
 \begin{proposition} $f$ is an equivalence:
- $\Id{A\times B}(x,y) \simeq \Id{A}(\pi_1 x, \pi_1 y) \times \Id{B}(\pi_2 x, \pi_2 y)$ 
+ $\Id{A\times B}(x,y) \simeq \Id{A}(\pi_1 x, \pi_1 y) \times \Id{B}(\pi_2 x, \pi_2 y)$.
 \end{proposition}
 
 \begin{proof}
- As noted in Section 2, it suffices to produce a quasi-inverse for $f$. We need to construct three objects:
+ As noted in Section 2, it suffices to produce a quasi-inverse for $f$.
+ We need to construct three objects:
  \begin{enumerate}
   \item $g: ( \Id{A}(\pi_1 x, \pi_1 y) \times \Id{B}(\pi_2 x, \pi_2 y) ) \to \Id{A\times B} (x,y)$
   \item $\alpha: g(f(p)) =_{\Id{A\times B} (x,y)} p$
@@ -305,7 +308,8 @@ Roughly speaking, if $x =_{A\times B} y$, then $\pi_1 x =_A \pi_1 y$ and $\pi_2 
   \item We define two auxiliary functions
   $$\pair \defeq \lambda x \lambda y \langle x, y \rangle : A\to B\to A\times B$$
   and
-  $$\ap2_f: \Id{}(x,x') \to \Id{}(y,y') \to \Id{}(f x y, f x' y')$$ %Should we fill this out more?
+  $$\ap2_f: \Id{}(x,x') \to \Id{}(y,y') \to \Id{}(f x y, f x' y')$$ 
+  %Should we fill this out more? Bob left it as an exercise.
   
   Using these, we can then define
   $$g\defeq \lambda \langle p,q \rangle .\ap2_\pair p q$$.
@@ -317,16 +321,92 @@ Roughly speaking, if $x =_{A\times B} y$, then $\pi_1 x =_A \pi_1 y$ and $\pi_2 
    \item $\beta_2: \Pi p \Pi q (\ap_{\pi_2} (\ap2_\pair p q) = q)$
   \end{itemize}
 
-  By path induction, we need to show that
+  By path induction, we need to find $R$ such that
   $$x:A\times B \entails R:(\ap2_\pair(\ap_{\pi_1}(\refl{}(x)),\ap_{\pi_2}(\refl{}(x))))=\refl{}(x)$$
   
+  Then,
+  $$\eta\defeq J[\ ](p; x.R).$$
+  
+  By our earlier definition of $\ap$\footnote{
+  This is a striking example of anti-modularity. One has no reason to expect that this 
+  equality should hold definitionally; it depends essentially on how $\ap$ was defined, 
+  not just on its type. It would be nice to avoid this kind of code-on-code dependency,
+  but at the current state of development, we cannot avoid it; trying to do the proof
+  in terms of propositional equalities results in type-checking failures.
+  }, we have that
+  \begin{align*}
+   \ap_{\pi_1}(\refl{}(x))\equiv &\ \refl{}(\pi_1(x)) \\
+   \ap_{\pi_2}(\refl{}(x))\equiv &\ \refl{}(\pi_2(x))\text{, and from these,} \\
+   \ap2_\pair(\refl{}(\pi_1(x))) (\refl{}(\pi_2(x))) \equiv &\ \refl{}\langle \pi_1(x),\pi_2(x)\rangle \\
+   \equiv &\ \refl{}(x)
+  \end{align*}
+
+  
   %This needs to be finished!
+  \item The constructions of $\beta_1$ and $\beta_2$ are similar and left as exercises.
  \end{enumerate}
 
 
 \end{proof}
 
 \subsection{Coproduct Types}
+Similarly, we can look into $\Id{A+B}(x,y)$. Intuitively speaking, we would like to say that
+any path in the space $A+B$ is either a path in $A$ or a path in $B$; we would never expect to have
+a path (equation) between an $\inl(a)$ and an $\inl(b)$.
+
+We would like to prove the following facts:
+
+\begin{align*}
+ \Id{A+B}(\inl(a),\inl(a'))\simeq &\ \Id{A}(a,a') \\
+ \Id{A+B}(\inr(b),\inr(b'))\simeq &\ \Id{B}(b,b') \\
+ \Id{A+B}(\inl(a),\inr(b))\simeq &\ 0 \\
+ \Id{A+B}(\inr(a),\inl(b))\simeq &\ 0
+\end{align*}
+
+Proving this requires a bit of a trick.
+
+Suppose we wanted to prove the first equivalence alone.
+The right-to-left direction is simple. For the left-to-right direction, we need to exhibit
+$$p: \Id{A+B}(\inl(a),inl(a'))\entails R:\Id{A}(a,a').$$
+
+$R$ must be a path induction on $p$, of the form $R=J[C](p,\_)$ for some motive $C$.
+The conclusion of this path induction will be of the form $C(\inl(a),\inl(a'),p)$.
+But what we need is $\Id{A}(a,a')$ (note the lack of $\inl$). One might try to define
+something like $D(u,v)=\Id{A}(\mathsf{outl}(u),\mathsf{outl}(v))$, but this cannot exist,
+since $\mathsf{outl}$ cannot be a total function.
+
+This approach, then, will not work. Instead, we must take a different approach. We will
+find a motive $F: (A+B)\times (A+B) \to \mathcal{U}$ such that:
+\begin{align*}
+ F(\inl(a),\inl(a'))\equiv &\ \Id{A}(a,a') \\
+ F(\inr(a),\inr(a'))\equiv &\ \Id{B}(b,b') \\
+ F(\inl(a),\inr(b)) \equiv &\ 0 \\
+ F(\inr(a),\inl(b)) \equiv &\ 0
+\end{align*}
+
+Such an $F$ expresses all of the desired properties of the coproduct.
+
+\begin{exercise}Define such an $F$ by ``double induction.''
+ 
+\end{exercise}
+
+The following lemma expresses the subgoal of our path induction with motive $F$:
+\begin{lemma}
+ $x:A+B\entails \_: F(x,x)$.
+\end{lemma}
+
+\begin{proof}
+ Our proof of this will be a $\case$ statement:
+ $$\underline{\case}[z.F(z,z)](x; m:A.\refl{A}(m),n:B.\refl{B}(n)): F(x,x)$$
+ 
+ Note that $\refl{A}(m):[\inl(m)/z]F(z,z)$, since 
+ $$\Id{A+B}(m,n)\equiv F(\inl(m),\inl(m))\equiv [\inl(m)/z]F(z,z).$$
+\end{proof}
+
+To complete the proof, we must define something of the type
+$$\Pi x:A+B \Pi x': A+B(\Id{A+B}(x,y)\to F(x,x')).$$
+
+This is our task for next time!
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
