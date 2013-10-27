@@ -190,7 +190,9 @@ we want $G(F(A))$ to itself be isomorphic to $A$ not equal.
 \section{Basic Properties of Equivalence}\label{sec:equiv}
 
 As discussed, there are situations where we would like to distinguish between 
-identical (or equal) types and \emph{equivalent} types, written $A\simeq B$.
+identical (equal) types and \emph{equivalent} types, written $A\simeq B$, in 
+a way that respects both first-order data types and higher-order function types.
+The notion of homotopy between paths, $\sim$, will be useful here.
 
 
  For a function $f:A \to B$, we define an \emph{equivalence} between $A$ and $B$ by
@@ -208,6 +210,9 @@ consists of five things:
  \item A function $h: B\to A$
  \item A proof $\beta: \Pi x:A.h(f(x)) =_A x$
 \end{itemize}
+
+To prove that $A\simeq B$, we need to provide all of these as evidence, and from
+evidence that $A\simeq B$, we can extract all of these.
   
  We will also be interested in the notion of a \emph{quasi-inverse}:
   $$\qinv(f)\defeq \Sigma g:B\to A.(f\comp g\sim \id_B \times g\comp f\sim \id_A).$$
@@ -234,7 +239,32 @@ $$ H: f\sim_{A\to B} g \defeq \Pi x:A.\Id{B} (f x, g x).$$
 Roughly, this means that ``for all $x:A$, $f x =_B g x$. But actually there is something more
 going on: $H$ is \emph{dependently functorial} in $x:A$. $H$ respects paths between inhabitants
 in $A$ and $B$. This property is also called \emph{naturality}; we can say that $H$ is
-a sort of polymorphism in $x:A$. 
+a sort of polymorphism in $x:A$. This means that the following diagram commutes:
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto]
+ \node (UL) {$f(a)$};
+ \node (UR) [right of=UL] {$g(a)$};
+ \node (LL) [below of=UL] {$f(a')$};
+ \node (LR) [below of=UR] {$g(a')$};
+ 
+ \draw[transform canvas={yshift=0.2ex},-] (UL) to node {\footnotesize $H(a)$} (UR);
+ \draw[transform canvas={xshift=0.2ex},-] (UL) to node [swap] {\footnotesize $\ap_f(p)$} (LL);
+ \draw[transform canvas={yshift=0.2ex},-] (LL) to node [swap] {\footnotesize $H(a')$} (LR);
+ \draw[transform canvas={xshift=0.2ex},-] (UR) to node {\footnotesize $\ap_g(p)$} (LR);
+ 
+ \draw[transform canvas={yshift=-0.2ex},-] (UL) to node {} (UR);
+ \draw[transform canvas={xshift=-0.2ex},-] (UL) to node [swap] {} (LL);
+ \draw[transform canvas={yshift=-0.2ex},-] (LL) to node [swap] {} (LR);
+ \draw[transform canvas={xshift=-0.2ex},-] (UR) to node {} (LR);
+%  \node (C) {$C$};
+%  \node (P) [below of=C] {$\prod_{i \in I} A_i$};
+%  \node (Ai) [right of=P] {$A_i$};
+%  \draw[->] (C) to node {$f_i$} (Ai);
+%  \draw[->, dashed] (C) to node [swap] {$\langle f_i \rangle_{i \in I}$} (P);
+%  \draw[->] (P) to node [swap] {$\pi_i$} (Ai);
+\end{tikzpicture}
+\end{center}
 
 %DIAGRAM HERE!
 
