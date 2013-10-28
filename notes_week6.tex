@@ -39,10 +39,10 @@ Recall that last time we explored the higher groupoid structure of types, and
 showed that for non-dependent maps, $\ap$ preserves this structure.  Now, in
 the case where we have a dependent function $f : \Pi x: A.B$, we would like to
 similarly state that $f$ maps equals to equals, so that given a path $p :
-\Id{A}(M,N)$, there is some map which takes $p$ gives a path between $f M$ and
-$f N$. However, because $f$ is dependent, $f M : [M/x]B$ and $f N : [N/x] B$.
-Although these types are related, they are not equal, so we cannot talk about
-propositional equality between $f M$ and $f N$.
+\Id{A}(M,N)$, there is some map which takes in $p$ and gives a path between $f
+M$ and $f N$. However, because $f$ is dependent, $f M : [M/x]B$ and $f N :
+[N/x] B$.  Although these types are related, they are not equal, so we cannot
+talk about propositional equality between $f M$ and $f N$.
 
 In earlier lectures, we defined $\tr[x.B]p : [M/x] B \to [N/x] B$, often
 written as $p_*$, which lifts the path $p$ to a mapping between the fibers
@@ -54,10 +54,12 @@ meaningfully talk about equality between them. We can now define a map $\apd_f
 %
 
 This has the appropriate type because when the path is simply $\refl{A}(M)$, we
-have that $(\refl{A}(M))_* \jdeq \refl{[M/x]B}(f M)$ Now, since $p_*^{-1}$
-gives a map between the fibers going the other way, we could just as well have
-defined an analogous term $\apd_f' : Id{A}(M, N) \to \Id{[M/x]B}(f M,
-p_*^{-1}(f N))$. Moreover, we have that
+have that $(\refl{A}(M))_* \jdeq \refl{[M/x]B}(f M)$. See
+figure~\ref{fig:paths-over-paths} for a pictorial representation of this. 
+
+Now, since $p_*^{-1}$ gives a map between the fibers going the other way, we
+could just as well have defined an analogous term $\apd_f' : \Id{A}(M, N) \to
+\Id{[M/x]B}(f M, p_*^{-1}(f N))$. Moreover, we have that
 %
 \[
 \begin{array}{lcl}
@@ -79,7 +81,6 @@ which we read as ``$f(M)$ and $f(N)$ are correlated by $p$" . This corresponds
 to the type of paths \emph{over} the path $p$. Using this notation, we 
 can prove theorems about this type like:
 
-
 \[
 \begin{array}{lcl}
 \text{sym}_{\text{corr}} & : & Q =_p^{x.B} R \ \to \ R =_{p^{-1}}^{x.B} Q \\
@@ -88,7 +89,58 @@ can prove theorems about this type like:
 \end{array}
 \]
 %
-[TODO : Draw diagrams? Give terms for the correlation lemmas?]
+
+
+\begin{figure}
+\label{fig:paths-over-paths}
+\begin{center}
+\begin{tikzpicture}
+   \draw (0, 0) ellipse (5cm and 3cm);
+   \draw (0, -5cm) ellipse (5cm and 1cm);
+
+   \draw [dashed, ultra thick] (-1.55 cm, -5cm) --  (1.55 cm, -5cm);
+   \node [above] at (0 cm, -5cm) {$p$};
+   \draw [fill] (-1.75cm, -5cm) circle [radius=.05cm];
+   \node [left] at (-1.75cm, -5cm) {$M$};
+   \draw [fill] (1.75cm, -5cm) circle [radius=.05cm];
+   \node [right] at (1.75cm, -5cm) {$N$};
+
+   \draw (-1.75 cm, -2.8102cm) -- (-1.75cm, 2.8102cm);
+   \node [above] at (-1.75 cm, 2.8cm) {$[M/x]B$};
+   \draw (1.75 cm, -2.8102cm) -- (1.75cm, 2.8102cm);
+   \node [above] at (1.75 cm, 2.8cm) {$[N/x]B$};
+
+   % p_* 
+   \draw [fill] (-1.75cm, 1.5 cm) circle [radius=.05cm];
+   \node [left] at (-1.75cm, 1.5cm) {$f(M)$};
+   \draw [fill] (1.75cm, 1.5 cm) circle [radius=.05cm];
+   \node [right] at (1.75cm, 1.5cm) {$p_*(f(M))$};
+   \node [above] at (0 cm, 1.5cm) {$p_*$};
+   \draw [->] (-1.55 cm, 1.5cm) --  (1.55 cm, 1.5cm);
+   \draw (-1.55cm, 1.45cm) -- (-1.55cm, 1.55cm);
+
+   % p_* inverse
+   \draw [fill] (-1.75cm, -1.5 cm) circle [radius=.05cm];
+   \node [left] at (-1.75cm, -1.5cm) {$p_*^{-1}(f(M))$};
+   \draw [fill] (1.75cm, -1.5 cm) circle [radius=.05cm];
+   \node [right] at (1.75cm, -1.5cm) {$f(N)$};
+   \node [above] at (0 cm, -1.5cm) {$p_*^{-1}$};
+   \draw [->]  (1.55 cm, -1.5cm) -- (-1.55 cm, -1.5cm) ;
+   \draw (1.55cm, -1.45cm) -- (1.55cm, -1.55cm);
+
+
+   \draw [dashed, ultra thick] (1.75 cm, 1.55cm) --  (1.75 cm, -1.55cm);
+   \node [right] at (1.75cm, 0cm) {$\apd_f p$};
+   \draw [dashed, ultra thick] (-1.75 cm, 1.55cm) --  (-1.75 cm, -1.55cm);
+   \node [left] at (-1.75cm, 0cm) {$\apd_f' p^{-1}$};
+
+
+\end{tikzpicture}
+\end{center}
+\caption{Paths-over-paths}
+
+\end{figure}
+
 
 \section{Equivalence of Types}
 
