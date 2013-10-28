@@ -144,6 +144,8 @@ can prove theorems about this type like:
 
 \section{Equivalence of Types}
 
+\subsection{Motivation}
+
 We start by informally recalling some notions of equivalence that are commonly
 used in mathematics:
 
@@ -239,19 +241,49 @@ Just as with functions, where we were really interested in showing that $G
 \circ F$ mapped a function to something that was extensionally equivalent, here
 we want $G(F(A))$ to itself be isomorphic to $A$ not equal.
 
-\section{Basic Properties of Equivalence}\label{sec:equiv}
+\subsection{Homotopy Equivalence}
 
-As discussed, there are situations where we would like to distinguish between 
-identical (equal) types and \emph{equivalent} types, written $A\simeq B$, in 
-a way that respects both first-order data types and higher-order function types.
-The notion of homotopy between paths, $\sim$, will be useful here.
+We now introduce the notion the notion of a \emph{homotopy}. Given two
+functions $f, g : A \to B$, a homotopy from $f$ to $g$ is a term with type $\Pi
+x:A.  \Id{B} (f x, g x)$. We introduce the notation $f\sim_{A \to B} g$ for the
+type of homotopies from $f$ to $g$. If this type is inhabited, we say that $f$
+is ``homotopic to'' $g$.
+
+Now, given $H : f\sim_{A \to B}$, we have that for all $x:A$, $f x =_B g x$.
+But in fact there is something more going on: $H$ is \emph{dependently
+functorial} in $x:A$. That is, $H$ respects paths between inhabitants in $A$
+and $B$.  This property is also called \emph{naturality}; we can say that $H$
+is a sort of polymorphism in $x:A$. This means that the following diagram
+commutes:
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto]
+ \node (UL) {$f(a)$};
+ \node (UR) [right of=UL] {$g(a)$};
+ \node (LL) [below of=UL] {$f(a')$};
+ \node (LR) [below of=UR] {$g(a')$};
+ 
+ \draw[transform canvas={yshift=0.2ex},-] (UL) to node {\footnotesize $H(a)$} (UR);
+ \draw[transform canvas={xshift=0.2ex},-] (UL) to node [swap] {\footnotesize $\ap_f(p)$} (LL);
+ \draw[transform canvas={yshift=0.2ex},-] (LL) to node [swap] {\footnotesize $H(a')$} (LR);
+ \draw[transform canvas={xshift=0.2ex},-] (UR) to node {\footnotesize $\ap_g(p)$} (LR);
+ 
+ \draw[transform canvas={yshift=-0.2ex},-] (UL) to node {} (UR);
+ \draw[transform canvas={xshift=-0.2ex},-] (UL) to node [swap] {} (LL);
+ \draw[transform canvas={yshift=-0.2ex},-] (LL) to node [swap] {} (LR);
+ \draw[transform canvas={xshift=-0.2ex},-] (UR) to node {} (LR);
+\end{tikzpicture}
+\end{center}
 
 
- For a function $f:A \to B$, we define an \emph{equivalence} between $A$ and $B$ by
-  $$\iseq(f)\defeq (\Sigma g: B\to A.f\comp g \sim \id_B)\times (\Sigma h: B\to A.h\comp f \sim \id_A).$$
+\subsection{Basic Properties of Equivalence}\label{subsec:equiv}
+
+For a function $f:A \to B$, we define an \emph{equivalence} between $A$ and
+$B$, by $$\iseq(f)\defeq (\Sigma g: B\to A.f\comp g \sim \id_B)\times (\Sigma
+h: B\to A.h\comp f \sim \id_A).$$
   
- The proposition expressing that two types $A$ and $B$ are equivalent is
-  $$A\simeq B\defeq \Sigma f: A\to B.\iseq(f).$$
+ The proposition expressing that two types $A$ and $B$ are equivalent, written
+$A \simeq B$ b, is $$A\simeq B\defeq \Sigma f: A\to B.\iseq(f).$$
   
 Since we are in a proof-relevant setting, the information that $A\simeq B$ 
 consists of five things:
@@ -282,48 +314,17 @@ if and only if it has a quasi-inverse. In addition, we can show that $\iseq(f)$
 expresses an HPROP: that is, up to higher homotopy, there is only one proof of this fact.
 This will become important later.
 
+\subsection{Function extensionality}
 
-\subsection{Homotopy Equivalence}
+The axiom of function extensionality allows us to show that the $(f =_{A \to B}
+g) \simeq (f \sim_{A \to b} g)$.  Even without the axiom, we can define
+the map $$ \happ: f =_{A\to B} g \to f\sim_{A\to B} g$$
 
-When we write $\sim$ above, we mean ``homotopic to.'' We define this by
-$$ H: f\sim_{A\to B} g \defeq \Pi x:A.\Id{B} (f x, g x).$$
-
-Roughly, this means that ``for all $x:A$, $f x =_B g x$. But actually there is something more
-going on: $H$ is \emph{dependently functorial} in $x:A$. $H$ respects paths between inhabitants
-in $A$ and $B$. This property is also called \emph{naturality}; we can say that $H$ is
-a sort of polymorphism in $x:A$. This means that the following diagram commutes:
-
-\begin{center}
-\begin{tikzpicture}[node distance=2cm, auto]
- \node (UL) {$f(a)$};
- \node (UR) [right of=UL] {$g(a)$};
- \node (LL) [below of=UL] {$f(a')$};
- \node (LR) [below of=UR] {$g(a')$};
- 
- \draw[transform canvas={yshift=0.2ex},-] (UL) to node {\footnotesize $H(a)$} (UR);
- \draw[transform canvas={xshift=0.2ex},-] (UL) to node [swap] {\footnotesize $\ap_f(p)$} (LL);
- \draw[transform canvas={yshift=0.2ex},-] (LL) to node [swap] {\footnotesize $H(a')$} (LR);
- \draw[transform canvas={xshift=0.2ex},-] (UR) to node {\footnotesize $\ap_g(p)$} (LR);
- 
- \draw[transform canvas={yshift=-0.2ex},-] (UL) to node {} (UR);
- \draw[transform canvas={xshift=-0.2ex},-] (UL) to node [swap] {} (LL);
- \draw[transform canvas={yshift=-0.2ex},-] (LL) to node [swap] {} (LR);
- \draw[transform canvas={xshift=-0.2ex},-] (UR) to node {} (LR);
-\end{tikzpicture}
-\end{center}
-
-
-\subsection{Function Extensionality}
-
-We can use this definition of homotopy equivalence to introduce the axiom of function
-extensionality. First, we define the map
-$$ \happ: f =_{A\to B} g \to f\sim_{A\to B} g$$
-
-The axiom of FUNEXT says that the above map is an equivalence: if we have a proof
-of $f \sim_{A\to B} g$, we may assume that we have a proof of $f =_{A\to B} g$. This is not
-necessarily provable without the axiom. For example, in the natural number type,
-$\lambda x.0+x \sim_{N\to N} \lambda x.x$, but since addition was defined inductively on the
-second argument, we cannot find a path between them.
+Now, the axiom says that the above map is an equivalence: if we have a proof of
+$f \sim_{A\to B} g$, we may assume that we have a proof of $f =_{A\to B} g$.
+This is not necessarily provable without the axiom. For example, in the natural
+number type, $\lambda x.0+x \sim_{N\to N} \lambda x.x$, but since addition was
+defined inductively on the second argument, we cannot find a path between them.
 
 \subsection{Exercises}
 The following propositions are left as exercises, with the first one begun for explanatory
