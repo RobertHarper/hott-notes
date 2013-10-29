@@ -407,8 +407,7 @@ Roughly speaking, if $x =_{A\times B} y$, then $\pi_1 x =_A \pi_1 y$ and $\pi_2 
   This is a striking example of anti-modularity. One has no reason to expect that this 
   equality should hold definitionally; it depends essentially on how $\ap$ was defined, 
   not just on its type. It would be nice to avoid this kind of code-on-code dependency,
-  but at the current state of development, we cannot avoid it; trying to do the proof
-  in terms of propositional equalities results in type-checking failures.
+  since ``the proof should not have to know about the computation."
   }, we have that
   \begin{align*}
    \ap_{\pi_1}(\refl{}(x))\equiv &\ \refl{}(\pi_1(x)) \\
@@ -418,7 +417,6 @@ Roughly speaking, if $x =_{A\times B} y$, then $\pi_1 x =_A \pi_1 y$ and $\pi_2 
   \end{align*}
 
   
-  %This needs to be finished!
   \item The constructions of $\beta_1$ and $\beta_2$ are similar and left as exercises.
  \end{enumerate}
 
