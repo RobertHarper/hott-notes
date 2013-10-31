@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathpazo}
+\newcommand{\zeroty}{\mathsf{void}}
+\newcommand{\abort}[1]{\mathsf{abort}(#1)}
+\newcommand{\sumty}[2]{{#1}+{#2}}
+\newcommand{\inleft}[1]{\mathsf{inl}(#1)}
+\newcommand{\inright}[1]{\mathsf{inr}{(#1)}}
+\newcommand{\sumcase}[5]{\mathsf{case}({#1};{#2}{.}{#3};{#4}{.}{#5})}
+\newcommand{\idty}[3]{{#2}\mathbin{=_{#1}}{#3}}
+\newcommand{\refl}[2]{\mathsf{refl}_{#1}({#2})}
+\newcommand{\idelim}[4]{\mathsf{J}[{#1}]({#2};{#3}{.}{#4})}
+\newcommand{\family}[2]{{#1}.{#2}}
+\newcommand{\familytwo}[3]{\family{#1}{\family{#2}{#3}}}
+\newcommand{\familythree}[4]{\family{#1}{\familytwo{#2}{#3}{#4}}}
+\newcommand{\prodty}[3]{\prod_{{#1}{:}{#2}}{#3}}
+\newcommand{\sigty}[3]{\sum_{{#1}{:}{#2}}{#3}}
+\newcommand{\lam}[2]{\lambda {#1}{.}{#2}}
+\newcommand{\app}[2]{{#1}({#2})}
+\newcommand{\apppath}[1]{\mathsf{ap}_{#1}}
+\newcommand{\univty}{\mathcal{U}}
+
+\newcommand{\inverse}[1]{#1^{-1}}
+\newcommand{\concat}[2]{{#1}\cdot{#2}}
+
+\newcommand{\transport}[2]{\mathsf{trans}[#1](#2)}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\begin{document}
+
+\section{Co-product Paths}
+
+As in the HoTT book, we wish to prove the following characterization of paths in a coproduct type $A+B$:
+\begin{enumerate}
+\item $\idty{\sumty{A}{B}}{\inleft{M}}{\inleft{M'}} \simeq \idty{A}{M}{M'}$;
+\item $\idty{\sumty{A}{B}}{\inright{N}}{\inright{N'}} \simeq \idty{B}{N}{N'}$;
+\item $\idty{\sumty{A}{B}}{\inleft{\_}}{\inright{\_}} \simeq \zeroty$;
+\item $\idty{\sumty{A}{B}}{\inright{\_}}{\inleft{\_}} \simeq \zeroty$.
+\end{enumerate}
+
+Define the family $$u:\sumty{A}{B},v:\sumty{A}{B}\vdash F[u,v]:\univty$$ so that the following definitional equivalences hold:
+\begin{enumerate}
+\item $F[\inleft{M},\inleft{M'}]\equiv \idty{A}{M}{M'}$;
+\item $F[\inright{M},\inright{M'}]\equiv \idty{A}{M}{M'}$;
+\item $F[\inleft{\_},\inright{\_}]\equiv\zeroty$;
+\item $F[\inright{\_},\inleft{\_}]\equiv\zeroty$.
+\end{enumerate}
+This is easily achieved by a nested case analysis on $u$ and $v$, respectively, with motive $\univty$ in each case.  The correspondence between the defnition of $F$ and the desired theorem is evident.  The point is that $F$ cancels the injections definitionally, so that no particular mention need be made of this in the proof.
+
+\begin{lemma}
+  \label{L-lemma}
+  There is a term $L$ of type $\prodty{z}{\sumty{A}{B}}{F[z,z]}$ such that $\app{L}{\inleft{x}}\equiv \refl{A}{x}$ and $\app{L}{\inright{y}}\equiv \refl{B}{y}$.
+\end{lemma}
+\begin{proof}
+  Construct $L$ by abstracting over $z$, then performing a case analysis on $z$:
+  \begin{enumerate}
+  \item $x:A\vdash \refl{A}{x}:F[\inleft{x},\inleft{x}]$.
+  \item $y:B\vdash \refl{A}{y}:F[\inright{y},\inright{y}]$.
+  \end{enumerate}
+\end{proof}
+
+We wish to show that $$\prodty{z,z'}{\sumty{A}{B}}{\idty{\sumty{A}{B}}{z}{z'}}\simeq F[z,z'],$$ from which the desired result follows immediately by definition of $F$.
+
+First we exhibit the function
+$$f:\prodty{z}{\sumty{A}{B}}{\prodty{z'}{\sumty{A}{B}}{\idty{\sumty{A}{B}}{z}{z'}\to F[z,z']}}$$
+given as follows:
+$$\lam{z}{\lam{z'}{\lam{p}{\idelim{\familythree{u}{v}{\_}{F[u,v]}}{p}{x}{\app{L}{x}}}}}.$$
+Lemma~\ref{L-lemma} does all the work: if $M:\sumty{A}{B}$, then $$\app{\app{\app{f}{M}}{M}}{\refl{\sumty{A}{B}}{M}}\equiv \app{L}{M}.$$
+
+We then exhibit a quasi-inverse for $f$,
+$$g:\prodty{z}{\sumty{A}{B}}{\prodty{z'}{\sumty{A}{B}}{F[z,z']\to\idty{\sumty{A}{B}}{z}{z'}}}$$
+given by a nested case analysis on $z$ and $z'$ based on the following data:
+\begin{enumerate}
+\item $x:A,x':A,z:F[\inleft{x},\inleft{x'}]\vdash \app{\apppath{\inleft{-}}}{z}:\idty{\sumty{A}{B}}{\inleft{x}}{\inleft{x'}}$;
+\item $x:A,y':B,z:F[\inleft{x},\inright{y'}]\vdash \abort{z}:\idty{\sumty{A}{B}}{\inleft{x}}{\inright{y'}}$.
+\item $y:B,y':B,z:F[\inright{x},\inright{x'}]\vdash \app{\apppath{\inright{-}}}{z}:\idty{\sumty{A}{B}}{\inright{x}}{\inright{x'}}$;
+\item $x:A,y':B,z:F[\inright{x},\inleft{y'}]\vdash \abort{z}:\idty{\sumty{A}{B}}{\inright{x}}{\inleft{y'}}$.
+\end{enumerate}
+Here we are relying on the definitional properties of the family $F$ to justify the given typings.  Notice that the $\lambda$-abstraction of the third argument to $g$ must occur \emph{inside} the case analysis in order to propagate the correct branch information (\textit{cf}. the hacky treatment of this issue in Haskell's so-called GADT's.)
+
+\begin{lemma} 
+  \label{g-lemma}
+  The following types are inhabited:
+  \begin{enumerate}
+  \item $x:A\vdash \_ : \idty{\sumty{A}{B}}{\app{\app{\app{g}{\inleft{x}}}{\inleft{x}}}{\refl{A}{x}}}{\refl{\sumty{A}{B}}{\inleft{x}}}$;
+  \item $y:B\vdash \_ : \idty{\sumty{A}{B}}{\app{\app{\app{g}{\inright{x}}}{\inright{x}}}{\refl{B}{y}}}{\refl{\sumty{A}{B}}{\inright{y}}}$.
+  \end{enumerate}
+\end{lemma}
+
+To complete the proof we need only exhibit witnesses to the fact that for $z,z':\sumty{A}{B}$, the function  $g'=\app{\app{g}{z}}{z'}$ is right and left inverse to the function $f'=\app{\app{f}{z}}{z'}$, up to higher homotopy.
+\begin{enumerate}
+\item $z:\sumty{A}{B},z':\sumty{A}{B},w:F(z,z')\vdash \alpha : \idty{F[z,z']}{\app{f'}{\app{g'}{w}}}{w}$.
+\item $z:\sumty{A}{B},z':\sumty{A}{B},w:\idty{\sumty{A}{B}}{z}{z'}\vdash \beta : \idty{\idty{\sumty{A}{B}}{z}{z'}}{\app{g'}{\app{f'}{w}}}{w}$.
+\end{enumerate}
+
+The first is proved by a nested case analysis on $z$ and $z'$, using the definitional equivalences governing $F$, either aborting, or performing a path induction on $w$, appealing to Lemma~\ref{g-lemma} to complete the proof.  The second is proved by induction on $w$, using a case analysis on the generic $u:\sumty{A}{B}$ so that we may appeal to Lemma~\ref{g-lemma} to complete the proof.
+
+\section{Application to Paths}
+
+The idea is to adapt the above proof for coproducts, except using propositional equivalences for the family $F$ obtained from the assumption that $f$ has a quasi-inverse.
+
+We are given $f:A\to B$ and the following data showing that $f$ has a quasi-inverse:
+\begin{enumerate}
+\item $\inverse{f}:B\to A$;
+\item $\alpha:\prodty{a}{A}{\idty{A}{\app{\inverse{f}}{\app{f}{a}}}{a}}$;
+\item $\beta:\prodty{b}{B}{\idty{B}{\app{f}{\app{\inverse{f}}{b}}}{b}}$.
+\end{enumerate}
+
+We are to show that $\apppath{f}$ has a quasi-inverse, which amounts to giving the following data:
+\begin{enumerate}
+\item $\inverse{\apppath{f}}$, which is taken to be $\lam{q}{\concat{\concat{\inverse{\app{\alpha}{a}}}{\app{\apppath{\inverse{f}}}{q}}}{\app{\alpha}{a'}}}$;
+\item $\alpha':\prodty{a}{A}{\prodty{a'}{A}{\prodty{p}{\idty{A}{a}{a'}}{\idty{\idty{A}{a}{a'}}{\app{\inverse{\apppath{f}}}{\app{\apppath{f}}{p}}}{p}}}}$;
+\item $\beta':\prodty{a}{A}{\prodty{a'}{A}{\prodty{q}{\idty{B}{\app{f}{a}}{\app{f}{a'}}}{\idty{\idty{B}{\app{f}{a}}{\app{f}{a'}}}{\app{\apppath{f}}{\app{\inverse{\apppath{f}}}{q}}}{q}}}}$.
+\end{enumerate}
+
+The construction of $\alpha'$ is given in the book.  It takes the form of a path induction on $p$, reducing the problem to the case of reflexivity for a generic $x$ of type $A$.  This presents no difficulties.
+
+The construction of $\beta'$ is more difficult, because the conclusion involves $a$, $a'$, and $q$, whereas the type of $q$, on which one would consider to perform a path induction, is $\idty{B}{\app{f}{a}}{\app{f}{a'}}$.  This means that whatever motive, $F$, we choose for the path induction, the conclusion will be of the form $F[\app{f}{a},\app{f}{a'},q]$, and we must somehow ``cancel'' the $f$'s in order to get back $a$ and $a'$.  We can do this by exploiting the quasi-inverse we are given for $f$.
+
+Thus define $u:B,v:B,w:\idty{B}{u}{v}\vdash F:\univty$ to be the following equality type:
+\begin{displaymath}
+  \idty{\idty{B}{u}{v}}{\app{\apppath{f}}{\concat{\concat{\inverse{\app{\alpha}{\app{\inverse{f}}{u}}}}{\app{\apppath{\inverse{f}}}{w}}}{\app{\alpha}{\app{\inverse{f}}{v}}}}}{w}
+\end{displaymath}
+If we use $F$ as the motive for a path induction over $q$ of type $\idty{B}{\app{f}{a}}{\app{f}{a'}}$, then we obtain an inhabitant of ${F[\app{f}{a},\app{f}{a'},q]}$, whichis just the equality type
+\begin{displaymath}
+  \idty{}
+  {\app{\apppath{f}}{\concat{\concat{\inverse{\app{\alpha}{\app{\inverse{f}}{\app{f}{a}}}}}{\app{\apppath{\inverse{f}}}{q}}}{\app{\alpha}{\app{\inverse{f}}{\app{f}{a'}}}}}}
+  {q}.
+\end{displaymath}
+Using data provided by the quasi-inverse for $f$, we may show that the left-hand side of this equation is
+\begin{displaymath}
+  \app{\apppath{f}}{\concat{\concat{\inverse{\app{\alpha}{a}}}{\app{\apppath{\inverse{f}}}{q}}}{\app{\alpha}{a'}}},
+\end{displaymath}
+which is the desired conclusion.
+
+It remains to show, then, that 
+\begin{displaymath}
+  y:B \vdash \_ : F[y,y,\refl{B}{y}],
+\end{displaymath}
+which is to say that 
+\begin{displaymath}
+  y:B \vdash \_ : \idty{B}{\app{\apppath{f}}{\concat{\concat{\inverse{\app{\alpha}{y}}}{\app{\apppath{\inverse{f}}}{\refl{B}{y}}}}{\app{\alpha}{y}}}}{\refl{B}{y}}.
+\end{displaymath}
+Now $\app{\apppath{\inverse{f}}}{\refl{B}{y}}\equiv \refl{B}{\app{\inverse{f}}{y}}$, which is the unit of concatenation (up to higher homotopy), so it suffices to show
+\begin{displaymath}
+  y:B \vdash \_ : \idty{B}{\app{\apppath{f}}{\concat{\inverse{\app{\alpha}{y}}}{\app{\alpha}{y}}}}{\refl{B}{y}}.
+\end{displaymath}
+Applying the inverse law for paths, this is just
+\begin{displaymath}
+  y:B \vdash \_ : \idty{B}{\app{\apppath{f}}{\refl{B}{\app{\inverse{f}}{y}}}}{\refl{B}{y}}.
+\end{displaymath}
+Finally, $\app{\apppath{f}}{\refl{B}{\app{\inverse{f}}{y}}}\equiv \refl{B}{\app{f}{\app{\inverse{f}}{y}}}$, and we have
+\begin{displaymath}
+  y:B \vdash \_ : \idty{B}{\refl{B}{\app{f}{\app{\inverse{f}}{y}}}}{\refl{B}{y}},
+\end{displaymath}
+again using the quasi-inverse of $f$, which completes the argument.
+
+\smallskip
+
+Throughout I am tacitly using the principle that $$\transport{\family{x}{x}}{p}:A\to A'$$ whenever $p:\idty{\univty}{A}{A'}$, which is to say that one may transport objects of a type $A$ to an object of an equal type $A'$ in the same universe.  This move corresponds to the implicit uses of definitional equality of types in the characterization of the paths in a coproduct type.
+
+\end{document}
