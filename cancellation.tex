@@ -107,7 +107,14 @@ The first is proved by a nested case analysis on $z$ and $z'$, using the definit
 
 \section{Application to Paths}
 
-The idea is to adapt the above proof for coproducts, except using propositional equivalences for the family $F$ obtained from the assumption that $f$ has a quasi-inverse.
+The idea is to adapt the above proof for coproducts, except using propositional
+equivalences for the family $F$ obtained from the assumption that $f$ has a
+quasi-inverse.  I will tacitly using the principle
+that $$\transport{\family{x}{x}}{p}:A\to A'$$ whenever
+$p:\idty{\univty}{A}{A'}$, which is to say that one may transport objects of a
+type $A$ to an object of an equal type $A'$ in the same universe.  This
+corresponds to the implicit uses of definitional equality of types in the
+characterization of the paths in a coproduct type.
 
 We are given $f:A\to B$ and the following data showing that $f$ has a quasi-inverse:
 \begin{enumerate}
@@ -209,9 +216,5 @@ Finally, $\app{\pa{f}}{\refl{B}{\app{\iv{f}}{\app{f}{x}}}}\equiv \refl{B}{\app{f
   x{:}A \vdash \_ : \idty{B}{\refl{B}{\app{f}{\app{\iv{f}}{\app{f}{x}}}}}{\refl{B}{\app{f}{x}}},
 \end{displaymath}
 using the quasi-inverse of $f$, which completes the argument.
-
-\smallskip
-
-Throughout I am tacitly using the principle that $$\transport{\family{x}{x}}{p}:A\to A'$$ whenever $p:\idty{\univty}{A}{A'}$, which is to say that one may transport objects of a type $A$ to an object of an equal type $A'$ in the same universe.  This move corresponds to the implicit uses of definitional equality of types in the characterization of the paths in a coproduct type.
 
 \end{document}
