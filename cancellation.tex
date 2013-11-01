@@ -161,7 +161,7 @@ $u{:}A,v{:}A,w{:}\idty{A}{u}{v}\vdash F:\univty$ defined by the equality type
 With $F$ as motive the path induction on $\app{\pa{\iv{f}}}{q}$ yields an inhabitant
 of the type
 $${F[\app{\iv{f}}{\app{f}{a}},\app{\iv{f}}{\app{f}{a'}},\app{\pa{\iv{f}}}{q}]},$$
-which is equal to
+which is definitionally equal to
 \begin{displaymath}
   \idty{}
   {\app{\pa{f}}
@@ -173,11 +173,17 @@ which is equal to
       {\app{\alpha}{\app{\iv{f}}{\app{f}{a'}}}}
     }
   }
-  {\app{\pa{f}}{\app{\pa{\iv{f}}}{q}}}.
+  {\app{\pa{f}}{\app{\pa{\iv{f}}}{q}}}
 \end{displaymath}
-Using the quasi-inverse for $f$, we may show that this equation is equal to the equation
+at the type
 \begin{displaymath}
-  \idty{}
+  \idty{B}{\app{f}{\app{\iv{f}}{\app{f}{a}}}}{\app{f}{\app{\iv{f}}{\app{f}{a'}}}}.
+\end{displaymath}
+Using the quasi-inverse for $f$, and the functoriality of $\pa{g}$ in $g$, we
+may show that this equation is equal to the equation
+\begin{displaymath}
+  \idty
+  {\idty{B}{\app{f}{a}}{\app{f}{a'}}}
   {\app{\pa{f}}
       {\concat
         {\concat
