@@ -147,7 +147,7 @@ transported to the latter, and \textit{vice versa}.
 An appropriate motive for the induction is the type family
 $u{:}A,v{:}A,w{:}\idty{A}{u}{v}\vdash F:\univty$ defined by the equality type
 \begin{displaymath}
-  \idty{\idty{B}{\app{f}{u}}{\app{f}{v}}}{\app{\pa{f}}{\concat{\concat{\iv{\app{\alpha}{u}}}{\app{\pa{\iv{f}}}{\app{\pa{f}}{w}}}}{\app{\alpha}{v}}}}{\pa{f}{w}}.
+  \idty{\idty{B}{\app{f}{u}}{\app{f}{v}}}{\app{\pa{f}}{\concat{\concat{\iv{\app{\alpha}{u}}}{\app{\pa{\iv{f}}}{\app{\pa{f}}{w}}}}{\app{\alpha}{v}}}}{\app{\pa{f}}{w}}.
 \end{displaymath}
 With $F$ as motive the path induction on $\app{\pa{\iv{f}}}{q}$ yields an inhabitant
 of the type
@@ -182,7 +182,7 @@ Using the quasi-inverse for $f$, we may show that this equation is equal to the 
 \end{displaymath}
 which is the desired conclusion.
 
-It remains to show, then, that 
+Then it remains to show that
 \begin{displaymath}
   x{:}A \vdash \_ : F[x,x,\refl{A}{x}],
 \end{displaymath}
@@ -191,22 +191,22 @@ which is to say that
   x{:}A \vdash \_ : \idty{}{\app{\pa{f}}{\concat{\concat{\iv{\app{\alpha}{x}}}{\app{\pa{\iv{f}}}{\app{\pa{f}}{\refl{A}{x}}}}}{\app{\alpha}{x}}}}{\app{\pa{f}}{\refl{A}{x}}}.
 \end{displaymath}
 Now $\app{\pa{f}}{\refl{A}{x}}\equiv\refl{B}{\app{f}{x}}$, and
-$\app{\iv{\pa{f}}}{\refl{B}{\app{f}{x}}}$, so this amounts to
+$\app{\iv{\pa{f}}}{\refl{B}{\app{f}{x}}} \equiv \refl{A}{\app{\iv{f}}{\app{f}{x}}}$, so this amounts to
 showing
 \begin{displaymath}
-  x{:}A \vdash \_ : \idty{}{\app{\pa{f}}{\concat{\concat{\iv{\app{\alpha}{x}}}{\refl{B}{\app{\iv{f}}{\app{f}{x}}}}}{\app{\alpha}{x}}}}{\refl{B}{\app{f}{x}}}.
+  x{:}A \vdash \_ : \idty{}{\app{\pa{f}}{\concat{\concat{\iv{\app{\alpha}{x}}}{\refl{A}{\app{\iv{f}}{\app{f}{x}}}}}{\app{\alpha}{x}}}}{\refl{B}{\app{f}{x}}}.
 \end{displaymath}
 Using the unit laws for path concatenation this reduces to showing
 \begin{displaymath}
-  y:B \vdash \_ : \idty{B}{\app{\pa{f}}{\concat{\iv{\app{\alpha}{y}}}{\app{\alpha}{y}}}}{\refl{B}{y}}.
+  x{:}A \vdash \_ : \idty{B}{\app{\pa{f}}{\concat{\iv{\app{\alpha}{x}}}{\app{\alpha}{x}}}}{\refl{B}{\app{f}{x}}}.
 \end{displaymath}
 Applying the inverse law for paths, this is just
 \begin{displaymath}
-  y:B \vdash \_ : \idty{B}{\app{\pa{f}}{\refl{B}{\app{\iv{f}}{y}}}}{\refl{B}{y}}.
+  x:{A} \vdash \_ : \idty{B}{\app{\pa{f}}{\refl{B}{\app{\iv{f}}{\app{f}{x}}}}}{\refl{B}{\app{f}{x}}}.
 \end{displaymath}
-Finally, $\app{\pa{f}}{\refl{B}{\app{\iv{f}}{y}}}\equiv \refl{B}{\app{f}{\app{\iv{f}}{y}}}$, and we have
+Finally, $\app{\pa{f}}{\refl{B}{\app{\iv{f}}{\app{f}{x}}}}\equiv \refl{B}{\app{f}{\app{\iv{f}}{\app{f}{x}}}}$, and we have
 \begin{displaymath}
-  y:B \vdash \_ : \idty{B}{\refl{B}{\app{f}{\app{\iv{f}}{y}}}}{\refl{B}{y}},
+  x{:}A \vdash \_ : \idty{B}{\refl{B}{\app{f}{\app{\iv{f}}{\app{f}{x}}}}}{\refl{B}{\app{f}{x}}},
 \end{displaymath}
 using the quasi-inverse of $f$, which completes the argument.
 
