@@ -127,7 +127,9 @@ Thus define $u:B,v:B,w:\idty{B}{u}{v}\vdash F:\univty$ to be the following equal
 \begin{displaymath}
   \idty{\idty{B}{u}{v}}{\app{\apppath{f}}{\concat{\concat{\inverse{\app{\alpha}{\app{\inverse{f}}{u}}}}{\app{\apppath{\inverse{f}}}{w}}}{\app{\alpha}{\app{\inverse{f}}{v}}}}}{w}
 \end{displaymath}
-If we use $F$ as the motive for a path induction over $q$ of type $\idty{B}{\app{f}{a}}{\app{f}{a'}}$, then we obtain an inhabitant of ${F[\app{f}{a},\app{f}{a'},q]}$, whichis just the equality type
+If we use $F$ as the motive for a path induction over $q$ of type
+$\idty{B}{\app{f}{a}}{\app{f}{a'}}$, then we obtain an inhabitant of
+${F[\app{f}{a},\app{f}{a'},q]}$, which is just the equality type
 \begin{displaymath}
   \idty{}
   {\app{\apppath{f}}{\concat{\concat{\inverse{\app{\alpha}{\app{\inverse{f}}{\app{f}{a}}}}}{\app{\apppath{\inverse{f}}}{q}}}{\app{\alpha}{\app{\inverse{f}}{\app{f}{a'}}}}}}
