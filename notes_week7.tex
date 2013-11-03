@@ -121,7 +121,7 @@ $$\ap_f(\alpha(a)^{-1} \cdot \ap_{f^{-1}}(q) \cdot \alpha(a')) =_{\Id{B}(f(a),f(
 \end{enumerate}
 \end{exercise}
 
-\section{Identity Types as Hom-sets in an $(\infty,1)$-Category}\label{}
+\section{Transport Properties of Identity}\label{}
 
 Consider the following transport properties of the identity type:
 
@@ -199,5 +199,22 @@ In order to construct a path {\small $\gamma : (M,\refl{A}(M)) =_{\sum_{y:A} \Id
 The above exercise tells us that in order to construct a path from $(M,\refl{A}(M))$ to $(N,P)$ in the type $\sum_{y:A}M=_A y$, it is sufficient to construct an element of the type
 $\sum_{q:M=_A N}\refl{A}(M) =^{y.M=_A y}_q P$. The natural choice for the first component of the pair is the path $P : M=_A N$ itself. It thus remains to show that $\refl{A}(M) =^{y.M=_A y}_P P$. In particular, this means showing that \[ \tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} P \]
 By Lemma.~\ref{??}, we have $\tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} \refl{A}(M) \cdot P$. Since the left-hand evaluates to $P$, we are done.
+
+\section{Homotopy Types}\label{}
+
+One way to see HoTT is that Homotopy \emph{Type Theory} is
+\emph{Homotopy Type} TheoryOne way to see HoTT is that Homotopy \emph{Type Theory} is
+\emph{Homotopy Type} Theory. That is, HoTT is the theory of Homotopy Types.
+
+A type $A$ is a \emph{set}, or $0$-type, if and only if for all $x,y:A$ and $p,q:x=_Ay$,
+we have that $p=_{x=_Ay}q$. In other words,
+\[
+\textsf{isSet}(A) := \prod_{x,y:A}\prod_{p,q:x=_Ay}p=_{x=_Ay}q
+\]
+This means that $A$ is a discrete groupoid up to homotopy. For example, $\Nat$ is a set.
+More about this and other Homotopy Types next week!
+
+
+
 
 \end{document}
