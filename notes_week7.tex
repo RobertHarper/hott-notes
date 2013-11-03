@@ -1,0 +1,196 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper]{geometry}                                              
+                                                                                
+\input{macros}                                                                  
+                                                                                
+\usepackage{proof-dashed}                                                       
+\usepackage{tikz-cd}                                                            
+\usepackage{amsmath}                                                            
+\usepackage{lmodern}                                                            
+\usepackage{microtype}                                                          
+
+\metadata{Lee and Sojakova}{2013/10/28 and 2013/10/30}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{eg}{Example}
+\newcommand{\ap}{\mathsf{ap}}
+\newcommand{\apd}{\mathsf{apd}}
+\newcommand{\tr}{\mathsf{tr}}
+\newcommand{\iseq}{\mathsf{isequiv}}
+\newcommand{\qinv}{\mathsf{qinv}}
+\newcommand{\happ}{\mathsf{happly}}
+\newcommand{\abort}{\mathsf{abort}}
+\newcommand{\seq}{\mathsf{seq}}
+\newcommand{\lp}{\mathsf{loop}}
+\newcommand*{\comp}{\mathbin{\circ}}
+
+\newtheorem*{remark}{Remark}
+\newtheorem*{proposition}{Proposition}
+\newtheorem*{exercise}{Exercise}
+\newtheorem*{lemma}{Lemma}
+
+\begin{document}
+\title{15-819 Homotopy Type Theory Lecture Notes} 
+\author{Joseph Lee and Kristina Sojakova}
+\date{October 28 and 30, 2013}
+
+\maketitle
+
+\section{The Path Spaces of Coproducts}\label{}
+
+Recall from last week that we intend to characterize paths in coproducts by showing
+\[ \prod_{x:A+B}\prod_{x':A+B} \Id{A+B}(x,x') \simeq F(x,x') \]
+where $F: (A+B) \to (A+B) \to \mathcal{U}$ is defined by nested case-analysis so that
+\begin{align*}
+ F(\inl(a),\inl(a'))\equiv &\ \Id{A}(a,a') \\
+ F(\inr(a),\inr(a'))\equiv &\ \Id{B}(b,b') \\
+ F(\inl(a),\inr(b)) \equiv &\ 0 \\
+ F(\inr(a),\inl(b)) \equiv &\ 0
+\end{align*}
+To this end we define a function $f : \prod_{x:A+B}\prod_{x':A+B} \Id{A+B}(x,x') \to F(x,x')$ by 
+\[
+f := \lambda x.\lambda x'.\lambda p.\; \J[F](p;z.\case(z;a.\refl{A}(a);b.\refl{B}(b)))
+\]
+Next we need to define a function $g:\prod_{x:A+B}\prod_{x':A+B} F(x,x')\to\Id{A+B}(x,x')$ such that $g(x,x')$ is a quasi-inverse of $f(x,x')$.
+We put
+{\small
+\begin{align*}
+g := \lambda x.\lambda x'.\case(x;&a.\case(x';a'.\lambda z:F(\inl(a),\inl(a')).\ap_{\inl}(z);b'.\lambda z:F(\inl(a),\inr(b')).\abort(z));\\
+                                  &b.\case(x';a'.\lambda z:F(\inr(b),\inl(a')).\abort(z);b'.\lambda z:F(\inr(b),\inr(b')).\ap_{\inr}(z)))
+\end{align*}}
+We then have to exhibit terms
+\begin{align*}
+\alpha&:\prod_{x:A+B}\prod_{x':A+B}\prod_{u:F(x,x')}f(g(u)) =_{F(x,x')} u\\
+\beta&:\prod_{x:A+B}\prod_{x':A+B}\prod_{v:\Id{A+B}(x,x')}g(f(v)) =_{\Id{A+B}(x,x')} v
+\end{align*}
+These terms are left as homework exercises.
+
+\begin{exercise}
+Characterize the path space of the empty type $\mathbf{0}$.
+\end{exercise}
+
+\section{The Path Spaces of Identity Types}\label{}
+
+For a given type $A$, we would like to characterize the types $\Id{A}(\_,\_)$,
+$\Id{\Id{A}(\_,\_)}(\_,\_)$, $\Id{\Id{\Id{A}(\_,\_)}(\_,\_)}(\_,\_)$, and so on. While this is possible for certain specific types such as $\mathbf{0}, \mathbf{1}, A \times B, A \to B, A + B$ and $\Nat$, it can be very difficult for other types, even seemingly simple ones. For example, determining the loop-spaces of $n$-spheres - i.e., path spaces based at a single point, denoted by $\Omega(S^n)$ - is a famous open problem in algebraic topology. 
+
+What we can say, however, is that if two types are equivalent then so are their path spaces:
+
+\begin{lemma} If $f : A \to B$ is an equivalence, then so is \
+$\ap_f:\Id{A}(a,a')\to\Id{B}(f(a),f(a'))$.
+\end{lemma}
+
+\begin{proof}
+Because $f$ is an equivalence, it has a quasi-inverse $f^{-1}:B\to A$ and we have the following coherences:
+
+\begin{itemize}
+\item $\alpha:\prod_{a:A} f^{-1}(f(a)) =_A a$
+\item $\beta:\prod_{b:B} f(f^{-1}(b) =_B b$
+\end{itemize}
+
+In order to show that $\ap_f$ is an equivalence, it suffices to give a
+quasi-inverse $\ap_f^{-1}:\Id{B}(f(a),f(a'))\to\Id{A}(a,a')$, which we define by
+\[
+\ap_f^{-1}(q) := \alpha(a)^{-1} \cdot \ap_{f^{-1}}(q) \cdot \alpha(a')
+\]
+We now need to construct coherences
+\begin{align*}
+\gamma&:\prod_{p:\Id{A}(a,a')}\ap_f^{-1}(\ap_f(p)) =_{\Id{A}(a,a')} p \\
+\delta&:\prod_{q:\Id{B}(f(a),f(a'))}\ap_f(\ap_f^{-1}(q)) =_{\Id{B}(f(a),f(a'))} q
+\end{align*}
+This will imply that $\ap_f^{-1}$ is indeed a quasi-inverse of $\ap_f$ and thus both are equivalences We leave these as exercises.
+\end{proof}
+
+\begin{exercise} Define the coherence $\gamma$ in the above proof by path induction.
+\end{exercise}
+
+\begin{exercise}
+Define the coherence $\delta$ in the above proof as follows:
+\begin{enumerate}
+\item Use the naturality of $\beta$ to show that 
+$$\beta(f(a))^{-1} \cdot \ap_f(\ap_{f^{-1}}(q)) \cdot \beta(f(a')) =_{\Id{B}(f(a),f(a'))} q$$
+\item Use the naturality of $\alpha$ to show that 
+$$\alpha(f^{-1}(f(a)))^{-1} \cdot \ap_{f^{-1}}(\ap_f(\ap_{f^{-1}}(q))) \cdot \alpha(f^{-1}(f(a'))) =_{\Id{A}(f^{-1}(f(a)),f^{-1}(f(a')))} \ap_{f^{-1}}(q)$$
+\item Use the naturality of $\alpha$ to show that 
+\begin{align*}
+& \alpha(f^{-1}(f(a))) =_{\Id{A}((f^{-1}(f(f^{-1}(f(a))))), f^{-1}(f(a)))}  \ap_{f^{-1}}(\ap_f(\alpha(a)))
+\end{align*}
+and similarly for $a'$.
+\item Use 1), 2), 3) and the naturality of $\beta$ to obtain the desired conclusion
+$$\ap_f(\alpha(a)^{-1} \cdot \ap_{f^{-1}}(q) \cdot \alpha(a')) =_{\Id{B}(f(a),f(a'))} q$$
+\end{enumerate}
+\end{exercise}
+
+\section{Identity Types as Hom-sets in an $(\infty,1)$-Category}\label{}
+
+Consider the following transport properties of the Identity type:
+
+Define $E(x,y) := \Id{A}(x,y)$.
+\begin{enumerate}
+\item Fix $x_0:A$, and consider $y.E(x_0,y)$ as the motive for transporting
+along $q:y=y'$:
+\[
+\tr[y.E(x_0,y)](q):E(x_0,y)\to E(x_0,y')
+\]
+If we apply some $p:E(x_0,y)$ to the term above, we get
+\[
+\tr[y.E(x_0,y)](q)(p) = (\J[a.b._.E(x_0,a)\to E(x_0,b)](q;x.\lambda w.w))(p)\\
+\]
+which is the same as $p \cdot q$! So $\tr[y.E(x_0,y)](q)$ can be seen as 
+the post-concatenation of $q$ to $p$.
+\item 
+\end{enumerate}
+
+\section{Justifying the Identity-Elimination Rule}\label{}
+
+Recall the identity elimination rule:
+{\small \[\infer[\Id{}\text{-E}]{\Gamma \entails \J[x.y.z.C](P,x.Q): [M,N,P/x,y,z]C}
+    {\Gamma \entails P:\Id{A}(M,N) & \Gamma,x{:}A,y{:}A,z{:}\Id{A}(x,y) \entails C \type & \Gamma, x{:}A\entails Q:[x,x,\refl{A}(x)/x,y,z]C}\]}
+In Extensional Type Theory (ETT), this rule is a consequence of the identity reflection and UIP rules and thus has no special status.
+
+In Intensional Type Theory (ITT), this rule can be understood as an induction principle: since the only way we can construct a proof of equality $P : M =_A N$ is by reflexivity in the case when
+$M \equiv N$, in order to prove $C[M,N,P]$ it is sufficient to prove $C[x,x,\refl{A}(x)]$ for an arbitrary $x : A$. This intuition is justified by the following very important (and highly nontrivial) theorem:
+\begin{thm}
+In an empty context, two terms are propositionally equal if and only if they are definitionally equal and any identity proof is necessarily a reflexivity. In other words, if $\vdash P:\Id{A}(M,N)$, then $\vdash M\equiv N: A$ and $\vdash P\equiv\refl{A}(M,M):\Id{A}(M,N)$.
+\end{thm}
+
+In HoTT, it is no longer the case that every proof of equality is a reflexivity. For example, we have the following non-trivial identity proofs:
+
+\begin{itemize}
+\item $\mathsf{funext}(H): f =_{A\to B} g$, where $H : \prod_{a:A} f(a) =_B g(a)$
+\item $\mathsf{ua}(E): A =_{\mathcal{U}} B$, where $E : \sum_{f:A\to B}\iseq(f)$
+\item $\seq: 0 =_{\mathbb{I}} 1$, where $\mathbb{I}$ is the interval type
+\item $\lp: b =_{S^1} b$, where $S^1$ is the circle type
+\end{itemize}
+
+This suggests that in HoTT, terms of an identity type should not be thought of purely as proofs of identity but rather as paths between terms. Since there can be potentially many distinct paths between two terms, the identity elimination rule should no longer be thought of as an induction principle.
+
+The presence of nontrivial paths, however, poses a serious problem with the computational interpretation of HoTT: for example, what should $\J[\_](\mathsf{funext}(H);x.Q)$, $\J[\_](\mathsf{ua}(E))$, or $\J[\_](\seq)$ compute to? 
+
+Even leaving aside univalence and higher inductive types, the addition of the function extensionality axiom to ITT poses a problem with computation. In ETT, we get function extensionality for free from the identity reflection rule. In Observational Type Theory (OTT), which combines intensional and extensional aspects, we get function extensionality with some special arrangements. Both ETT and OTT admit a computational interpretation, albeit by different means. 
+
+The computational interpretation of HoTT is currently a principal open problem. So how do we justify the $\J$-rule as a suitable identity elimination rule? Given
+
+\begin{itemize}
+\item $C : \prod_{x : A} \prod{y : A}, \Id{A}{x}{y} \to \mathcal{U}$
+\item $M,N:A$ and $P:M=_A N$
+\item $x:A\vdash Q:C[x,x,\refl{A}(x)]$
+\end{itemize}
+why should there exist a term $\J[x.y.z.C](P;x.Q):C[M,N,P]$?
+
+Plugging $M$ into $Q$, we obtain a term $Q[M]:C[M,M,\refl{A}(M)]$. Similarly, plugging $M$ into $C$ yields a type family $C[M] : \prod_{y:A}(p:M=_A y)\to\mathcal{U}$, which can be equivalently understood as the function \[\lambda z. C[M, \pi_1(z), \pi_2(z)] : \big(\sum_{y:A} \Id{A}(M,y)\big)\to\mathcal{U} \]
+
+Since functions are supposed to be functorial, constructing a path $\gamma$ from $(M,\refl{A}(M))$ to $(N,P)$ in the type $\sum_{y:A} \Id{A}(M,y)$ would give us a term
+\[ \ap_{\lambda z. C[M, \pi_1(z), \pi_2(z)]}(\gamma) : C[M,M,\refl{A}(M)] =_\mathcal{U} C[M,N,P] \]
+We could thus obtain our desired conclusion of the $\J$-rule as \[ \tr[x : \mathcal{U}.x](\ap_{\lambda z. C[M, \pi_1(z), \pi_2(z)]}(\gamma))(Q[M]) : C[M,N,P]\]
+In order to construct a path {\small $\gamma : (M,\refl{A}(M)) =_{\sum_{y:A} \Id{A}(M,y)} (N,P)$}, we need a characterization of path spaces of $\Sigma$-types, outlined in the following exercise:
+
+\begin{exercise} Characterize the path space of the type $\Sigma_{x:A} B$ by constructing a term of type
+\small {\[ \prod_{p,p':\sum_{x:A}B(x)} \big( \Id{\sum_{x:A}B(x)}(p,p')\simeq\sum_{q:\pi_1(p)=_A\pi_1(p')}\pi_2(p) =^{x.B}_q \pi_2(p') \big) \]}
+\end{exercise}
+
+The above exercise tells us that in order to construct a path from $(M,\refl{A}(M))$ to $(N,P)$ in the type $\sum_{y:A}M=_A y$, it is sufficient to construct an element of the type 
+$\sum_{q:M=_A N}\refl{A}(M) =^{y.M=_A y}_q P$. The natural choice for the first component of the pair is the path $P : M=_A N$ itself. It thus remains to show that $\refl{A}(M) =^{y.M=_A y}_P P$. In particular, this means showing that \[ \tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} P \]
+By Lemma.~\ref{??}, we have $\tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} \refl{A}(M) \cdot P$. Since the left-hand evaluates to $P$, we are done.
+
+\end{document}
