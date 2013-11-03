@@ -121,7 +121,32 @@ $$\ap_f(\alpha(a)^{-1} \cdot \ap_{f^{-1}}(q) \cdot \alpha(a')) =_{\Id{B}(f(a),f(
 \end{enumerate}
 \end{exercise}
 
-\section{Identity Types as Hom-sets in an $(\infty,1)$-Category}\label{} TODO
+\section{Identity Types as Hom-sets in an $(\infty,1)$-Category}\label{}
+
+Consider the following transport properties of the identity type:
+
+Define $E(x,y) := \Id{A}(x,y)$.
+\begin{enumerate}
+\item Fix $x_0:A$ and consider $y.E(x_0,y)$ as the fiber we are transporting over
+the identity proof $q:y=_Ay'$:
+\[
+\tr[y.E(x_0,y)](q):E(x_0,y)\to E(x_0,y')
+\]
+This is the same as taking a $p:E(x_0,y)$ and post-concatenating
+it to $q$, giving $p \cdot q$.
+\item Fix $y_0:A$ and consider $x.E(x,y_0)$ as the fiber we are transporting over
+the identity proof $p:x=_Ax'$:
+\[
+\tr[x.E(x,y_0)](p):E(x,y_0)\to E(x',y_0)
+\]
+This is the same as taking a $q:E(x,y_0)$ and post-concatenating
+$p^{-1}$ to it, giving $p^{-1} \cdot q$.
+\item For $p:x=_Ax'$ and $q:E(x,x)$, the transport
+\[
+\tr[x.E(x,x)](p):E(x,x)\to E(x',x')
+\]
+can be seen as taking $q$ to $p^{-1}\cdot q\cdot p$.
+\end{enumerate}
 
 \section{Justifying the Identity-Elimination Rule}\label{}
 
