@@ -23,11 +23,15 @@
 \newcommand{\seq}{\mathsf{seq}}
 \newcommand{\lp}{\mathsf{loop}}
 \newcommand*{\comp}{\mathbin{\circ}}
+\newcommand*{\U}{\mathcal{U}}
+
 
 \newtheorem*{remark}{Remark}
 \newtheorem*{proposition}{Proposition}
 \newtheorem*{exercise}{Exercise}
 \newtheorem*{lemma}{Lemma}
+\newtheorem*{definition}{Definition}
+
 
 \begin{document}
 \title{15-819 Homotopy Type Theory Lecture Notes}
@@ -121,25 +125,37 @@ $$\ap_f(\alpha(a)^{-1} \cdot \ap_{f^{-1}}(q) \cdot \alpha(a')) =_{\Id{B}(f(a),f(
 \end{enumerate}
 \end{exercise}
 
-\section{Identity Types as Hom-sets in an $(\infty,1)$-Category}\label{}
+\section{Transport Properties of Identity}\label{}
 
-Consider the following transport properties of the Identity type:
+The identity type family on a type $A$ can be thought of as a function $Id{A}(\_,\_) : A \to A \to \mathcal{U}$. Keeping the first argument $x : A$ fixed yields a type family
+$Id{A}(x,\_) : A \to \U$. For any path $q : y =_A y'$, the fibers $\Id{A}(x,y)$ and $\Id{A}(x, y')$ are related by the transport function
+\[ \tr[z.\Id{A}(x, z)](q) : \Id{A}(x, y) \to \Id{A}(x, y') \]
+Can we give an explicit description of this function? Clearly we can construct a function of the desired type "manually" by taking a $p : x =A y$ and concatenating it
+with $q$ to obtain $p \cdot q : x =_A y'$. Fortunately, it turns out this is precisely characterizes the behavior of the transport function, up to a propositional equality:
+\begin{lemma}
+For any term $x : A$, and paths $q : y =_A y'$, $p : x =_A y$ we have
+\[ \tr[z.\Id{A}(x, z)](q)(p) =_{\Id{A}(x,y')} p \cdot q \]
+\end{lemma}
+We have a similar characterization of transport in the case when the second
+argument is fixed:
+\begin{lemma}
+For any term $y : A$, and paths $q : x =_A x'$, $p : x =_A y$ we have
+\[ \tr[z.\Id{A}(z, y)](q)(p) =_{\Id{A}(x',y)} q^{- 1} \cdot p \]
+\end{lemma}
+We notice that in the first case, we use the path $q$ as-is whereas in the second
+case we first have to invert it. This can be described in category-theoretic terms as
+saying that the type family $\Id{A}$ is \emph{covariant in the second argument and contravariant
+in the first.}
 
-Define $E(x,y) := \Id{A}(x,y)$.
-\begin{enumerate}
-\item Fix $x_0:A$, and consider $y.E(x_0,y)$ as the motive for transporting
-along $q:y=y'$:
-\[
-\tr[y.E(x_0,y)](q):E(x_0,y)\to E(x_0,y')
-\]
-If we apply some $p:E(x_0,y)$ to the term above, we get
-\[
-\tr[y.E(x_0,y)](q)(p) = (\J[a.b._.E(x_0,a)\to E(x_0,b)](q;x.\lambda w.w))(p)\\
-\]
-which is the same as $p \cdot q$! So $\tr[y.E(x_0,y)](q)$ can be seen as
-the post-concatenation of $q$ to $p$.
-\item
-\end{enumerate}
+Finally, we can consider the case of loops when the base point is allowed to vary:
+\begin{lemma}
+For any paths $q : x =_A y$, $p : x =_A x$ we have
+\[ \tr[z.\Id{A}(z, z)](q)(p) =_{\Id{A}(y,y)} q^{ -1} \cdot p \cdot q \]
+\end{lemma}
+All these lemmas follow by straightforward path induction.
+
+
+
 
 \section{Justifying the Identity-Elimination Rule}\label{}
 
@@ -191,6 +207,20 @@ In order to construct a path {\small $\gamma : (M,\refl{A}(M)) =_{\sum_{y:A} \Id
 
 The above exercise tells us that in order to construct a path from $(M,\refl{A}(M))$ to $(N,P)$ in the type $\sum_{y:A}M=_A y$, it is sufficient to construct an element of the type
 $\sum_{q:M=_A N}\refl{A}(M) =^{y.M=_A y}_q P$. The natural choice for the first component of the pair is the path $P : M=_A N$ itself. It thus remains to show that $\refl{A}(M) =^{y.M=_A y}_P P$. In particular, this means showing that \[ \tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} P \]
-By Lemma.~\ref{??}, we have $\tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} \refl{A}(M) \cdot P$. Since the left-hand evaluates to $P$, we are done.
+By the first lemma in Section.~3, we have $\tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} \refl{A}(M) \cdot P$. Since the left-hand evaluates to $P$, we are done.
+
+\section{Introduction to Homotopy Types}
+One way to see HoTT is that Homotopy \emph{Type Theory} is \emph{Homotopy Type} Theory.
+That is, HoTT can be thought of as the theory of homotopy types. We have already
+encountered several examples of the homotopy type \emph{set}, also sometimes called an
+\emph{h-set} or a \emph{0-type}; however, we have not explicitly labeled them as such. We have the
+following definition:
+
+\begin{definition} A type $A$ is called a \emph{set} (or a \emph{0-type}), if for all $x, y : A$ and $p, q : x =_A y$,
+we have that $p =_{\Id{A}(x,y)} q$. In other words, the following type is inhabited:
+  \[ \mathsf{isSet}(A) \defeq \prod_{x,y:A} \prod_{p,q:\Id{A}(x,y)} p =_{\Id{A}(x,y)} q \]
+\end{definition}
+Intuitively, the type $A$ can be viewed as "discrete up to homotopy". The familiar example of the type $\Nat$ of natural numbers (unsurisingly) turns out to be a set.
+More about this and other Homotopy Types next week!
 
 \end{document}
