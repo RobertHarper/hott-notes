@@ -190,11 +190,11 @@ Plugging $M$ into $Q$, we obtain a term $Q[M]:C[M,M,\refl{A}(M)]$. Similarly, pl
 Since functions are supposed to be functorial, constructing a path $\gamma$ from $(M,\refl{A}(M))$ to $(N,P)$ in the type $\sum_{y:A} \Id{A}(M,y)$ would give us a term
 \[ \ap_{\lambda z. C[M, \pi_1(z), \pi_2(z)]}(\gamma) : C[M,M,\refl{A}(M)] =_\mathcal{U} C[M,N,P] \]
 We could thus obtain our desired conclusion of the $\J$-rule as \[ \tr[x : \mathcal{U}.x](\ap_{\lambda z. C[M, \pi_1(z), \pi_2(z)]}(\gamma))(Q[M]) : C[M,N,P]\]
-In order to construct a path {\small $\gamma : (M,\refl{A}(M)) =_{\sum_{y:A} \Id{A}(M,y)} (N,P)$}, we need a characterization of path spaces of $\Sigma$-types, outlined in the following theorem:
+In order to construct a path {\small $\gamma : (M,\refl{A}(M)) =_{\sum_{y:A} \Id{A}(M,y)} (N,P)$}, we need a characterization of path spaces of $\Sigma$-types, outlined in the following exercise:
 
-\begin{thm} We can characterize the path space of the type $\Sigma_{x:A} B$ by
+\begin{exercise} Characterize the path space of the type $\Sigma_{x:A} B$ by constructing a term of type
 \small {\[ \prod_{p,p':\sum_{x:A}B(x)} \big( \Id{\sum_{x:A}B(x)}(p,p')\simeq\sum_{q:\pi_1(p)=_A\pi_1(p')}\pi_2(p) =^{x.B}_q \pi_2(p') \big) \]}
-\end{thm}
+\end{exercise}
 
 The above exercise tells us that in order to construct a path from $(M,\refl{A}(M))$ to $(N,P)$ in the type $\sum_{y:A}M=_A y$, it is sufficient to construct an element of the type
 $\sum_{q:M=_A N}\refl{A}(M) =^{y.M=_A y}_q P$. The natural choice for the first component of the pair is the path $P : M=_A N$ itself. It thus remains to show that $\refl{A}(M) =^{y.M=_A y}_P P$. In particular, this means showing that \[ \tr[y.M=_A y](P)(\refl{A}(M)) =_{\Id{A}(M,N)} P \]
@@ -213,8 +213,6 @@ we have that $p=_{x=_Ay}q$. In other words,
 \]
 This means that $A$ is a discrete groupoid up to homotopy. For example, $\Nat$ is a set.
 More about this and other Homotopy Types next week!
-
-
 
 
 \end{document}
