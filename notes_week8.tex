@@ -34,7 +34,47 @@ syntax trees, for every type in the universe and showing that they map onto
 the natural numbers. % XXX
 
 \subsection*{Identity types}
-% XXX cmartens will fill this in
+
+We can show that $\Id{A}(x,y)$ is a set if $A$ is a set.
+
+Assumption: $A$ is a set, i.e. there is a term $H$ s.t.
+
+\[
+H : \Pi{x,y}{:}A.\Pi{p,q}{:}\Id{A}(x,y).\Id{\Id{A}(x,y)}(p,q)
+\]
+
+For the sake of making deeply-nested subscripts on identity types more
+readable, let's introduce a few definitions:
+
+\newcommand{\idA}{\op{idA}}
+\newcommand{\ididA}{\op{ididA}}
+\newcommand{\idididA}{\op{idididA}}
+\begin{eqnarray*}
+\op{idA}(x,y) &:=& \Id{A}(x,y)\\
+\op{ididA}(x,y,r,s) &:=& \Id{\idA(x,y)}(r,s) \\
+\op{idididA}(x,y,r,s,\alpha,\beta) &:=& \Id{\ididA(x,y,r,s)}(\alpha,\beta)
+\end{eqnarray*}
+
+We need to show that for any $x,y$, 
+$\Id{A}(x,y)$ is a set, i.e. construct a proof term of type
+
+\[
+\Pi{r,s}{:}\idA(x,y).\Pi{\alpha,\beta}{:}\ididA(x,y,r,s).
+\idididA(\alpha,\beta)
+\]
+
+Assume:
+\begin{eqnarray*}
+u,v &:& A\\
+r,s &:& \idA(u,v)\\
+\alpha,\beta &:& \idid(u,v,r,s)
+\end{eqnarray*}
+
+Need to construct a term of type $\idididA(u,v,r,s,\alpha,\beta)$.
+
+First, specialize $H$ to $H'(q) : H(u,v,r,q)$.
+
+% XXX continue here
 
 \section{ITT + UA is {\em not} a set theory}
 
