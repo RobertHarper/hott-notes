@@ -67,7 +67,7 @@ Assume:
 \begin{eqnarray*}
 u,v &:& A\\
 r,s &:& \idA(u,v)\\
-\alpha,\beta &:& \idid(u,v,r,s)
+\alpha,\beta &:& \ididA(u,v,r,s)
 \end{eqnarray*}
 
 Need to construct a term of type $\idididA(u,v,r,s,\alpha,\beta)$.
@@ -75,12 +75,106 @@ Need to construct a term of type $\idididA(u,v,r,s,\alpha,\beta)$.
 First, specialize $H$ to $H'(q) : H(u,v,r,q)$.
 
 % XXX continue here
+Exploit functoriality of $H'$
+
+\begin{eqnarray*}
+\op{apd}_{H'} &:& \Pi{q,q'}{:}\Id{A}(u,v).
+                \Pi{\gamma}{:}\Id{-}(q,q').
+                  \Id{-}(\gamma_{*}(H'(q)), H'(q'))\\
+\op{apd}_{H'}(r,s,\alpha) &:& \Id{-}(\alpha_{*}(H'(r)), H'(s))\\
+\op{apd}_{H'}(r,s,\beta) &:& \Id{-}(\beta_*{}(H'(r)), H'(s))
+\end{eqnarray*}
+
+By symmetry and transitivity of identity, we can form a term of type
+
+\[
+\Id{-}(\alpha_*(H'(r)), \beta_*(H'(r)))
+\]
+and so we can get transport in the identity
+\[
+\Id{-}(H'(r)\cdot \alpha, H'(r)\cdot\beta)
+\]
+Because the groupid structure tells us we get a cancellation property (?),
+this means $\alpha = \beta$
+
+(XXX The above is sloppy; I'll work on it.)
 
 \section{ITT + UA is {\em not} a set theory}
 
+In other words, in homotopy type theory, not all types are sets. In
+particular, $\universe$ is a proper groupoid. There are nontrivial paths
+between the elements of $\universe$.
+
+As an example, we can demonstrate two paths between the booleans
+$\mathbb{2}$, one which is the identity mapping $\op{id}$ taking $\op{tt}$
+to $\op{tt}$ and $\op{ff}$ to $\op{ff}$. The other is $\op{not}$, taking
+$\op{tt}$ to $\op{ff}$ and $\op{ff}$ to $\op{tt}$.
+
+$\op{not}$ and $\op{id}$ are two paths from $\mathbb{2}$ to $\mathbb{2}$,
+and we can demonstrate that they are not identified using univalence.
+
+% XXX do this
+
 \section{$n$-types}
 
+To foreshadow what's to come: we will eventually consider $\op{isSet}(A)$ a
+special case of the more general $\op{is-}n\op{-type}(A)$, specifically
+
+% \newcommand{\isntype}[1]{#1}
+\newcommand{\isntype}[1]{\op{is-}{#1}\op{-type}}
+
+\begin{tabular}{ccc}
+$\op{isSet}(A)$ & becomes & $\isntype{0}(A)$ \\
+$\op{isGpd}(A)$ & becomes & $\isntype{1}(A)$ \\
+$\op{is2Gpd}(A)$ & becomes & $\isntype{2}(A)$ \\
+% $\vdots$ & & $\vdots$
+- & - & -
+\end{tabular}
+
+The types $A$ for which $\op{is-}n\op{-type}(A)$ holds will be called the
+$n$-types. Roughly, it means that ``up a level'' we have a set (the
+identities between identities between ... ($n$ times) become identified).
+
+But before we start climbing the ladder upward, let's go the opposite
+direction and consider (in some sense) $n=-1, -2$. I.e. what happens if we
+{\em take away} structure in the sense of differentiation of identity
+proofs.
+
 \section{Proof Irrelevance}
+
+So far, we have taken to heart the idea of {\em proof relevance} and seen
+that it can be useful for the {\em evidence for a proposition} to matter,
+i.e. to treat the proposition as a type and terms inhabiting that type as
+useful, meaningful data. For example, the natural numbers form a type
+$\mathbb{N}$, and different ``{\em proofs}'' of $\mathbb{N}$ are different
+numbers---so of course we care to differentiate them.
+
+Now we will consider the special case of proof {\em irrelevance}: we can
+identify certain propositions for which we {\em do not}
+distinguishing its proofs, i.e. we can consider any $M, N : A$ for this type
+$A$ to be equivalent. We will call this property $\op{isProp}$
+(corresponding to $\op{is-}-1\op{-type}$ in the table above), and formally
+we define $\op{isProp}(A)$ to be the type
+
+\[
+\Pi{x,y}{:}A.\Id{A}(x,y)
+\]
+
+Another word used to describe $A$ with this property is ``subsingleton.''
+It is a type with at most one element, up to higher homotopy (i.e. if there
+are multiple elements then there are paths between them).
+
+A motivation for considering this type arises in the domain of dependently
+typed programming, wherein we want to consider types (propositions) to be
+{\em specificatons} for code. For example, consider specifying a function
+that takes a (possibly infinite) sequence and returns the first index of
+the sequence that contains the element $0$. A type giving this
+specification might look like
+
+\[
+% \Pi{s{:}\Sigma{t{:}\Nat\to\Nat}}.\ \Sigma{i:\Nat}.s(i)=_{\Nat} 0
+\Pi{s{:}\Nat\to\Nat}.\ \Sigma{i:\Nat}.s(i)=_{\Nat} 0
+\]
 
 
 
