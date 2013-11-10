@@ -9,7 +9,8 @@
 
 \metadata{Martens and Cavallo}{2013/11/04 and 2013/11/06}
 
-\newcommand*{\UU}{\mathcal{U}}
+\newcommand*{\Void}{\mathsf{0}}
+\newcommand*{\Unit}{\mathsf{1}}
 \newcommand*{\Bool}{\mathsf{2}}
 
 \newcommand*{\Interval}{I}
@@ -21,6 +22,7 @@
 \newcommand*{\apd}{\mathsf{apd}}
 
 \newcommand*{\funext}{\mathsf{funext}}
+\newcommand*{\isSet}{\mathsf{isSet}}
 
 \title{15-819 Homotopy Type Theory\\Lecture Notes}
 \author{Evan Cavallo and Chris Martens}
@@ -39,7 +41,7 @@
 
 \subsection*{Definition}
 
-Homotopy type theory takes full advantage of the latent groupoid structure of ITT's identity types by adding new paths. One way we add paths is via the univalence axiom, which introduces new paths between types. We can also directly postulate the existence of types with higher path structure. We will eventually develop a general theory of these \emph{higher inductive types}. For the moment, we consider a simple example, the \emph{interval type}.
+Homotopy type theory takes full advantage of the latent $\infty$-groupoid structure of ITT's identity types by adding new paths. One way we add paths is via the univalence axiom, which introduces new paths between types. We can also directly postulate the existence of types with higher path structure. We will eventually develop a general theory of these \emph{higher inductive types}. For the moment, we consider a simple example, the \emph{interval type}.
 
 \begin{center}
 \begin{tikzpicture}[node distance=2cm, auto]
@@ -126,10 +128,28 @@ $k(\Izero) \jdeq f$ and $k(\Ione) \jdeq g$. Hence, $\ap_k(\Iseg) : \Id{A
 
 \section{ITT is a theory of sets}
 
-% XXX Evan should fill in the following, before identity types.
+Without univalence or higher inductive types, we have no way to constructing paths other than reflexivity. For this reason, we would expect that the types of ITT are \emph{homotopically discrete} -- they have no higher path structure. Recall the definition of $\isSet$:
+\[
+\isSet(A) \defeq \prod_{x,y:A} \prod_{p,q:\Id{A}(x,y)} p =_{\Id{A}(x,y)} q 
+\]
+We will be able to show that most of the basic types in ITT are sets, and that most of the type constructors preserve the property of being a set. Depending on how we define the universe $\universe$, it may or may not be possible to prove $\universe$ is a set. To prove $\Pi$ preserves sethood, we will need function extensionality, which is not present in pure ITT. However, it is certianly consistent with pure ITT that all types are sets. In HoTT, on the other hand, we will be able to find types which are provably not sets.
+
 \subsection*{Basic constructs}
 
-(show that $\Pi$, $\Sigma$, etc. respect sethood)
+\begin{itemize}
+\item 
+  $\Unit$: By a homework exercise, we know that $\Id{\Unit}(x,y) \simeq \Unit$, so for any $x,y : \Unit$ we have a map $f : \Id{\Unit}(x,y) \to \Unit$ which is an equivalence. Let $x,y : \Unit$ and $p, q : \Id{\Unit}(x,y)$ be given. We know that $f(p) =_\Unit \left<\right>$ and $f(q) =_\Unit \left<\right>$, so $f(p) =_\Unit f(q)$. Then $f^{-1}(f(p)) =_{\Id{\Unit}(x,y)} f^{-1}(f(q))$ by $\ap_{f^{-1}}$, and the properties of inverses give us that $p =_{\Id{\Unit}(x,y)} q$.
+\item
+  $\Void$: Given $x,y : \Void$ and $p, q : \Id{\Void}(x,y)$, we can simply abort with $x$ to prove that $p =_{\Id{\Void}(x,y)} q$.
+\item
+  $\Pi$: We assume function extensionality. To prove that $\Pi x{:}A. B_x$ is a set, we only need to know that $B_x$ is a set for every $x{:}A$. Assume this is true, and let $f, g : \Pi x{:}A. B$. We want to show any two $p, q : \Id{\Pi x {:}A. B}(f,g)$ are equal. By function extensionality, the type $\Id{\Pi x {:}A. B}(f,g)$ is equivalent to $\Pi x{:}A. \Id{B_x}(f(x), g(x))$, so it suffices to prove any homotopies $h, k : \Pi x{:}A. \Id{B_x}(f(x), g(x))$ are equal. Applying function extensionality again, it is enough to show $h(x) =_{\Id{B_x}(f(x),g(x))} k(x)$ for every $x{:}A$. This follows from our assumption that $B_x$ is a set.
+\item
+  $\Sigma$: 
+\item
+  $+$: 
+\item
+  $\Nat$: 
+\end{itemize}
 
 \subsection*{The universe}
 
