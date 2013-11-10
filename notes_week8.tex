@@ -111,13 +111,18 @@ Intuitively, the interval has the shape of a single path, so the image of a func
 
 \subsection*{{\sc Funext} from the Interval}
 
-Interestingly, we can prove function extensionality in ITT if we assume the presence of the interval type. Let $f , g : A \to B$ be two functions and assume $h : \Pi x{:}A. \Id{B} (f(x), g(x))$; we want to show $\Id{A\to B}(f,g)$. To do this, we'll define a function $k : I \to (A \to B)$. In order to do that, we'll first want another function $\~{k} : A \to (I \to B)$. This function is defined for every $x : A$ by induction on $I$:
-\begin{eqnarray*}
-  \~{k}(x)(\Izero) &\defeq& f(x) \\
-  \~{k}(x)(\Ione) &\defeq& g(x) \\
-  \ap_{\~{k}(x)}(\Iseg) &\defeq& h(x)
-\end{eqnarray*}
-The function $k$ is then defined by $k(t)(x) \defeq \~{k}(x)(t)$. Observe that $k(\Izero) \jdeq f$ and $k(\Ione) \jdeq g$. Hence, $\ap_k(\Iseg) : \Id{A \to B}(f,g)$.
+Interestingly, we can prove function extensionality in ITT if we assume the
+presence of the interval type. Let $f , g : A \to B$ be two functions and
+assume $h : \Pi x{:}A. \Id{B} (f(x), g(x))$; we want to show $\Id{A\to
+B}(f,g)$. To do this, we'll define a function $k : I \to (A \to B)$. In
+order to do that, we'll first want another function 
+$\sim{k} : A \to (I \to B)$. 
+This function is defined for every $x : A$ by induction on $I$:
+\begin{eqnarray*} \sim{k}(x)(\Izero) &\defeq& f(x) \\ \sim{k}(x)(\Ione)
+&\defeq& g(x) \\ \ap_{\sim{k}(x)}(\Iseg) &\defeq& h(x) \end{eqnarray*} The
+function $k$ is then defined by $k(t)(x) \defeq \sim{k}(x)(t)$. Observe that
+$k(\Izero) \jdeq f$ and $k(\Ione) \jdeq g$. Hence, $\ap_k(\Iseg) : \Id{A
+\to B}(f,g)$.
 
 \section{ITT is a theory of sets}
 
@@ -205,11 +210,11 @@ particular, $\universe$ is a proper groupoid. There are nontrivial paths
 between the elements of $\universe$.
 
 As an example, we can demonstrate two paths between the booleans
-$\mathbb{2}$, one which is the identity mapping $\op{id}$ taking $\op{tt}$
+$2$, one which is the identity mapping $\op{id}$ taking $\op{tt}$
 to $\op{tt}$ and $\op{ff}$ to $\op{ff}$. The other is $\op{not}$, taking
 $\op{tt}$ to $\op{ff}$ and $\op{ff}$ to $\op{tt}$.
 
-$\op{not}$ and $\op{id}$ are two paths from $\mathbb{2}$ to $\mathbb{2}$,
+$\op{not}$ and $\op{id}$ are two paths from ${2}$ to ${2}$,
 and we can demonstrate that they are not identified using univalence.
 
 % XXX do this
@@ -226,16 +231,17 @@ special case of the more general $\op{is-}n\op{-type}(A)$, specifically
 $\op{isSet}(A)$ & becomes & $\isntype{0}(A)$ \\
 $\op{isGpd}(A)$ & becomes & $\isntype{1}(A)$ \\
 $\op{is2Gpd}(A)$ & becomes & $\isntype{2}(A)$ \\
-% $\vdots$ & & $\vdots$
-- & - & -
+\vdots & & \vdots
+% - & - & -
 \end{tabular}
+\bigskip
 
 The types $A$ for which $\op{is-}n\op{-type}(A)$ holds will be called the
 $n$-types. Roughly, it means that ``up a level'' we have a set (the
 identities between identities between ... ($n$ times) become identified).
 
 But before we start climbing the ladder upward, let's go the opposite
-direction and consider (in some sense) $n=-1, -2$. I.e. what happens if we
+direction and consider (in some sense) $n=-1, -2$, i.e. what happens if we
 {\em take away} structure in the sense of differentiation of identity
 proofs.
 
@@ -245,7 +251,7 @@ So far, we have taken to heart the idea of {\em proof relevance} and seen
 that it can be useful for the {\em evidence for a proposition} to matter,
 i.e. to treat the proposition as a type and terms inhabiting that type as
 useful, meaningful data. For example, the natural numbers form a type
-$\mathbb{N}$, and different ``{\em proofs}'' of $\mathbb{N}$ are different
+$\Nat$, and different ``{\em proofs}'' of $\Nat$ are different
 numbers---so of course we care to differentiate them.
 
 Now we will consider the special case of proof {\em irrelevance}: we can
@@ -280,10 +286,114 @@ a $0$ element:
 
 
 \[
-% \Pi{s{:}\Sigma{t{:}\Nat\to\Nat}}.\ \Sigma{i:\Nat}.s(i)=_{\Nat} 0
-\Pi{s{:}\Sigma{t{:}\Nat\to\Nat}.\Sigma{i{:}\Nat}.t(i) =_{\Nat}0.\ 
-  \Sigma{i:\Nat}.s(i)=_{\Nat} 0
+\Pi{s{:}(\Sigma{t{:}\Nat\to\Nat}.\Sigma{i{:}\Nat}.t(i) =_{\Nat}0}).\ 
+  \Sigma{i:\Nat}.(\pi_1 s)(i)=_{\Nat} 0
 \]
 
+But it turns out that we are now asking for too much information from our
+input. The above specification has a constant-time algorithm: the input
+contains a proof, i.e. a witness that it has a 0 element, which is exactly
+what we are supposed to return. The function is
+
+\[
+\lambda{s}.\langle \pi_1 (\pi_2 s), \pi_2 (\pi_2 s) \rangle
+\]
+
+This is not the function we wanted to specify: we had in mind something
+like an inductive traversal of the sequence, stopping when we find the 0
+element and returning a tracked index.
+
+The question for resolving this puzzle is ``How do we suppress information
+in a type?''. We would like to still require the input to have a 0 element
+without making that information available in computation; that is, we are
+interested in only the {\em propositional} content of the spec.
+
+One way of suppressing information in a type is Brouwer's idea of using
+double negation, i.e. to put a $\lnot\lnot$ in front of $s$'s type. 
+
+(digression on possibly-infinite streams, TM halting obeying DNE i.e.
+Markov's principle, Russian school of constructivism) XXX get back to this.
+We can however (as done in NuPRL) just specify a bound on the stream so
+that you know you'll eventually find the 0 if there is one.
+
+Double negation ``kills computational content'' in the way that we want,
+and we can formally state that as the following fact:
+
+$\op{isProp}(\lnot\lnot A)$ for any $A$.
+
+$\lnot\lnot A$ is defined as $(A\to \zero) \to \zero$
+
+NTS a term inhabiting
+
+\[
+\Pi{x,y}{:}(\lnot\lnot A).\Id{\lnot\lnot A}(x,y)
+\]
+
+% XXX stuck here, work this out.
+
+\subsection{G{\"o}del's Double Negation Translation}
+\newcommand{\dnt}[1]{{\parallel}{#1}{\parallel}}
+\renewcommand{\implies}{\supset}
+
+Brouwer's insight about double negation led to G{\"o}del's discovery of a
+translation embedding classical logic into constructive logic.  The idea is
+to define $\dnt{-}$ such that if $A$ is provable classically, $\dnt{A}$ is
+provable constructively. We can give this translation as:
+
+\begin{eqnarray*}
+\dnt{1}           &=& 1\\
+\dnt{A\land B}    &=& \dnt{A} \land \dnt{B}\\
+\dnt{0}           &=& 0\\
+\dnt{A\lor B}     &=& \lnot\lnot(\dnt{A} \lor \dnt{B})\\
+\end{eqnarray*}
+
+For implication we have two choices. We can either ``just squash'' the
+type, which would be sufficient for information erasure:
+
+\[
+\dnt{A\implies B} = \dnt{A} \implies \dnt{B}
+\]
+
+...or we can properly embed classical logic with the translation
+
+\[
+\dnt{A\implies B} = \dnt{A} \implies \lnot\lnot\dnt{B}
+\]
+
+We need the latter definition to recover completeness wrt classical logic,
+since, remembering that classical logic can be formulated as ``constructive
+logic plus DNE (a double negation elimination rule available in general),''
+we have
+
+\[
+\dnt{\lnot\lnot A\implies A} = \lnot\lnot A\implies A
+\]
+
+with the ``just squash'' principle, but
+
+\[
+\dnt{\lnot\lnot A\implies A} = \lnot\lnot A\implies \lnot\lnot A
+\]
+
+with the classical embedding, which is provable constructively (it is just
+an instance of the identity).
+
+% XXX other possible ways of doing information erasure
+% quotient by the full relation
+% form a subsingleton, the set {* | A}
+
+\section{Hedberg's Theorem}
+
+Finally, we will touch briefly on Hedberg's Theorem.
+Hedberg's Theorem is another way to prove something is a set: it states
+that a type with {\em decidable equality} is a set. In other words, If
+
+\[
+\Pi{x,y}{:}A.\Id{A}(x,y) \lor \lnot\Id{A}(x,y)
+\]
+
+then $\op{isSet}(A)$.
+
+Proof sketch: % XXX
 
 \end{document}
