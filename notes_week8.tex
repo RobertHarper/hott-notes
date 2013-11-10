@@ -1,11 +1,26 @@
 \documentclass[11pt]{article}
 
+\usepackage{tikz-cd}
+
 \usepackage{proof-dashed}
 \input{macros}
 
 \setlength{\inferLineSkip}{4pt}
 
 \metadata{Martens and Cavallo}{2013/11/04 and 2013/11/06}
+
+\newcommand*{\UU}{\mathcal{U}}
+\newcommand*{\Bool}{\mathsf{2}}
+
+\newcommand*{\Interval}{I}
+\newcommand*{\Izero}{0_I}
+\newcommand*{\Ione}{1_I}
+\newcommand*{\Iseg}{\mathsf{seg}}
+
+\newcommand*{\ap}{\mathsf{ap}}
+\newcommand*{\apd}{\mathsf{apd}}
+
+\newcommand*{\funext}{\mathsf{funext}}
 
 \title{15-819 Homotopy Type Theory\\Lecture Notes}
 \author{Evan Cavallo and Chris Martens}
@@ -19,6 +34,90 @@
 
 % \bibliographystyle{alpha}
 % \bibliography{fp}
+
+\section{The Interval}
+
+\subsection*{Definition}
+
+Homotopy type theory takes full advantage of the latent groupoid structure of ITT's identity types by adding new paths. One way we add paths is via the univalence axiom, which introduces new paths between types. We can also directly postulate the existence of types with higher path structure. We will eventually develop a general theory of these \emph{higher inductive types}. For the moment, we consider a simple example, the \emph{interval type}.
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto]
+ \node (L) {$\Izero$};
+ \node (R) [right of=L] {$\Ione$};
+ \draw (L) to node {\footnotesize $\Iseg$} (R);
+\end{tikzpicture}
+\end{center}
+
+The interval $\Interval$ is defined inductively with two traditional constructors, $\Izero$ and $\Ione$. We think of these as two endpoints of an continuum of points, analogous to the interval $[0,1]$ of classical analysis. With these points alone, the interval is no different from the type $\Bool$. In order to complete the definition, we also define a path $\Iseg$ which connects the two endpoints. We thus have the following introduction rules:
+
+\begin{equation*}
+  \infer[\Interval\text{-I-0}]{\ctx \vdash \Izero : \Interval}{}
+  \hspace{30pt}
+  \infer[\Interval\text{-I-1}]{\ctx \vdash \Ione : \Interval}{}
+  \hspace{30pt}
+  \infer[\Interval\text{-I-\textsf{seg}}]{\ctx \vdash \Iseg : \Id{\Interval}(\Izero,\Ione)}{}
+\end{equation*}
+
+In order to find the correct elimination rule for this type, we ask the same question we asked in defining the coproduct: how do we map out of this type? For any type $A$, what is the form of a map $f : \Pi z{:}I. A$? For the sake of simplicity, let's first consider how to define a map $f : I \to A$. We expect the recursor to have the form
+\begin{equation*}
+  \infer{\ctx, x : I \vdash \rec_\Interval[\_.A](x;M;N;?) : A}{\ctx \vdash M : A & \ctx \vdash N : A & ?}
+\end{equation*}
+with computation rules 
+\begin{eqnarray*}
+  \rec_\Interval[\_.A](\Izero;M;N;?) &\jdeq& M \\
+  \rec_\Interval[\_.A](\Ione;M;N;?) &\jdeq& N
+\end{eqnarray*}
+So far, this is just the recursor for $\Bool$. To see what additional information we need, notice that for any map $f : I \to A$ we have $\ap_f(\Iseg) : \Id{A}(f(\Izero), f(\Ione))$ -- the values $f(\Izero)$ and $f(\Ione)$ have to be related in some way. In other words, we need to specify the way that $f$ acts on the path $\Iseg$. The full (nondependent) recursor therefore has the form
+\begin{equation*}
+  \infer{\ctx, x : I \vdash \rec_\Interval[\_.A](x;M;N;P) : A}{\ctx \vdash M : A & \ctx \vdash N : A & \ctx \vdash P : \Id{A}(M,N)}
+\end{equation*}
+with the computation rules
+\begin{eqnarray*}
+  \rec_\Interval[\_.A](\Izero;M;N;P) &\jdeq& M \\
+  \rec_\Interval[\_.A](\Ione;M;N;P) &\jdeq& N \\
+  \ap_{\rec_\Interval[\_.A](\Ione;M;N;P)}(\Iseg) &\jdeq& P
+\end{eqnarray*}
+For a dependent function $f : \Pi z{:}I. A$, the values $f(\Izero)$ and $f(\Ione)$ may have different types. Here, we have $\apd_f(\Iseg) : \Izero =_\Iseg^{z.A} \Ione$, so the dependent eliminator has the form
+\begin{equation*}
+  \infer{\ctx, x : I \vdash \rec_\Interval[z.A](x;M;N;P) : A[x/z]}{\ctx \vdash M : A & \ctx \vdash N : A & \ctx \vdash P : \Izero =_\Iseg^{z.A} \Ione}
+\end{equation*}
+with the computation rules
+\begin{eqnarray*}
+  \rec_\Interval[z.A](\Izero;M;N;P) &\jdeq& M \\
+  \rec_\Interval[z.A](\Ione;M;N;P) &\jdeq& N \\
+  \apd_{\rec_\Interval[z.A](\Ione;M;N;P)}(\Iseg) &\jdeq& P
+\end{eqnarray*}
+One question we should ask ourselves is whether this last computation rule should be definitional. Postulating a definitional equality involving an internally-defined function, $\apd$, is highly unnatural. On the other hand, adding new propositional ruins the computational interpretation of the theory. At this point, we have no satisfactory answer to this question. We will use definitional equality; the HoTT book uses propositional equality. The formal developments in Coq and Agda both use propositional equality, but this is largely an artifact of technical restrictions: it is impossible to add axioms for definitional equalities in these languages.
+
+\subsection*{Describing Paths With the Interval}
+
+In classical homotopy theory, paths in a space $A$ are defined as continuous mappings $f : I \to A$ where $I$ is the interval $[0,1]$. $f(0)$ is the left endpoint of the path, $f(1)$ the right endpoint, and the function gives a way of traveling continuously from one endpoint to the other. In homotopy type theory, paths are a primitive notion, but we can show that the classical definition is equivalent. For any type $A$, the path space $\Sigma x{:}A. \Sigma y{:}A. \Id{A}(x,y)$ is equal to $I \to A$, as shown by the following equivalence:
+\begin{align*}
+  & f : (\Sigma x{:}A. \Sigma y{:}A. \Id{A}(x,y)) \to (I \to A) \\
+  & f \left<x,\left<y,p\right>\right> \defeq \lambda z. \rec_\Interval[\_.A](z;x;y;p) \\
+  ~ \\
+  & g : (I \to A) \to (\Sigma x{:}A.\Sigma y{:}A. \Id{A}(x,y)) \\
+  & g~h \defeq \left< h(\Izero), \left<h(\Ione), \ap_h(\Iseg)\right> \right> \\
+  ~ \\
+  & \alpha : \Pi s{:} (\Sigma x{:}A.\Sigma y{:}A. \Id{A}(x,y)).~g(f(s)) = s \\
+  & \alpha~s \defeq \refl{\Sigma x{:}A. \Sigma y{:}A. \Id{A}(x,y)}(s) \\ 
+  ~ \\
+  & \beta : \Pi h{:}(I \to A).~f(g(h)) = h \\
+  & \beta~h \defeq \funext(\lambda x{:}I. \rec[z. f(g(h))(x) = h(x)](x; \refl{A}(h(\Izero)); \refl{A}(h(\Ione)); \\
+  & \hspace{210pt} \refl{\Id{A}(h(\Izero),h(\Ione))}(\ap_h(\Iseg))))
+\end{align*}
+Intuitively, the interval has the shape of a single path, so the image of a function $f : I \to A$ is a path in $A$.
+
+\subsection*{{\sc Funext} from the Interval}
+
+Interestingly, we can prove function extensionality in ITT if we assume the presence of the interval type. Let $f , g : A \to B$ be two functions and assume $h : \Pi x{:}A. \Id{B} (f(x), g(x))$; we want to show $\Id{A\to B}(f,g)$. To do this, we'll define a function $k : I \to (A \to B)$. In order to do that, we'll first want another function $\~{k} : A \to (I \to B)$. This function is defined for every $x : A$ by induction on $I$:
+\begin{eqnarray*}
+  \~{k}(x)(\Izero) &\defeq& f(x) \\
+  \~{k}(x)(\Ione) &\defeq& g(x) \\
+  \ap_{\~{k}(x)}(\Iseg) &\defeq& h(x)
+\end{eqnarray*}
+The function $k$ is then defined by $k(t)(x) \defeq \~{k}(x)(t)$. Observe that $k(\Izero) \jdeq f$ and $k(\Ione) \jdeq g$. Hence, $\ap_k(\Iseg) : \Id{A \to B}(f,g)$.
 
 \section{ITT is a theory of sets}
 
