@@ -172,10 +172,19 @@ the sequence that contains the element $0$. A type giving this
 specification might look like
 
 \[
-% \Pi{s{:}\Sigma{t{:}\Nat\to\Nat}}.\ \Sigma{i:\Nat}.s(i)=_{\Nat} 0
 \Pi{s{:}\Nat\to\Nat}.\ \Sigma{i:\Nat}.s(i)=_{\Nat} 0
 \]
 
+...except that if we want the function to be {\em total}, we need some
+extra information about the input stream, saying that it actually contains
+a $0$ element:
+
+
+\[
+% \Pi{s{:}\Sigma{t{:}\Nat\to\Nat}}.\ \Sigma{i:\Nat}.s(i)=_{\Nat} 0
+\Pi{s{:}\Sigma{t{:}\Nat\to\Nat}.\Sigma{i{:}\Nat}.t(i) =_{\Nat}0.\ 
+  \Sigma{i:\Nat}.s(i)=_{\Nat} 0
+\]
 
 
 \end{document}
