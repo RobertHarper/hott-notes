@@ -149,11 +149,11 @@ We will be able to show that most of the basic types in ITT are sets, and that m
 \item
   $\Pi$: We assume function extensionality. To prove that $\Pi x{:}A. B_x$ is a set, we only need to know that $B_x$ is a set for every $x{:}A$. Assume this is true, and let $f, g : \Pi x{:}A. B$. We want to show any two $p, q : \Id{\Pi x {:}A. B}(f,g)$ are equal. By function extensionality, the type $\Id{\Pi x {:}A. B}(f,g)$ is equivalent to $\Pi x{:}A. \Id{B_x}(f(x), g(x))$, so it suffices to prove any homotopies $h, k : \Pi x{:}A. \Id{B_x}(f(x), g(x))$ are equal. Applying function extensionality again, it is enough to show $h(x) =_{\Id{B_x}(f(x),g(x))} k(x)$ for every $x{:}A$. This follows from our assumption that $B_x$ is a set.
 \item
-  $\Sigma$: 
+  $\Sigma$: Analogously with the product type $A \times B$, it is possible to show that $\Id{\Sigma x{:}A. B_x}(a,b)~\simeq~\Sigma p : (\fst~a = \fst~b).~(\snd~a =^{x.B_x}_p \snd~b)$. Thus, a path in $\Sigma x{:}A. B_x$ is decomposable into a path in $A$ and a path in $B_x$ for some $x$; if $A$ and $B_x$ are sets, all such paths will be equal, so we can show that all paths in $\Sigma x{:}A. B_x$ are equal.
 \item
-  $+$: 
+  $+$: To prove that $A + B$ is a set, we need to assume $A$ and $B$ are sets. Given $x,y : A + B$, we want to show that any two elements of $\Id{A + B}(x,y)$ are equal. We can do this by a case analysis on $x$ and $y$. If $x \jdeq \inl(a)$ and $y \jdeq \inl(a')$, then $\Id{A + B}(x,y) \simeq \Id{A}(a,a')$, so our theorem follows from the fact that $A$ is a set. The case that $x \jdeq \inr(b)$ and $y \jdeq \inr(b')$ is symmetric. If $x \jdeq \inl(a)$ and $y \jdeq \inr(b)$ (or in the reverse case), then the space of paths from $x$ and $y$ is empty, so of course any two paths are equal.
 \item
-  $\Nat$: 
+  $\Nat$: We will later discuss Hedberg's theorem, which shows that any type with decidable equality is a set. We leave it as an exercise for the reader to show that $\Nat$ has decidable equality.
 \end{itemize}
 
 \subsection*{The universe}
