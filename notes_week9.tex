@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+
+\usepackage{tikz-cd}
+
+\usepackage{proof-dashed}
+\input{macros}
+
+\setlength{\inferLineSkip}{4pt}
+
+\metadata{Lewis and Tassarotti}{2013/11/04 and 2013/11/06}
+
+\newcommand*{\Void}{\mathsf{0}}
+\newcommand*{\Unit}{\mathsf{1}}
+\newcommand*{\Bool}{\mathsf{2}}
+
+\newcommand*{\Interval}{I}
+\newcommand*{\Izero}{0_I}
+\newcommand*{\Ione}{1_I}
+\newcommand*{\Iseg}{\mathsf{seg}}
+
+\newcommand*{\ap}{\mathsf{ap}}
+\newcommand*{\apd}{\mathsf{apd}}
+
+\newcommand*{\funext}{\mathsf{funext}}
+\newcommand*{\isSet}{\mathsf{isSet}}
+\newcommand*{\isProp}{\mathsf{isProp}}
+\newcommand*{\trunc}{\mathsf{trunc}}
+\newcommand*{\isContr}{\mathsf{isContr}}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{defn}{Definition}
+
+\title{15-819 Homotopy Type Theory\\Lecture Notes}
+\author{Robert Lewis and Joseph Tassarotti}
+\date{November 11 and 13, 2013}
+
+\begin{document}
+
+\maketitle
+
+\section{Contents}
+These notes cover Robert Harper's lectures on Homotopy Type Theory from
+November 11 and 13, 2013. Discussions include Hedberg's theorem, propositional truncation,
+and ...
+
+
+\section{Refresher: Sets and Propositions}
+Recall from previous lectures the definitions of sets and propositions within HoTT.
+A type is called a set if there is only ``one way'' for any two of its elements to be equal:
+$$ \isSet(A) \defeq \prod_{x,y:A}\prod_{p,q: x=_Ay}(p=_{x=_A y}q) $$
+
+Relatedly, a type is called a proposition if it is a ``subsingleton'': that is, it has at most one inhabitant.
+$$ \isProp(A) \defeq \prod_{x,y:A}(x=_A y) $$
+
+We can define $\isSet$ in terms of $\isProp$: a type is a set if equality for that type is propositional.
+$$ \isSet(A) \equiv \prod_{x,y:A}\isProp(x=_A y) $$
+
+What it means for a type to be a set is that there are no nontrivial relationships between 
+elements of the type. The higher homotopy structure we have seen in previous weeks does not exist
+in a set, as the only paths between elements are trivial, which trivializes the higher structure.
+In this sense, sets (and propositions) ``reclaim'' some properties of classical mathematics.
+%: for instance, $\isProp(A)\to\neg\neg A\to A$. (True?)
+
+\begin{proposition}
+ For any type $A$, we have $\isProp(\neg A)$, where $\neg A\defeq A\to \zero$.
+\end{proposition}
+\begin{proof}
+ We want to find $$\_:\prod_{x,y:\neg A}(x=_{\neg A} y).$$ Since $\neg A$ is a function type, 
+ via $\funext$ it suffices to find $$\_:\prod_{u: A}(x(u) =_\zero y(u)).$$ 
+ We have $\abort{x(u)=_\zero y(u)}$ of this type.
+ %Where in notes was abort defined? I can't find it.
+\end{proof}
+
+From this, we can derive the (perhaps surprising) result that $\neg\neg (\neg A)\to \neg A$,
+even though we do not necessarily have $\neg\neg A \to A$.
+
+\section{Hedberg's Theorem}
+These considerations lead us to the following important theorem.
+
+\begin{defn}
+ A type $A$ has \emph{decidable equality} if one can prove of any two inhabitants of $A$ 
+ that they are either equal or unequal.
+ $$\prod_{x,y:A}(\Id{A}(x,y)\vee \neg \Id{A}(x,y)).$$
+ 
+ A type $A$ has \emph{stable equality} if double-negation elimination holds in its identity type:
+ $$\prod_{x,y:A}(\neg\neg \Id{A}(x,y)\to \Id{A}(x,y))$$
+\end{defn}
+
+\begin{thm}
+ A type with decidable equality is a set.
+\end{thm}
+\begin{proof}
+ 
+ The proof of Hedberg's theorem goes in two parts:
+ \begin{enumerate}
+  \item Decidable equality implies stable equality. In fact, we can prove in general that for 
+  any type $A$, $(A+\neg A)\to \neg\neg A \to A$. This part is simple and left as an exercise.
+  
+  \item Stable equality implies sethood. This is the heart of Hedberg's theorem.
+ \end{enumerate}
+ 
+ We prove 2. Suppose $h:\prod x,y:A.(\neg \neg x=_A y)\to (x=_Ay)$ is evidence that equality in $A$ is stable.
+ To show $\isSet(A)$, is suffices to show that $x:A, p:x=_A x\entails p=_{x=_A x} \refl{A}(x)$, 
+ since we can reduce the identity of $p,q:x=_A y$ to the identity of $p\cdot q^{-1}: x=_A x$.
+ 
+ Fix $x:A$. We then have $h(x):\prod y:A.(\neg\neg x=_A y)\to(x=_A y)$.
+ 
+ Using dependent function application $\apd$ (defined previously), we see that
+ $$\apd_{h(x)}(p): p_*(h(x)(x))=_{(\neg\neg x=_A x)\to(x=_A x)}h(x)(x)$$
+ 
+ and from that it follows that for any $r:\neg\neg(x=_A x)$,
+ $$ p_*(h(x)(x))(r)=_{x=_A x} h(x)(x)(p_* r). $$
+ 
+ By proven property of transport in identity types,
+ $$ p_*(h(x)(x))(r) =_{x=_A x} h(x)(x)(r)\cdot p $$ % This shouldn't be definitional, is it?
+ 
+ and because negated types are propositions (from above),
+ $$ h(x)(x)(p_* r) =_{x=_A x} h(x)(x)(r)$$
+ 
+ so we have by transitivity
+ $$ h(x)(x)(r)\cdot p =_{x=_A x} h(x)(x)(r) $$
+ 
+ and cancellation gives us $p =_{x=_A x} \refl{A}(x)$ as desired.
+\end{proof}
+
+For an example of the power of Hedberg's theorem, note that it implies $\isSet(\Nat)$.
+Using double induction, one can show 
+$$\prod_{x,y:\Nat}(x=_\Nat y)\vee \neg (x=_\Nat y).$$ This is left as an exercise.
+
+\section{More Results on Propositions and Sets}
+\begin{thm}
+ Every proposition is a set:
+ $$\text{\emph{If} }\prod_{x,y:A}x=_A y\text{ \emph{then} }\prod_{x,y:A}\prod_{p,q:x=_A y}p=_{x=_A y} q$$
+\end{thm}
+
+\begin{proof}
+ Suppose $f:\prod x,y:A.x=_A y$. Given two inhabitants of $A$, $f$ returns a path between them.
+ 
+ Fix $x_0:A$ and let $g \defeq f(x_0):\prod y:A.x_0=_A y$. For $p:y=_A y'$, we have 
+ $$\apd_g(p): p_*(g(y)) =_{x_0=_A y'} g(y')$$
+ 
+ and by property of transport within identity type,
+ $$p_*(g(y))=_{x_0=_A y'} g(y)\cdot p.$$
+ 
+ By transitivity, we thus have
+ $$g(y)\cdot p =_{x_0=_A y'} g(y')$$
+ $$p =_{x_0=_A y'} g(y)^{-1}\cdot g(y)$$
+ 
+ For $q:y=_A y'$, these same calculations give us 
+ $$q =_{x_0=_A y'} g(y)^{-1}\cdot g(y).$$
+ 
+ Thus, $p =_{x_0=_A y'} q$ as desired.
+\end{proof}
+
+\begin{thm}
+ $\isProp(\isProp(A))$ -- that is, there is only one proof that $A$ has only one inhabitant.
+\end{thm}
+\begin{proof}
+ Let $f,g:\isProp(A)$ be given. To show $f =_{\isProp(A)} g$, it suffices to show (by $\funext$)
+ $x,y:A\entails \_: f x y =_{x=_A y} g x y$. This follows since $\isProp(A)\to \isSet(A)$.
+\end{proof}
+
+We can similarly prove $\isProp(\isSet(A))$. With the proper notion of $\mathsf{isEquiv}(A)(B)$,
+we will be able to prove $\isProp(\mathsf{isEquiv}(A)(B))$; this will come later.
+
+\section{Propositional Truncation (Squashing)}
+
+The notion of ``squashing'' introduced last week was perhaps too heavy-handed: it was used toward
+a number of goals, among them to recover classical logic within constructive logic. We now introduce
+the more general idea of \emph{abstract truncation}, which for now will be taken as a primitive
+idea of HoTT. Truncation serves to reduce types to sets, without all the byproducts of squashing.
+
+Let $\|A\|$ be read as the \emph{truncation} of $A$. We have the following $\|\cdot \|$-introduction rules:
+
+\begin{mathpar}
+  \infer[{\|\cdot\|}I]{|M|:\|A\|}{
+    M:A}
+  \and
+  \infer[{\|\cdot\|}I]{\_: \Id{\|A\|}(|M|,|N|)}{
+    M:A & N:A}
+\end{mathpar}
+
+And the elimination rule:
+$$
+  \infer[{\|\cdot\|}E]{\trunc(|M|; P; x.N):B}{
+    M:\|A\| & x:A\entails N:B & P:\isProp(B)}
+$$
+
+The $\beta$ rule works as one might expect:
+$$\trunc(|M|; P; x.N)\equiv [M/x]N$$
+
+We require a proof of $\isProp(B)$ to ensure that the behavior of $N$ does not depend on the
+representative $x:A$. There are other ways to ensure this property: for instance, we could instead
+require $u,v:A\entails [u/x]N =_B [v/x]N$. Note that $\isProp(B)$ implies that this is the case.
+
+\section{Contractibility}
+In preparation for the next lecture, we define the notion of contractibility:
+$$\isContr(A):\sum_{x:A}\prod_{y:A}x=_A y$$
+
+\begin{lemma}
+ $$\isProp(A)\leftrightarrow \prod_{x,y:A}\isContr(x=_A y)$$
+\end{lemma}
+
+We use this to define the $n$-types. Since this will presumably be repeated on Wednesday, I'll
+leave it alone for now.
+
+
+
+\end{document}
