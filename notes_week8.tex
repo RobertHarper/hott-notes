@@ -123,11 +123,11 @@ presence of the interval type. Let $f , g : A \to B$ be two functions and
 assume $h : \Pi x{:}A. \Id{B} (f(x), g(x))$; we want to show $\Id{A\to
 B}(f,g)$. To do this, we'll define a function $k : I \to (A \to B)$. In
 order to do that, we'll first want another function 
-$\sim{k} : A \to (I \to B)$. 
+$\tilde{k} : A \to (I \to B)$. 
 This function is defined for every $x : A$ by induction on $I$:
-\begin{eqnarray*} \sim{k}(x)(\Izero) &\defeq& f(x) \\ \sim{k}(x)(\Ione)
-&\defeq& g(x) \\ \ap_{\sim{k}(x)}(\Iseg) &\defeq& h(x) \end{eqnarray*} The
-function $k$ is then defined by $k(t)(x) \defeq \sim{k}(x)(t)$. Observe that
+\begin{eqnarray*} \tilde{k}(x)(\Izero) &\defeq& f(x) \\ \tilde{k}(x)(\Ione)
+&\defeq& g(x) \\ \ap_{\tilde{k}(x)}(\Iseg) &\defeq& h(x) \end{eqnarray*} The
+function $k$ is then defined by $k(t)(x) \defeq \tilde{k}(x)(t)$. Observe that
 $k(\Izero) \jdeq f$ and $k(\Ione) \jdeq g$. Hence, $\ap_k(\Iseg) : \Id{A
 \to B}(f,g)$.
 
@@ -158,9 +158,14 @@ We will be able to show that most of the basic types in ITT are sets, and that m
 
 \subsection*{The universe}
 
-We can show that $\universe$ is a set by giving ``codes,'' or abstract
-syntax trees, for every type in the universe and showing that they map onto
-the natural numbers. % XXX
+We did not go into much detail with demonstrating that the universe is a
+set, but the gist of it is that we can show it by giving ``codes,'' or abstract
+syntax trees, for every type in the universe such that they map onto
+the natural numbers. For example, for base types like $\Nat$ we just give a
+terminal code $\dot{\Nat}$ and for the complex types we can concatenate
+(the inductive codification of) their codes. Then we give an interpretation
+function to say the appropriate thing, like $T(\dot{\Nat}) = \Nat$ and
+$T(a\dot{\to}b) = T(\dot{a}) \to T(\dot(b)$.
 
 \subsection*{Identity types}
 
@@ -203,8 +208,7 @@ Need to construct a term of type $\idididA(u,v,r,s,\alpha,\beta)$.
 
 First, specialize $H$ to $H'(q) : H(u,v,r,q)$.
 
-% XXX continue here
-Exploit functoriality of $H'$
+We exploit the functoriality of $H'$ to get
 
 \begin{eqnarray*}
 \op{apd}_{H'} &:& \Pi{q,q'}{:}\Id{A}(u,v).
@@ -224,9 +228,12 @@ and so we can get transport in the identity
 \Id{-}(H'(r)\cdot \alpha, H'(r)\cdot\beta)
 \]
 Because the groupid structure tells us we get a cancellation property (?),
-this means $\alpha = \beta$
+this means $\alpha = \beta$.
 
-(XXX The above is sloppy; I'll work on it.)
+It is left as an exercise to the reader to construct this term in formal
+notation.
+
+% (XXX The above is sloppy; I'll work on it.)
 
 \section{ITT + UA is {\em not} a set theory}
 
@@ -234,15 +241,27 @@ In other words, in homotopy type theory, not all types are sets. In
 particular, $\universe$ is a proper groupoid. There are nontrivial paths
 between the elements of $\universe$.
 
-As an example, we can demonstrate two paths between the booleans
-$2$, one which is the identity mapping $\op{id}$ taking $\op{tt}$
-to $\op{tt}$ and $\op{ff}$ to $\op{ff}$. The other is $\op{not}$, taking
-$\op{tt}$ to $\op{ff}$ and $\op{ff}$ to $\op{tt}$.
+As an example, we can demonstrate two distinct paths between the booleans
+$2$, one which is based on the identity mapping $\op{id}$ taking $\op{tt}$
+to $\op{tt}$ and $\op{ff}$ to $\op{ff}$. The other is based on $\op{not}$,
+taking $\op{tt}$ to $\op{ff}$ and $\op{ff}$ to $\op{tt}$.
 
-$\op{not}$ and $\op{id}$ are two paths from ${2}$ to ${2}$,
-and we can demonstrate that they are not identified using univalence.
+$\op{not}$ and $\op{id}$ are two functions from ${2}$ to ${2}$, and we can
+show them {\em equivalent} (exercise). Denote with $\mathsf{ua}$ the 
+half of UA that takes us from equivalences to paths. Then
+$\mathsf{ua}(\op{id})$ and
+$\mathsf{ua}(\op{not})$ are two {\em paths} from $2$ to $2$. 
 
-% XXX do this
+We can now refute that these paths are identifiable, i.e. realize
+\[
+\Pi x{:}2.\Id{2}(\mathsf{ua}(\op{id})(x),\mathsf{ua}(\op{not})(x)) \to 0
+\]
+
+$\mathsf{refl}_2(\op{tt}) : \op{tt} =_2 \op{tt}$ by identity introduction,
+and by the assumed identity between $\op{id}$ and $\op{not}$, we can
+transport to get a proof that $\op{tt} =_2 \op{ff}$. This can be refuted
+via the path characterization of sum types seen in a previous lecture,
+yielding $0$.
 
 \section{$n$-types}
 
@@ -257,7 +276,6 @@ $\op{isSet}(A)$ & becomes & $\isntype{0}(A)$ \\
 $\op{isGpd}(A)$ & becomes & $\isntype{1}(A)$ \\
 $\op{is2Gpd}(A)$ & becomes & $\isntype{2}(A)$ \\
 \vdots & & \vdots
-% - & - & -
 \end{tabular}
 \bigskip
 
@@ -336,10 +354,14 @@ interested in only the {\em propositional} content of the spec.
 One way of suppressing information in a type is Brouwer's idea of using
 double negation, i.e. to put a $\lnot\lnot$ in front of $s$'s type. 
 
-(digression on possibly-infinite streams, TM halting obeying DNE i.e.
-Markov's principle, Russian school of constructivism) XXX get back to this.
-We can however (as done in NuPRL) just specify a bound on the stream so
-that you know you'll eventually find the 0 if there is one.
+(Digression: if the stream is infinite, it's not actually clear that we
+would be able to decide whether it contains a 0; we might be worried that
+by doubly-negating, we no longer have access to that information.
+Markov's Principle, from the Russian school of constructivism, states that
+if a Turing machine can't fail to halt, it must halt; i.e. it takes a form
+of DNE specialized to Turing machines. Alternatively, we can take the NuPRL
+route and specify a bound $k$ for the sequence such that we know we will
+find a $0$ if there is one.)
 
 Double negation ``kills computational content'' in the way that we want,
 and we can formally state that as the following fact:
@@ -352,6 +374,22 @@ NTS a term inhabiting
 
 \[
 \Pi{x,y}{:}(\lnot\lnot A).\Id{\lnot\lnot A}(x,y)
+\]
+
+In lecture it was stated that this is a simple proof using $\abort{-}$. If we
+have function extensionality available it seems straightforward that in
+fact {\em any} negated type $A \to 0$ is a prop:
+
+\[
+{f,g}{:}{\lnot C}, x{:}C \vdash \abort{C}(f\ x)
+ : \Id{0}(f\ x, g\ x)
+\]
+
+With function extensionality we can turn this into
+
+\[
+{f,g}{:}{\lnot C} \vdash \op{funext}(\lambda{x}.\abort{C}(f\ x))
+ : \Id{\lnot C}(f, g)
 \]
 
 % XXX stuck here, work this out.
@@ -403,6 +441,10 @@ with the ``just squash'' principle, but
 with the classical embedding, which is provable constructively (it is just
 an instance of the identity).
 
+With the interpretation of $\lnot A$ as a {\em continuation} accepting a
+term of type $A$, this translation coincides with the
+``continuation-passing transform'' for compilers.
+
 % XXX other possible ways of doing information erasure
 % quotient by the full relation
 % form a subsingleton, the set {* | A}
@@ -419,6 +461,8 @@ that a type with {\em decidable equality} is a set. In other words, If
 
 then $\op{isSet}(A)$.
 
-Proof sketch: % XXX
+Proof sketch: decidable equality implies {\em stable} equality, i.e.
+$\lnot\lnot\Id{A}(x,y) \implies \Id{a}(x,y)$, and stable equality implies
+sethood.
 
 \end{document}
