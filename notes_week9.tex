@@ -7,7 +7,7 @@
 
 \setlength{\inferLineSkip}{4pt}
 
-\metadata{Lewis and Tassarotti}{2013/11/04 and 2013/11/06}
+\metadata{Lewis and Tassarotti}{2013/11/11 and 2013/11/13}
 
 \newcommand*{\Void}{\mathsf{0}}
 \newcommand*{\Unit}{\mathsf{1}}
@@ -26,6 +26,8 @@
 \newcommand*{\isProp}{\mathsf{isProp}}
 \newcommand*{\trunc}{\mathsf{trunc}}
 \newcommand*{\isContr}{\mathsf{isContr}}
+
+\newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{thm}{Theorem}
@@ -165,14 +167,49 @@ $$\prod_{x,y:\Nat}(x=_\Nat y)\vee \neg (x=_\Nat y).$$ This is left as an exercis
 We can similarly prove $\isProp(\isSet(A))$. With the proper notion of $\mathsf{isEquiv}(A)(B)$,
 we will be able to prove $\isProp(\mathsf{isEquiv}(A)(B))$; this will come later.
 
+
+\section{Contractibility}
+In preparation for what follows, we define the notion of contractibility:
+$$\isContr(A):\sum_{x:A}\prod_{y:A}x=_A y$$
+
+\begin{lemma}
+ $$\isProp(A)\leftrightarrow \prod_{x,y:A}\isContr(x=_A y).$$
+\end{lemma}
+
+The notions of contraction and truncation are related to the (n)-type hierarchy: 
+specifically, contractions sit at the bottom of the hierarchy. For historical reasons,
+we begin with (-2) types, and define inductively:
+\begin{align*}
+ \isNtype{(-2)}(A)\defeq&\ \isContr(A) \\ %Better way to format this?
+ \isNtype{(n+1)}(A)\defeq &\ \prod_{x,y:A}\isNtype{n}(x=_A y)
+\end{align*}
+
+The above lemma implies that
+$$\isProp(A)\leftrightarrow \isNtype{(-1)}(A).$$
+
+We can further prove the following:
+\begin{align*}
+ \isSet(A)\leftrightarrow &\ \isNtype{0}(A) \\
+ \mathsf{isGpd}(A)\leftrightarrow &\ \isNtype{1}(A) \\
+ \mathsf{is}\mbox{-}2\mbox{-}\mathsf{Gpd}(A)\leftrightarrow &\ \isNtype{2}(A) \\
+ \vdots\ & 
+\end{align*}
+
+As well as
+$$\prod_{A:\mathcal{U}}\left( \isNtype{n}(A)\to \isNtype{(n+1)}(A) \right).$$
+
+However, it is \emph{not} the case that every type is an $n$-type for some $n$: consider $\mathcal{U}$.
+
 \section{Propositional Truncation (Squashing)}
+THIS SECTION NEEDS TO BE UPDATED FOR WEDNESDAY'S LECTURE.
 
 The notion of ``squashing'' introduced last week was perhaps too heavy-handed: it was used toward
 a number of goals, among them to recover classical logic within constructive logic. We now introduce
 the more general idea of \emph{abstract truncation}, which for now will be taken as a primitive
 idea of HoTT. Truncation serves to reduce types to sets, without all the byproducts of squashing.
 
-Let $\|A\|$ be read as the \emph{truncation} of $A$. We have the following $\|\cdot \|$-introduction rules:
+Let $\|A\|_{-1}$ be read as the \emph{(-1)-truncation} of $A$. When the context is clear, we omit
+the subscript. We have the following $\|\cdot \|$-introduction rules:
 
 \begin{mathpar}
   \infer[{\|\cdot\|}I]{|M|:\|A\|}{
@@ -194,18 +231,5 @@ $$\trunc(|M|; P; x.N)\equiv [M/x]N$$
 We require a proof of $\isProp(B)$ to ensure that the behavior of $N$ does not depend on the
 representative $x:A$. There are other ways to ensure this property: for instance, we could instead
 require $u,v:A\entails [u/x]N =_B [v/x]N$. Note that $\isProp(B)$ implies that this is the case.
-
-\section{Contractibility}
-In preparation for the next lecture, we define the notion of contractibility:
-$$\isContr(A):\sum_{x:A}\prod_{y:A}x=_A y$$
-
-\begin{lemma}
- $$\isProp(A)\leftrightarrow \prod_{x,y:A}\isContr(x=_A y)$$
-\end{lemma}
-
-We use this to define the $n$-types. Since this will presumably be repeated on Wednesday, I'll
-leave it alone for now.
-
-
 
 \end{document}
