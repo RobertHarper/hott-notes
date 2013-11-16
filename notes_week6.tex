@@ -98,7 +98,7 @@ can prove theorems about this type like:
    \draw (0, 0) ellipse (5cm and 3cm);
    \draw (0, -5cm) ellipse (5cm and 1cm);
 
-   \draw [dashed, ultra thick] (-1.55 cm, -5cm) --  (1.55 cm, -5cm);
+   \draw [double equal sign distance] (-1.55 cm, -5cm) --  (1.55 cm, -5cm);
    \node [above] at (0 cm, -5cm) {$p$};
    \draw [fill] (-1.75cm, -5cm) circle [radius=.05cm];
    \node [left] at (-1.75cm, -5cm) {$M$};
@@ -129,9 +129,9 @@ can prove theorems about this type like:
    \draw (1.55cm, -1.45cm) -- (1.55cm, -1.55cm);
 
 
-   \draw [dashed, ultra thick] (1.75 cm, 1.55cm) --  (1.75 cm, -1.55cm);
+   \draw [double equal sign distance, shorten <= .15 cm, shorten >= .15 cm] (1.75 cm, 1.55cm) --  (1.75 cm, -1.55cm);
    \node [right] at (1.75cm, 0cm) {$\apd_f p$};
-   \draw [dashed, ultra thick] (-1.75 cm, 1.55cm) --  (-1.75 cm, -1.55cm);
+   \draw [double equal sign distance, shorten <= .15 cm, shorten >= .15 cm] (-1.75 cm, 1.55cm) --  (-1.75 cm, -1.55cm);
    \node [left] at (-1.75cm, 0cm) {$\apd_f' p^{-1}$};
 
 

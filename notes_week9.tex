@@ -170,9 +170,35 @@ we will be able to prove $\isProp(\mathsf{isEquiv}(A)(B))$; this will come later
 In preparation for what follows, we define the notion of contractibility:
 $$\isContr(A):\sum_{x:A}\prod_{y:A}x=_A y$$
 
-\begin{lemma}
- $$\isProp(A)\leftrightarrow \prod_{x,y:A}\isContr(x=_A y).$$
-\end{lemma}
+That is, a type is contractible if there is some inhabitant which all other
+inhabitants are equal to. This is equivalent to saying that $A$ is a prop, and
+it is inhabited. Alternatively, a $A$ type is contractibile if it is equivalent
+to $1$. 
+
+Notice that for any type $A$, given $a{:}A$, we have that $\isContr(\Sigma
+x{:}A a = x)$. In particular, $\tuple{a}{\refl{A}(a))}$ is an inhabitant of
+this type which all other elements are equal to.
+
+\begin{figure}
+\label{fig:contractible}
+\begin{center}
+\begin{tikzpicture}
+   \draw (0, 0) ellipse (3cm and 3cm);
+
+   \node [above] at (0 cm, 0cm) {$x$};
+   \draw [fill] (0 cm, 0cm) circle [radius=.05cm];
+   \draw [fill] (1.5 cm, 1.5cm) circle [radius=.05cm];
+   \draw [fill] (-1.5 cm, 1.5cm) circle [radius=.05cm];
+   \draw [fill] (-1.50 cm, -1.5cm) circle [radius=.05cm];
+   \draw [fill] (1.5 cm, -1.5cm) circle [radius=.05cm];
+   \draw [double equal sign distance, shorten <= .25cm, shorten >= .25cm] (0cm, 0cm) -- (1.5cm, 1.5cm);
+   \draw [double equal sign distance, shorten <= .25cm, shorten >= .25cm] (0cm, 0cm) -- (1.5cm, -1.5cm);
+   \draw [double equal sign distance, shorten <= .25cm, shorten >= .25cm] (0cm, 0cm) -- (-1.5cm, -1.5cm);
+   \draw [double equal sign distance, shorten <= .25cm, shorten >= .25cm] (0cm, 0cm) -- (-1.5cm, 1.5cm);
+\end{tikzpicture}
+\end{center}
+\caption{A contractible type. There is some element $x$, and paths between $x$ and all other elements}
+\end{figure}
 
 The notions of contraction and truncation are related to the (n)-type hierarchy: 
 specifically, contractions sit at the bottom of the hierarchy. For historical reasons,
@@ -182,7 +208,10 @@ we begin with (-2) types, and define inductively:
  \isNtype{(n+1)}(A)\defeq &\ \prod_{x,y:A}\isNtype{n}(x=_A y)
 \end{align*}
 
-The above lemma implies that
+Now, we have that: 
+
+ $$\isProp(A)\leftrightarrow \prod_{x,y:A}\isContr(x=_A y).$$
+which implies that
 $$\isProp(A)\leftrightarrow \isNtype{(-1)}(A).$$
 
 We can further prove the following:
