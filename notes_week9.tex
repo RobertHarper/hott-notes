@@ -229,15 +229,18 @@ $$\prod_{A:\mathcal{U}}\left( \isNtype{n}(A)\to \isNtype{(n+1)}(A) \right).$$
 However, it is \emph{not} the case that every type is an $n$-type for some $n$: consider $\mathcal{U}$.
 
 \section{Propositional Truncation (Squashing)}
-THIS SECTION NEEDS TO BE UPDATED FOR WEDNESDAY'S LECTURE.
 
-The notion of ``squashing'' introduced last week was perhaps too heavy-handed: it was used toward
-a number of goals, among them to recover classical logic within constructive logic. We now introduce
-the more general idea of \emph{abstract truncation}, which for now will be taken as a primitive
-idea of HoTT. Truncation serves to reduce types to sets, without all the byproducts of the double negation translation.
+The notion of ``squashing'' introduced last week was perhaps too heavy-handed:
+it was used toward a number of goals, among them to recover classical logic
+within constructive logic. We now introduce the more general idea of
+\emph{abstract truncation}, which for now will be taken as a primitive idea of
+HoTT. Truncation serves to reduce types to sets, without all the byproducts of
+the double negation translation.
 
-Let $\|A\|_{-1}$ be read as the \emph{(-1)-truncation} of $A$. When the context is clear, we omit
-the subscript. We have the following $\|\cdot \|$-introduction rules:
+Let $\|A\|_{-1}$ be read as the \emph{(-1)-truncation} of $A$. When the context
+is clear, we omit the subscript. When the type $\|A\|$ is inhabited, we say $A$
+is ``merely inhabited'', to emphasize that this is a proof-irrelevant setting.
+We have the following $\|\cdot \|$-introduction rules:
 
 \begin{mathpar}
   \infer[{}]{\Gamma \entails |M|:\|A\|}{
@@ -247,7 +250,7 @@ the subscript. We have the following $\|\cdot \|$-introduction rules:
     }
 \end{mathpar}
 
-And the elimination rule:
+As we would expect, $\isProp(\|A\|)$ because of the rule for $\squash(\cdot, \cdot)$. The corresponding elimination rule s:
 $$
   \infer[{\|\cdot\|}E]{\elimtrunc[B](M; x.N; P):B}{
     \Gamma \entails M:\|A\| & \Gamma, x:A\entails N:B & \Gamma \entails P:\isProp(B)}
@@ -260,12 +263,78 @@ require $u,v:A\entails [u/x]N =_B [v/x]N$. Note that $\isProp(B)$ implies that t
 The $\beta$ rule works as one might expect:
 $$\elimtrunc(|M|; x.N; P)\equiv [M/x]N$$
 
-One would similarly like some $\beta$ like rule to hold for $\squash$. For
+One would similarly like some $\beta$ like rule to hold for the 1-cell, $\squash$. For
 example, something of the form $$\ap(\lambda z. \elimtrunc(z; x. N;
 P))(\squash(|M|, |M'|)) \jdeq P([M/x]N)([M'/x]N)$$ which corresponds to the
 idea that $P$ is a proof that $N$ is equal under substitutions of different
 terms of type $A$, because $B$ is a proposition. However, just as in the case of 
 $\mathsf{seg}$, we do not have this.
+
+\section{Revisiting the Axiom of Choice}
+
+Previously, we explored how the axiom of choice is provable in ITT. That is, there is a term $AC_\infty$ such that
+$$AC_\infty{:} \prod_{A{:}U} \prod_{B{:}A \to U} \prod_{C{:}\Pi x:A. B \to U}
+\left(\left( \prod_{x{:}A} \sum_{y: B(x)} C(x,y) \right ) \to \left(\sum_{f: \Pi x{:} A. B} \prod_{x:A} C(x, f(x))\right)\right)
+$$
+
+In fact, we can strengthen this and say that the two types are equivalent.
+Recall that this type is inhabited because the witness that the relation $C$ is
+total provides precisely the choice we should make, because the specification
+is proof relevant. The situation is similar to the example that motivated our
+introduction of propositional truncation, where we wanted to write a total
+function that returned the index of the first occurrence of 0 in an infinite
+sequence. The proof that the infinite sequence actually contained a 0 also
+immediately told us where the 0 was.
+
+Now that we have developed the notion of propositional truncation, we can state
+a version of the axiom of choice that is closer in meaning to its typical
+statement:
+\begin{multline*}
+\prod_{A{:}U} \prod_{B{:}A \to U} \prod_{C{:}\Pi x:A. B \to U}
+\left(\isSet(A) \to \left(\prod_{x:A} \isSet(B(x))\right) \to \left(\prod_{x:A} \prod_{y: B(x)} \isProp(C(x,y))\right) \right. \\
+\left. \to \left(\left( \prod_{x{:}A} \left|\left|\sum_{y: B_x} C(x,y) \right|\right| \right ) \to 
+  \left|\left| \sum_{f: \Pi x{:} A. B} \prod_{x:A} C(x, f(x)) \right|\right| \right)\right)
+\end{multline*}
+
+%% This is how it was scoped when written on the board, but it is really hard to typeset it 
+%%$$\prod_{A{:}U}\left(\isSet(A) \to 
+%%     \prod_{B{:}A \to U} \left(\prod_{x{:}A} \isSet(B(x))\right) \to 
+%%  \prod_{C{:}\Pi x:A. B \to U} \prod_{x{:}A} \prod_{y{:}B_x} \isProp(C(x, y)) \to ...
+%%$$
+
+This restated form is not provable. What has happened is now that we say that
+there merely exists some $y$ for each $x$ such that $C(x,y)$. The axiom says
+that given such weaker evidence, there merely exists such a function $f$ where
+for each $x$, $C(x,f(x))$. We might call an axiom of such a type $AC_{-1}$, to
+emphasize that it involves the $-1$-truncation.
+
+Now, the truncations of equivalent types are equivalent. Since the
+non-truncated form of the axiom of choice, $AC_{\infty}$, gives us the
+equivalence
+$$
+\left(\left( \prod_{x{:}A} \sum_{y: B(x)} C(x,y) \right ) \simeq \left(\sum_{f: \Pi x{:} A. B} \prod_{x:A} C(x, f(x))\right)\right)
+$$
+so that the type of $AC_{-1}$ is equivalent to
+\begin{multline*}
+\prod_{A{:}U} \prod_{B{:}A \to U} \prod_{C{:}\Pi x:A. B \to U}
+\left(\isSet(A) \to \left(\prod_{x:A} \isSet(B(x))\right) \to \left(\prod_{x:A} \prod_{y: B(x)} \isProp(C(x,y))\right) \right. \\
+\left. \to \left(\left( \prod_{x{:}A} \left|\left|\sum_{y: B_x} C(x,y) \right|\right| \right ) \to 
+  \left|\left| \prod_{x{:}A} \sum_{Y: B(x)} C(x,y) \right|\right| \right)\right)
+\end{multline*}
+
+Now, for all $Y: A \to U$, we have that $\Pi_{x:A} Y(x) \simeq \Pi_{x:A}(\Sigma_{a:Y(x)} 1)$, so we can simplify the above type to:
+\begin{multline*}
+\prod_{A{:}U} \prod_{Y{:}A \to U}
+\left(\isSet(A) \to \left(\prod_{x:A} \isSet(Y(x))\right)
+\to \left(\left( \prod_{x{:}A} \left|\left|Y(x) \right|\right| \right) \to 
+  \left|\left| \prod_{x{:}A} Y(x) \right|\right| \right)\right)
+\end{multline*}
+
+In this form, we see that the axiom is saying that a product of a family of
+merely inhabited sets is merely inhabited, which is a well-known equivalence of
+the axiom of choice in classical mathematics. It is crucial here that $\isSet(A)$, 
+since if $A$ is not, there is a counter example (see lemma 3.8.5 in ~\cite{HoTTBook2013})
+
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
