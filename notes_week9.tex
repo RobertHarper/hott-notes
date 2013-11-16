@@ -24,8 +24,9 @@
 \newcommand*{\funext}{\mathsf{funext}}
 \newcommand*{\isSet}{\mathsf{isSet}}
 \newcommand*{\isProp}{\mathsf{isProp}}
-\newcommand*{\trunc}{\mathsf{trunc}}
+\newcommand*{\elimtrunc}{\mathsf{elim}}
 \newcommand*{\isContr}{\mathsf{isContr}}
+\newcommand*{\squash}{\mathsf{squash}}
 
 \newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
 
@@ -239,25 +240,32 @@ Let $\|A\|_{-1}$ be read as the \emph{(-1)-truncation} of $A$. When the context 
 the subscript. We have the following $\|\cdot \|$-introduction rules:
 
 \begin{mathpar}
-  \infer[{\|\cdot\|}I]{|M|:\|A\|}{
-    M:A}
+  \infer[{}]{\Gamma \entails |M|:\|A\|}{
+    \Gamma \entails M:A}
   \and
-  \infer[{\|\cdot\|}I]{\_: \Id{\|A\|}(|M|,|N|)}{
-    M:A & N:A}
+  \infer[{}]{\Gamma, x: \|A\|, y: \|A\| \entails \squash(x, y): \Id{\|A\|}(x, y)}{
+    }
 \end{mathpar}
 
 And the elimination rule:
 $$
-  \infer[{\|\cdot\|}E]{\trunc(|M|; P; x.N):B}{
-    M:\|A\| & x:A\entails N:B & P:\isProp(B)}
+  \infer[{\|\cdot\|}E]{\elimtrunc[B](M; x.N; P):B}{
+    \Gamma \entails M:\|A\| & \Gamma, x:A\entails N:B & \Gamma \entails P:\isProp(B)}
 $$
-
-The $\beta$ rule works as one might expect:
-$$\trunc(|M|; P; x.N)\equiv [M/x]N$$
 
 We require a proof of $\isProp(B)$ to ensure that the behavior of $N$ does not depend on the
 representative $x:A$. There are other ways to ensure this property: for instance, we could instead
 require $u,v:A\entails [u/x]N =_B [v/x]N$. Note that $\isProp(B)$ implies that this is the case.
+
+The $\beta$ rule works as one might expect:
+$$\elimtrunc(|M|; x.N; P)\equiv [M/x]N$$
+
+One would similarly like some $\beta$ like rule to hold for $\squash$. For
+example, something of the form $$\ap(\lambda z. \elimtrunc(z; x. N;
+P))(\squash(|M|, |M'|)) \jdeq P([M/x]N)([M'/x]N)$$ which corresponds to the
+idea that $P$ is a proof that $N$ is equal under substitutions of different
+terms of type $A$, because $B$ is a proposition. However, just as in the case of 
+$\mathsf{seg}$, we do not have this.
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
