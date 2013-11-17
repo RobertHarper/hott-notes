@@ -27,6 +27,14 @@
 \newcommand*{\elimtrunc}{\mathsf{elim}}
 \newcommand*{\isContr}{\mathsf{isContr}}
 \newcommand*{\squash}{\mathsf{squash}}
+\newcommand{\iseq}{\mathsf{isequiv}}
+\newcommand{\qinv}{\mathsf{qinv}}
+\newcommand*{\comp}{\mathbin{\circ}}
+
+\newcommand{\biequiv}{\mathsf{biequiv}}
+\newcommand{\isContrf}{\mathsf{isContr}}
+\newcommand{\ishae}{\mathsf{ishae}}
+\newcommand{\fib}{\mathsf{fib}}
 
 \newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
 
@@ -331,9 +339,78 @@ Now, for all $Y: A \to U$, we have that $\Pi_{x:A} Y(x) \simeq \Pi_{x:A}(\Sigma_
 \end{multline*}
 
 In this form, we see that the axiom is saying that a product of a family of
-merely inhabited sets is merely inhabited, which is a well-known equivalence of
-the axiom of choice in classical mathematics. It is crucial here that $\isSet(A)$, 
-since if $A$ is not, there is a counter example (see lemma 3.8.5 in ~\cite{HoTTBook2013})
+merely inhabited sets is merely inhabited, which is well-known to be equivalent
+to the axiom of choice in classical mathematics. It is crucial here that
+$\isSet(A)$, since if $A$ is not a set, there is a counter example (see lemma
+3.8.5 in~\cite{HoTTBook2013})
+
+
+\section{Equivalence and Propositions}
+
+A few weeks ago, we defined what it meant for a map $f: A \to B$ to be an
+equivalence between $A$ and $B$, written $\iseq(f)$. The definition we gave
+was: $$\iseq(f)\defeq (\Sigma g: B\to A.f\comp g \sim \id_B)\times (\Sigma h:
+B\to A.h\comp f \sim \id_A).$$
+
+We also gave the related notion of a quasi-inverse, written $\qinv(f)$, which
+was defined as: $$\qinv(f)\defeq \Sigma g:B\to A.(f\comp g\sim \id_B \times
+g\comp f\sim \id_A).$$
+
+In some ways, the definition of $\qinv$ may at first appear to be a more
+natural definition than $\iseq$, since it states that there is some function
+$g$ which is a left and right inverse of $f$. This is the definition of an
+isomorphism in category theory, for example. Of course, we explained that
+$\iseq(f) \to \qinv(f)$ and $\qinv(f) \to \iseq(f)$, and this enabled us to use
+whatever definition was more convenient over the past few weeks.
+
+Why did we choose the above definition for $\iseq$ instead of using the
+definition we gave for $\qinv$? The issue is that we would like there to be
+only one proof that a given function $f$ is an equivalence. That is, we want
+$\isProp(\iseq(f))$ to hold for all $f$. This is the case for the definition we
+gave, but it is not true that $\isProp(\qinv(f))$ for every $f$. We can show this 
+by establishing two lemmas:
+
+\begin{proposition}
+If $f: A \to B$ and $e: \qinv(f)$ then $\qinv(f) \simeq \Pi x{:}A. (x = x)$
+\end{proposition}
+
+\begin{proposition}
+There exists some type $X$ such that $\Pi x{:}X (x = x)$ is not a proposition.
+\end{proposition}
+
+See the discussion in section 4.1 in~\cite{HoTTBook2013} for proofs of these
+lemmas. This makes $\qinv$ unsuitable as a definition for $\iseq$. 
+Nevertheless, we would still like a definition of $\iseq$ to be interprovable with $\qinv$,
+while also being a proposition. There are three candidates which satisfy these properties, all of which are equivalent:
+
+\begin{enumerate}
+\item $\biequiv(f) \defeq (\Sigma g: B\to A.f\comp g \sim \id_B)\times (\Sigma h:
+B\to A.h\comp f \sim \id_A).$
+
+We say that $f$ is \emph{bi-invertible}, which means that $f$ has a left
+inverse and a right inverse. This is the definition we have been using.
+
+\medskip
+
+\item $\isContrf(f) \defeq \Pi y{:}B.\, \isContr(\fib_f(y))$ where $\fib_f(y) =
+\Sigma x{:}A. f(x) = y$.
+
+This says that $f$ is contractible if given any $y$ in the codomain, the set of
+all things that $f$ maps to $y$ (the fiber), is contractible. That is, for
+every point in the codomain, there is an element $x$ in the domain such that
+$f(x) = y$, and if $f(x') = y$ then $x = x'$. But that precisely means that $f$
+is a bijection up to homotopy. 
+
+\medskip
+\item $\ishae(f) \defeq \Sigma g{:} B \to A. \Sigma \alpha{:} (f \comp g \sim id). \Sigma \beta{:} (g \comp f \sim id). \\ \smallskip \qquad \qquad \qquad \Pi x{:A}. f(\beta x) = \alpha(f x)  $:
+
+We read this as saying that $f$ is a \emph{half-adjoint equivalence}. We did
+not talk about this definition in class, but a discussion can be found in
+section 4.2 of~\cite{HoTTBook2013}. Roughly, we can motivate this by noticing
+that it is similar to the definition of $\qinv$ (where the homotopies $\alpha$
+and $\beta$ were unnamed) with an additional coherence condition relating how
+these homotopies interact with $f$.
+\end{enumerate}
 
 
 \bibliographystyle{plain}
