@@ -53,8 +53,8 @@
 
 \section{Contents}
 These notes cover Robert Harper's lectures on Homotopy Type Theory from
-November 11 and 13, 2013. Discussions include Hedberg's theorem, propositional truncation,
-and ...
+November 11 and 13, 2013. Discussions include Hedberg's theorem, contractibility,
+propositional truncation, and the ``axiom'' of choice.
 
 
 \section{Refresher: Sets and Propositions}
@@ -171,8 +171,9 @@ $$\prod_{x,y:\Nat}(x=_\Nat y)\vee \neg (x=_\Nat y).$$ This is left as an exercis
  $x,y:A\entails \_: f x y =_{x=_A y} g x y$. This follows since $\isProp(A)\to \isSet(A)$.
 \end{proof}
 
-We can similarly prove $\isProp(\isSet(A))$. With the proper notion of $\mathsf{isEquiv}(A)(B)$,
-we will be able to prove $\isProp(\mathsf{isEquiv}(A)(B))$; this will come later.
+We can similarly prove $\isProp(\isSet(A))$. For $f:A\to B$, with the proper notion of 
+$\mathsf{isEquiv}(f)$, we will soon be able to prove $\isProp(\mathsf{isEquiv}(f))$.
+If we take equivalence to mean having a quasi-inverse, though, this is not the case.
 
 
 \section{Contractibility}
