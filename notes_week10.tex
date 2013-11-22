@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+
+%\usepackage{tikz-cd}
+
+\usepackage{proof-dashed}
+\input{macros}
+
+\setlength{\inferLineSkip}{4pt}
+
+\metadata{Muller and Cavallo}{2013/11/18 and 2013/11/20}
+
+\newcommand*{\Void}{\mathsf{0}}
+\newcommand*{\Unit}{\mathsf{1}}
+\newcommand*{\Bool}{\mathsf{2}}
+
+\newcommand*{\Interval}{I}
+\newcommand*{\Izero}{0_I}
+\newcommand*{\Ione}{1_I}
+\newcommand*{\Iseg}{\mathsf{seg}}
+
+\newcommand*{\ap}{\mathsf{ap}}
+\newcommand*{\apd}{\mathsf{apd}}
+
+\newcommand*{\funext}{\mathsf{funext}}
+\newcommand*{\isSet}{\mathsf{isSet}}
+
+\newcommand*{\z}{0}
+\newcommand*{\s}[1]{\mathsf{succ}(#1)}
+
+\title{15-819 Homotopy Type Theory\\Lecture Notes}
+\author{Evan Cavallo and Stefan Muller}
+\date{November 18 and 20, 2013}
+
+\begin{document}
+
+\maketitle
+
+\section{Reconsider $\Nat$ in simple types}
+
+As a warmup to discussing inductive types, we first review several equivalent
+presentations of the simple type $\Nat$ seen earlier in the course. The
+introduction form for $\Nat$ are $\z$ and $\s{M}$ for any $M: \Nat$.
+The elimination form is the recursor $\rec$.
+
+\subsection{Traditional Form}
+
+\[
+\begin{array}{c}
+
+\infer[{\Nat}I_z]{\ctx \entails \z : \Nat}{}
+
+\qquad
+\hfill
+
+\infer[{\Nat}I_s]{\ctx \entails \s{M} : \Nat}{\ctx \entails M: \Nat}
+
+\\[4ex]
+
+\infer[{\Nat}E]
+{\ctx \entails \rec[A](M; M_0; x. M_1): A}
+{\ctx \entails M : \Nat \qquad
+\ctx \entails M_0 : A \qquad
+\ctx, x: A \entails M_1 :A}
+
+\end{array}
+\]
+
+We include the motive $A$ in the recursor to motivate the dependently-typed
+presentation to come although it is not necessary in the simply-typed setting.
+The dynamic behavior of $\rec$ is defined by the following $\beta$ rules.
+
+\[\rec[A](\z; M_0; x. M_1) \jdeq M_0\]
+\[\rec[A](\s{M}; M_0; x. M_1) \jdeq [\rec[A](M; M_0; x. M_1)/x]M_1\]
+
+The recursor on $\z$ returns the base case $M_0$. On $\s{M}$, it substitutes
+the recursive result on $M$ for $x$ in $M_1$. The $\eta$ rule states that
+any object that ``behaves like'' the recursor is definitionally equal to the
+recursor on the appropriate arguments.
+
+\[
+\infer[\eta]
+{\ctx, y: \Nat \entails N \jdeq \rec[A](y; M_0; x. M_1)}
+{[0/x]N \jdeq M_0 \qquad
+\ctx, z: \Nat \entails [\s{z}/x]N \jdeq [[z/y]N/x]M_1 : A}
+\]
+
+\subsection{Alternate Form}
+The introduction and elimination rules can be presented in this alternate form:
+
+\[
+\cdot \entails \z : \Nat ({\Nat}I_z)
+
+\qquad
+\hfill
+
+x: \Nat \entails \succ{x} : \Nat ({\Nat}I_s)
+
+\\[4ex]
+
+M: \Nat, M_0: A, x: A, M_1
+\]
+
+\textbf{TODO: Help!}
+
+\subsection{As elements of the exponential}
+The introduction forms of $\Nat$ may be treated as exponentials in the absence
+of a context.
+
+\[\z : 1 \to \Nat ({\Nat}I_z)\]
+\[\s : \Nat \to \Nat ({\Nat}I_z)\]
+
+Note that the type $1 \to \Nat$ is equivalent to the type $\Nat$.
+
+\end{document}
