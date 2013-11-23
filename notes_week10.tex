@@ -1,11 +1,12 @@
 \documentclass[11pt]{article}
+\usepackage[letterpaper]{geometry}
 
-%\usepackage{tikz-cd}
-
+\usepackage{tikz-cd}
+\usepackage{amsthm}
 \usepackage{proof-dashed}
 \input{macros}
 
-\setlength{\inferLineSkip}{4pt}
+%\setlength{\inferLineSkip}{4pt}
 
 \metadata{Muller and Cavallo}{2013/11/18 and 2013/11/20}
 
@@ -25,7 +26,14 @@
 \newcommand*{\isSet}{\mathsf{isSet}}
 
 \newcommand*{\z}{0}
-\newcommand*{\s}[1]{\mathsf{succ}(#1)}
+\newcommand*{\s}{\mathsf{succ}}
+
+\newcommand*{\dummy}{\_}
+\newcommand*{\triv}{\langle \rangle}
+
+\newcommand*{\comp}{\circ}
+
+\newtheorem{lemma}{Lemma}
 
 \title{15-819 Homotopy Type Theory\\Lecture Notes}
 \author{Evan Cavallo and Stefan Muller}
@@ -39,7 +47,7 @@
 
 As a warmup to discussing inductive types, we first review several equivalent
 presentations of the simple type $\Nat$ seen earlier in the course. The
-introduction form for $\Nat$ are $\z$ and $\s{M}$ for any $M: \Nat$.
+introduction form for $\Nat$ are $\z$ and $\s(M)$ for any $M: \Nat$.
 The elimination form is the recursor $\rec$.
 
 \subsection{Traditional Form}
@@ -47,16 +55,16 @@ The elimination form is the recursor $\rec$.
 \[
 \begin{array}{c}
 
-\infer[{\Nat}I_z]{\ctx \entails \z : \Nat}{}
+\infer[{\Nat}I_{z1}]{\ctx \entails \z : \Nat}{}
 
 \qquad
 \hfill
 
-\infer[{\Nat}I_s]{\ctx \entails \s{M} : \Nat}{\ctx \entails M: \Nat}
+\infer[{\Nat}I_{s1}]{\ctx \entails \s(M) : \Nat}{\ctx \entails M: \Nat}
 
 \\[4ex]
 
-\infer[{\Nat}E]
+\infer[{\Nat}E_1]
 {\ctx \entails \rec[A](M; M_0; x. M_1): A}
 {\ctx \entails M : \Nat \qquad
 \ctx \entails M_0 : A \qquad
@@ -70,9 +78,9 @@ presentation to come although it is not necessary in the simply-typed setting.
 The dynamic behavior of $\rec$ is defined by the following $\beta$ rules.
 
 \[\rec[A](\z; M_0; x. M_1) \jdeq M_0\]
-\[\rec[A](\s{M}; M_0; x. M_1) \jdeq [\rec[A](M; M_0; x. M_1)/x]M_1\]
+\[\rec[A](\s(M); M_0; x. M_1) \jdeq [\rec[A](M; M_0; x. M_1)/x]M_1\]
 
-The recursor on $\z$ returns the base case $M_0$. On $\s{M}$, it substitutes
+The recursor on $\z$ returns the base case $M_0$. On $\s(M)$, it substitutes
 the recursive result on $M$ for $x$ in $M_1$. The $\eta$ rule states that
 any object that ``behaves like'' the recursor is definitionally equal to the
 recursor on the appropriate arguments.
@@ -81,23 +89,25 @@ recursor on the appropriate arguments.
 \infer[\eta]
 {\ctx, y: \Nat \entails N \jdeq \rec[A](y; M_0; x. M_1)}
 {[0/x]N \jdeq M_0 \qquad
-\ctx, z: \Nat \entails [\s{z}/x]N \jdeq [[z/y]N/x]M_1 : A}
+\ctx, z: \Nat \entails [\s(z)/x]N \jdeq [[z/y]N/x]M_1 : A}
 \]
 
 \subsection{Alternate Form}
 The introduction and elimination rules can be presented in this alternate form:
 
 \[
-\cdot \entails \z : \Nat ({\Nat}I_z)
+\begin{array}{c}
+\cdot \entails \z : \Nat ({\Nat}I_{z2})
 
 \qquad
 \hfill
 
-x: \Nat \entails \succ{x} : \Nat ({\Nat}I_s)
+x: \Nat \entails \s(x) : \Nat ({\Nat}I_{s2})
 
 \\[4ex]
 
 M: \Nat, M_0: A, x: A, M_1
+\end{array}
 \]
 
 \textbf{TODO: Help!}
@@ -106,9 +116,216 @@ M: \Nat, M_0: A, x: A, M_1
 The introduction forms of $\Nat$ may be treated as exponentials in the absence
 of a context.
 
-\[\z : 1 \to \Nat ({\Nat}I_z)\]
-\[\s : \Nat \to \Nat ({\Nat}I_z)\]
+\[\cdot \entails \z : 1 \to \Nat ({\Nat}I_{z3})\]
+\[\cdot \entails \s : \Nat \to \Nat ({\Nat}I_{s3})\]
 
-Note that the type $1 \to \Nat$ is equivalent to the type $\Nat$.
+Note that the type $1 \to \Nat$ is equivalent to the type $\Nat$. There are
+two ways to present the elimination form in this format. The first moves the
+$\Nat$ on which the recursion is done to the argument position, implying that
+$\rec$ has exponential type.
+
+\[
+\infer[{\Nat}E_{3a}]
+{z: \Nat \entails \rec[A](M_0; x. M_1)(z)}
+{\cdot \entails M_0: A \qquad x: A \entails M_1: A}
+\]
+
+This can be presented in a more direct way by ommitting the argument.
+
+\[
+\infer[{\Nat}E_{3b}]
+{\cdot \entails \rec[A](M_0; x. M_1)(z)}
+{\cdot \entails M_0: A \qquad x: A \entails M_1: A}
+\]
+
+As above, we can derive rules $\Nat I_{z1}$, $\Nat I_{s1}$ and $\Nat E_1$.
+For example,
+
+\[
+\begin{array}{c}
+\infer{\ctx, M: \Nat \entails \s(M) : \Nat}
+{\infer{\ctx, M: \Nat \entails M: \Nat}{\strut} \qquad
+\infer[\Nat I_{s3}]{\ctx, M: \Nat \entails \s : \Nat \to \Nat}{\strut}}
+\end{array}
+\]
+
+\section{Nat-algebras}
+We now motivate the idea of nat-algebras, %which are maps of the form
+$1 + A \to A$. From the name, one would expect there to be a nat-algebra
+where $A$ is $\Nat$. Indeed, there is.
+
+\[z: 1 + \Nat \entails \case(z; \dummy. \z; x. \s(x)) : \Nat\]
+
+We can write $\case(z; \dummy. \z; x. \s(x))$
+above as $\{\dummy. \z; x. \s(x)\}(z)$ or, somewhat abusively,
+$\{\z, \s\}(z)$. This gives
+
+\[\cdot \entails \{\z, \s\} : 1 + \Nat \to \Nat\]
+
+as desired. More generally, we can write any nat-algebra as
+$\alpha = \{\alpha_0, \alpha_1\}$ where $\alpha_0 : 1 \to \Nat$ (or,
+equivalently, $\alpha_0 : \Nat$) and $\alpha_1: \Nat \to \Nat$. We call
+$\alpha_0$ the {\em basis} or {\em pseudo-zero} and $\alpha_1$ the
+{\em inductive step} or {\em pseudo-successor}.
+
+In fact, $\{\z, \s\}$ holds a special position among nat-algebras.
+The nat-algebras form a category and $\{\z, \s\}$ is the initial object
+in this category. Recall that this means it has a unique morphism to any other
+object in the category. This requires us to define morphisms between
+nat-algebras, which we will call {\em Nat homomorphisms}. Given two
+nat-algebras, $\alpha : 1 + A \to A$ and $\beta: 1 + B \to B$,
+$h: A \to B$ is a Nat homomorphism if it makes the following diagram commute.
+
+\[
+\begin{tikzcd}
+1+A \arrow{d}{\alpha} \arrow{r}{1+h} & 1+B \arrow{d}{\beta}\\
+A \arrow{r}{h} & B
+\end{tikzcd}
+\]
+
+The map $1 + h: 1 + A \to 1 + B$ is defined in the natural way:
+
+\[1 + h \defeq \{\dummy. \inl \triv; a. \inr h(a)\}\]
+
+To show that $\Nat$ is an initial algebra, we must show that for every
+nat-algebra
+$\alpha: 1 + A \to A$, there exists a unique Nat homomorphism $!: \Nat \to A$
+such that the following diagram commutes (note that the order of
+quantifications expressed in the previous sentence is not inherently clear in
+the diagram, and must be considered to get a full understanding of the
+diagram.)
+
+\[
+\begin{tikzcd}
+1+\Nat \arrow{d}{\{\z, \s\}} \arrow[dashed]{r}{1+!} & 1+A \arrow{d}{\alpha}\\
+\Nat \arrow[dashed]{r}{!} & A
+\end{tikzcd}
+\]
+
+Let's consider the requirements on $!$ for the diagram to commute.
+
+\[! \z = \alpha_0 \]
+\[! \s(x) = \alpha_1(! x)\]
+
+where the left sides correspond to following the path $! \comp \{\z, \s\}$
+and the right sides correspond to following $\alpha \comp 1 + !$. Note that
+these two equations match the $\beta$ rules for $\rec$, so we can define
+$! \defeq \rec[A](\alpha_0; \alpha_1)$ or simply $! \defeq \rec[A](\alpha)$.
+As we see above, the $\beta$ rules for $\rec$ imply
+commutation of the diagram. Uniqueness of $!$ follows from the $\eta$ rule
+for $\rec$.
+
+It's worth noting that commuting diagrams hide exactly the type of equality
+that is being discussed, which is quite
+important in HoTT. For $\Nat$, for example, uniqueness of $!$ holds ``on
+the nose,'' while, in general, uniqueness may be only up to higher homotopy.
+
+\section{$F$-algebras}
+The above discussion can be generalized to any functor $F$. A functor is
+a mapping between categories $C$ and $D$. Functors act on objects in a
+category and the morphisms between them, i.e. for all objects $X \in C$,
+$F(X) \in D$, and for all morphisms $f: X \to Y$ between objects $X$ and $Y$
+in $C$, $F(f): F(X) \to F(Y)$. 
+Functors respect identity and composition:
+  \begin{enumerate}
+  \item For every object $X \in C$, $F(\id_X) = \id_{F(X)}$
+  \item For all morphisms $f: X \to Y$ and $g: Y \to Z$, 
+    $F(g\comp f) = F(g)\comp F(f)$
+  \end{enumerate}
+\cite{WikiFunctor}
+
+For example, $F_{\Nat}(C) \defeq 1 + C$ is a functor. We check that $F_\Nat$
+preserves identities and composition. Let $X$ be an object of $C$.
+\[F_\Nat(\id_X) = 1 + \id_X = \{\triv, \id_X\}\]
+which is indeed an identity
+on $1 + X$. Let $f: X\to Y, g: Y \to Z$ be morphisms between objects of $C$.
+\[F_\Nat(g \comp f) = 1 + g \comp f = \{\triv, g \comp f\} =
+\{\triv, g\} \comp \{\triv, f\} = (1 + g) \comp (1 + f) = F(g) \comp F(f)\]
+
+For any functor $F$, an $F$-algebra is a mapping $F(X) \to X$. Thus,
+a nat-algebra is an $F_\Nat$-algebra. $F$-algebras form categories as
+nat-algebras do. For a functor $F$, objects $A$ and $B$, two $F$-algebras
+$\alpha: F(A) \to A$ and $\beta: F(B) \to B$, and a morphism $h: A \to B$,
+the following diagram commutes.
+
+\[
+\begin{tikzcd}
+F(A) \arrow{d}{\alpha} \arrow{r}{F(h)} & F(B) \arrow{d}{\beta}\\
+A \arrow{r}{h} & B
+\end{tikzcd}
+\]
+
+An {\em initial} $F$-algebra is an $F$-algebra $i: F(I) \to I$ such that
+for all other $F$-algebras $\alpha: F(A) \to A$, there exists a unique map
+$!: I \to A$ such that the following diagram commutes.
+
+\[
+\begin{tikzcd}
+F(I) \arrow{d}{i} \arrow[dashed]{r}{F(!)} & F(A) \arrow{d}{\alpha}\\
+I \arrow[dashed]{r}{!} & A
+\end{tikzcd}
+\]
+
+There also exists the notion of an $F$-coalgebra, which, dual to the above,
+is a map $\alpha: A \to F(A)$. A final $F$-coalgebra is a mapping 
+$j: J \to F(J)$ such that for all other $F$-coalgebras $\alpha: A \to F(A)$,
+there exists a unique map $!: A \to J$ making the following diagram commute.
+
+\[
+\begin{tikzcd}
+A \arrow{d}{\alpha} \arrow[dashed]{r}{!} & J \arrow{d}{j}\\
+F(A) \arrow[dashed]{r}{!} & J
+\end{tikzcd}
+\]
+
+\begin{lemma}[Lambek]
+If $i: F(I) \to I$ is an initial $F$-algebra, then $i$ is an isomorphism.
+That is, $F(I) \equiv I$.
+\end{lemma}
+
+\begin{proof}
+To show that $i$ is an isomorphism, we must exhibit an inverse
+$i^{-1}: I \to F(I)$
+such that $i \comp i^{-1} = \id_I$ and $i^{-1} \comp i = \id_{F(I)}$.
+Consider the $F$-algebra $F(i): F(F(I)) \to F(I)$. We now treat $i$ as
+homomorphism between the $F$-algebras $F(i)$ and $i$ making this diagram
+commute.
+
+\[
+\begin{tikzcd}
+F(F(I)) \arrow{d}{F(i)} \arrow{r}{F(i)} & F(I) \arrow{d}{i}\\
+F(I) \arrow{r}{i} & I
+\end{tikzcd}
+\]
+
+Since $i$ is an initial $F$-algebra, however, we also have a unique mapping
+$!: I \to F(I)$ making the top half of this diagram commute.
+\[
+\begin{tikzcd}
+F(I) \arrow[dashed]{d}{F(!)} \arrow{r}{i} & I \arrow[dashed]{d}{!}\\
+F(F(I)) \arrow{d}{F(i)} \arrow{r}{F(i)} & F(I) \arrow{d}{i}\\
+F(I) \arrow{r}{i} & I
+\end{tikzcd}
+\]
+
+There is also a unique mapping from $I$ to $I$, which must be the identity.
+This indicates that the mapping $i \comp !$ along the right side of the
+diagram must be equal to $\id_I$:
+
+\[i \comp ! = \id_I\]
+
+We also have
+\[! \comp i = F(i) \comp F(!) = F(i \comp !) = F(\id_I) = \id_{F(I)}\]
+where the first equality follows from the commutativity of the upper half of
+the diagram, the second and fourth follow from the properties of functors
+and the third follows from the result above.
+\end{proof}
+
+This shows that for any functor $F$, the initial $F$-algebra $I$ is a fixed
+point of $F$. A dual result can be proven showing that, if $J$ is the final 
+$F$-coalgebra of a functor $F$, then $F(J) \equiv J$.
+
+\bibliographystyle{plain}
+\bibliography{hott_references}
 
 \end{document}
