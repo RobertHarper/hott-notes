@@ -33,6 +33,10 @@
 
 \newcommand*{\comp}{\circ}
 
+\newcommand*{\W}{\mathsf{W}}
+\newcommand*{\wrec}{\mathsf{wrec}}
+\newcommand*{\wind}{\mathsf{wind}}
+
 \newtheorem{lemma}{Lemma}
 
 \title{15-819 Homotopy Type Theory\\Lecture Notes}
@@ -324,6 +328,96 @@ and the third follows from the result above.
 This shows that for any functor $F$, the initial $F$-algebra $I$ is a fixed
 point of $F$. A dual result can be proven showing that, if $J$ is the final 
 $F$-coalgebra of a functor $F$, then $F(J) \equiv J$.
+
+\section{Internalizing $\Nat$-Algebras}
+
+Inside type theory, we can define the notion of $\Nat$-algebra as
+\[
+\mathsf{NatAlg} \defeq \Sigma A{:}\universe.\, ((1 + A) \to A)
+\]
+We can define the type of $\Nat$-homomorphisms between two $\Nat$-algebras $(A,\alpha)$ and $(B,\beta)$ as
+\[
+\mathsf{NatHom}(\alpha,\beta) \defeq \Sigma h{:}A \to B.\, (\beta \circ (1 + h) = h \circ \alpha)
+\]
+The fact that $\nu \defeq \tuple{\Nat}{\{\z, \s\}}$ is initial in the category of $\Nat$-algebras is expressed by the fact that $\mathsf{NatHom}(\nu,\alpha)$ is contractible for all $\alpha$: this means that there exists a $\Nat$-homomorphism from $\nu$ to $\alpha$ which is unique up to higher homotopy.
+
+\section{$\W$-types}
+We'd like to be able to take a functor $F$ and define the initial $F$-algebra within HoTT (if one exists). For the class of \emph{polynomial functors}, we can do this using \emph{Brouwer ordinals}, also called \emph{$\W$-types}.
+
+$\W$-types are inspired by the mathematical concept of well-founded induction. In classical mathematics, a partially ordered set $\left< A, < \right>$ is said to be well-founded if every subset of $A$ has a $<$-minimal element (equivalently, there are no infinite descending chains). Well-founded sets are useful because they admit an induction principle:
+\begin{quote}
+  \textbf{Proposition (Well-Founded Induction):} \\
+  Let $\left<A , <\right>$ be a well-founded set and $P(x)$ be a proposition. If for any $a \in A$ we can prove $P(a)$ by assuming $P(b)$ for all $b < a$, then $P(a)$ holds for all $a \in A$.
+\end{quote}
+The set of natural numbers $\left< \mathbb{N}, <\right>$ together with its usual ordering is an example of a well-founded set, and the induction principle is the familiar mathematical induction.
+
+Classically, the proof that induction holds goes by contradiction, so this definition is unsatisfactory for a constructive theory. We will instead characterize well-founded sets as those for which we have a (constructive) induction principle.
+
+To better understand what we mean by this, we will define $\W$-types. To form a $\W$-type, we require a type $A$ and a type family $B$ over $A$:
+\[
+  \infer[\W F]
+      {\ctx \vdash \W x{:}A. B : \universe}
+      {\ctx \vdash A : \universe & \ctx, x{:}A \vdash B : \universe}
+\]
+$A$ is the type of \emph{node sorts}. Each node sort represents a different way of forming an element of $\W x{:}A. B$. For example, in the case of the natural numbers, the node sorts are $\z$ and $\s$. We can think of each element of the natural numbers as a tree built from these two sorts of nodes. For example, the numbers 0 through 2 can be represented as
+\begin{center}
+\begin{tikzcd}
+\z & \s \arrow{d} & \s \arrow{d} \\
+& \z & \s \arrow{d} \\
+& & \z
+\end{tikzcd}
+\end{center}
+Another natural example is the type of binary trees. This type can be defined by two node sorts $\mathsf{node}$ and $\mathsf{leaf}$, with the elements taking the form of trees such as this:
+\begin{center}
+\begin{tikzcd}
+& \mathsf{node} \arrow{dl} \arrow{dr} & \\
+\mathsf{leaf} & & \mathsf{leaf} 
+\end{tikzcd}
+\end{center}
+In order to fully specify these two types, we need to have some notion of a nodes arity. This is given by the type family $B$. For each node sort $a : A$, $B(a)$ describes the \emph{branching factor} of $a$, the index type to specify the predecessors of a node of sort $a$. For example, the branching factor of the sort $\z$ or $\mathsf{leaf}$ would be $0$, the branching factor of $\s$ would be $1$, and the branching factor of $\mathsf{leaf}$ would be $1 + 1$. Thus we can write $\Nat$ as $\W x{:}\Bool. \caseif(x;0;1)$, where $\ttsym$ represents $\z$ and $\ffsym$ represents $\s$.
+
+Now that we have the purposes of $A$ and $B$ in hand, we can see how to define the introduction rule for $\W x{:}A. B$. 
+\[
+  \infer[\W I]
+    {\ctx \vdash \sup[a](x.w) : \W x{:}A. B}
+    {a : A & x{:}B(a) \vdash w : \W x{:}A. B}
+\]
+In other words, in order to construct a node of sort $a$, we must give an element $\W x{:}A. B$ for each predecessor as specified by the branching factor $B(a)$. Note that when $B(a)$ is $0$ we can construct a new node without any predecessor information. For example, we can construct elements of the naturals as follows:
+\begin{align*}
+  \overline{0} &\defeq \sup[\ttsym](x.\abort{\W x{:}\Bool. \caseif(x;0;1)}(x)) \\
+  \overline{1} &\defeq \sup[\ffsym](\dummy.\overline{0}) \\
+  \overline{2} &\defeq \sup[\ffsym](\dummy.\overline{1})
+\end{align*}
+
+The recursor for $\W x{:}A. B$ follows the idea of well-founded recursion: in order to define the result of a function $f$ on an element $w : \W x{:}A. B$, we can assume we've already computed $f$ for all of $w$'s predecessors.
+\[
+  \infer[\W R]
+    {\ctx, z : \W x{:}A.B \vdash \wrec[C](a,r.M)(z) : C}
+    {\ctx \vdash C : \universe & \ctx, a : A, r : B(a) \to C \vdash M : C}
+\]
+In the hypothesis, we assume that we are dealing with a node of type $a$ and that we have the value $r(b)$ for each $b : B(a)$ indexing a predecessor. We use this information to construct the value $M$ of the recursor at the current node. The recursor comes with the compuation rule
+\[
+  \wrec[C](a,r.M)(\sup[a](w)) \jdeq [a,\lambda z. \wrec[C](a,r.M)(w(z))/a,r]M
+\]
+which, as expected, gives the value of $\wrec[C](a,r.M)$ on $\sup[a](w)$ in terms of the value on each predecessor $w(z)$ for $z : B(a)$.
+
+The dependent eliminator has a similar form, expressing the idea of well-founded induction.
+\[
+  \infer[\W E]
+     {\ctx, z : \W x{:}A.B \vdash \wind[x.P](a,p,h.M) : P(z)}
+     {\ctx, z : \W x{:}A.B \vdash P : \universe &
+      \ctx, a{:}A, p : B(a) \to \W x{:}A.B, h : \prod_{b : B(a)} P(p(b))
+       \vdash M : P(\sup[a](p))}
+\]
+Here, in order to formulate the hypothesis, we need to assume the additional data $p : B(a) \to \W x{:}A.B$ which gives us the predecessors of the element we are considering. The computation rule takes the form
+\[
+  \wind[x.P](a,p,h.M)(\sup[a](w)) = [a,w,\lambda z. \wind[x.P](a,p,h.M)(w(z))/a,p,h]M
+\]
+In general, we can only assert that this computation rule holds propositionally.
+
+Each $\W$-type determines a functor, in particular a \emph{polynomial functor}. This is a functor of the form $F(X) = \Sigma a{:}A. (B(a) \to X)$ for some type $A$ and type family $B$. We can see that the $\W$-type $\W x{:}A.B$ defines an $F$-algebra where $F(X) \defeq \Sigma a{:}A. (B(a) \to X)$: we have $\lambda \tuple{a}{w}. \sup[a](w) : F(X) \to X$. The map $\lambda \tuple{a}{w}. \sup[a](w)$ is in fact an equivalence, and $\W x{:}A.B$ is a homotopy-initial $F$-algebra.
+
+In the case of our $\W$-type definition of $\Nat$, observe that the functor determined by $\W x{:}\Bool. \caseif(x;0;1)$ is $F(X) = \Sigma b{:}\Bool. (\caseif(b;0;1) \to X)$. One can check that $\Sigma b{:}\Bool. (\caseif(b;0;1) \to X) \simeq 1 + X$. Thus, this type satisfies the equation $F(X) = 1 + X$, our original definition of a $\Nat$-algebra.
 
 \bibliographystyle{plain}
 \bibliography{hott_references}
