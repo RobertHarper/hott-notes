@@ -51,7 +51,7 @@
 
 As a warmup to discussing inductive types, we first review several equivalent
 presentations of the simple type $\Nat$ seen earlier in the course. The
-introduction form for $\Nat$ are $\z$ and $\s(M)$ for any $M: \Nat$.
+introduction forms for $\Nat$ are $\z$ and $\s(M)$ for any $M: \Nat$.
 The elimination form is the recursor $\rec$.
 
 \subsection{Traditional Form}
@@ -92,27 +92,27 @@ recursor on the appropriate arguments.
 \[
 \infer[\eta]
 {\ctx, y: \Nat \entails N \jdeq \rec[A](y; M_0; x. M_1)}
-{[0/x]N \jdeq M_0 \qquad
-\ctx, z: \Nat \entails [\s(z)/x]N \jdeq [[z/y]N/x]M_1 : A}
+{[0/y]N \jdeq M_0 \qquad
+\ctx, z: \Nat \entails [\s(z)/y]N \jdeq [[z/y]N/x]M_1 : A}
 \]
 
-\subsection{Alternate Form}
-The introduction and elimination rules can be presented in this alternate form:
+%\subsection{Alternate Form}
+%The introduction and elimination rules can be presented in this alternate form:
 
-\[
-\begin{array}{c}
-\cdot \entails \z : \Nat ({\Nat}I_{z2})
+%\[
+%\begin{array}{c}
+%\cdot \entails \z : \Nat ({\Nat}I_{z2})
 
-\qquad
-\hfill
+%\qquad
+%\hfill
 
-x: \Nat \entails \s(x) : \Nat ({\Nat}I_{s2})
+%x: \Nat \entails \s(x) : \Nat ({\Nat}I_{s2})
 
-\\[4ex]
+%\\[4ex]
 
-M: \Nat, M_0: A, x: A, M_1
-\end{array}
-\]
+%M: \Nat, M_0: A, x: A, M_1
+%\end{array}
+%\]
 
 %% TODO: Help!
 
@@ -120,8 +120,8 @@ M: \Nat, M_0: A, x: A, M_1
 The introduction forms of $\Nat$ may be treated as exponentials in the absence
 of a context.
 
-\[\cdot \entails \z : 1 \to \Nat ({\Nat}I_{z3})\]
-\[\cdot \entails \s : \Nat \to \Nat ({\Nat}I_{s3})\]
+\[\cdot \entails \z : 1 \to \Nat \qquad ({\Nat}I_{z3})\]
+\[\cdot \entails \s : \Nat \to \Nat \qquad ({\Nat}I_{s3})\]
 
 Note that the type $1 \to \Nat$ is equivalent to the type $\Nat$. There are
 two ways to present the elimination form in this format. The first moves the
@@ -130,19 +130,19 @@ $\rec$ has exponential type.
 
 \[
 \infer[{\Nat}E_{3a}]
-{z: \Nat \entails \rec[A](M_0; x. M_1)(z)}
+{z: \Nat \entails \rec[A](M_0; x. M_1)(z): A}
 {\cdot \entails M_0: A \qquad x: A \entails M_1: A}
 \]
 
-This can be presented in a more direct way by ommitting the argument.
+This can be presented in a more direct way by omitting the argument.
 
 \[
 \infer[{\Nat}E_{3b}]
-{\cdot \entails \rec[A](M_0; x. M_1)(z)}
+{\cdot \entails \rec[A](M_0; x. M_1): \Nat \to A}
 {\cdot \entails M_0: A \qquad x: A \entails M_1: A}
 \]
 
-As above, we can derive rules $\Nat I_{z1}$, $\Nat I_{s1}$ and $\Nat E_1$.
+We can derive rules $\Nat I_{z1}$, $\Nat I_{s1}$ and $\Nat E_1$.
 For example,
 
 \[
@@ -153,9 +153,9 @@ For example,
 \end{array}
 \]
 
-\section{Nat-algebras}
-We now motivate the idea of nat-algebras, %which are maps of the form
-$1 + A \to A$. From the name, one would expect there to be a nat-algebra
+\section{$\Nat$-algebras}
+We now motivate the idea of $\Nat$-algebras, which are maps of the form
+$1 + A \to A$. From the name, one would expect there to be a $\Nat$-algebra
 where $A$ is $\Nat$. Indeed, there is.
 
 \[z: 1 + \Nat \entails \case(z; \dummy. \z; x. \s(x)) : \Nat\]
@@ -166,19 +166,19 @@ $\{\z, \s\}(z)$. This gives
 
 \[\cdot \entails \{\z, \s\} : 1 + \Nat \to \Nat\]
 
-as desired. More generally, we can write any nat-algebra as
+as desired. More generally, we can write any $\Nat$-algebra as
 $\alpha = \{\alpha_0, \alpha_1\}$ where $\alpha_0 : 1 \to \Nat$ (or,
 equivalently, $\alpha_0 : \Nat$) and $\alpha_1: \Nat \to \Nat$. We call
 $\alpha_0$ the {\em basis} or {\em pseudo-zero} and $\alpha_1$ the
 {\em inductive step} or {\em pseudo-successor}.
 
-In fact, $\{\z, \s\}$ holds a special position among nat-algebras.
-The nat-algebras form a category and $\{\z, \s\}$ is the initial object
+In fact, $\{\z, \s\}$ holds a special position among $\Nat$-algebras.
+The $\Nat$-algebras form a category and $\{\z, \s\}$ is the initial object
 in this category. Recall that this means it has a unique morphism to any other
 object in the category. This requires us to define morphisms between
-nat-algebras, which we will call {\em Nat homomorphisms}. Given two
-nat-algebras, $\alpha : 1 + A \to A$ and $\beta: 1 + B \to B$,
-$h: A \to B$ is a Nat homomorphism if it makes the following diagram commute.
+$\Nat$-algebras, which we will call {\em $\Nat$-homomorphisms}. Given two
+$\Nat$-algebras, $\alpha : 1 + A \to A$ and $\beta: 1 + B \to B$,
+$h: A \to B$ is a $\Nat$-homomorphism if it makes the following diagram commute.
 
 \[
 \begin{tikzcd}
@@ -189,11 +189,11 @@ A \arrow{r}{h} & B
 
 The map $1 + h: 1 + A \to 1 + B$ is defined in the natural way:
 
-\[1 + h \defeq \{\dummy. \inl \triv; a. \inr h(a)\}\]
+\[1 + h \defeq \{\dummy. \inl\; \triv; a. \inr\; h(a)\}\]
 
 To show that $\Nat$ is an initial algebra, we must show that for every
-nat-algebra
-$\alpha: 1 + A \to A$, there exists a unique Nat homomorphism $!: \Nat \to A$
+$\Nat$-algebra
+$\alpha: 1 + A \to A$, there exists a unique $\Nat$-homomorphism $!: \Nat \to A$
 such that the following diagram commutes (note that the order of
 quantifications expressed in the previous sentence is not inherently clear in
 the diagram, and must be considered to get a full understanding of the
@@ -247,8 +247,8 @@ on $1 + X$. Let $f: X\to Y, g: Y \to Z$ be morphisms between objects of $C$.
 \{\triv, g\} \comp \{\triv, f\} = (1 + g) \comp (1 + f) = F(g) \comp F(f)\]
 
 For any functor $F$, an $F$-algebra is a mapping $F(X) \to X$. Thus,
-a nat-algebra is an $F_\Nat$-algebra. $F$-algebras form categories as
-nat-algebras do. For a functor $F$, objects $A$ and $B$, two $F$-algebras
+a $\Nat$-algebra is an $F_\Nat$-algebra. $F$-algebras form categories as
+$\Nat$-algebras do. For a functor $F$, objects $A$ and $B$, two $F$-algebras
 $\alpha: F(A) \to A$ and $\beta: F(B) \to B$, and a morphism $h: A \to B$,
 the following diagram commutes.
 
@@ -278,7 +278,7 @@ there exists a unique map $!: A \to J$ making the following diagram commute.
 \[
 \begin{tikzcd}
 A \arrow{d}{\alpha} \arrow[dashed]{r}{!} & J \arrow{d}{j}\\
-F(A) \arrow[dashed]{r}{!} & J
+F(A) \arrow[dashed]{r}{!} & F(J)
 \end{tikzcd}
 \]
 
@@ -374,7 +374,7 @@ Another natural example is the type of binary trees. This type can be defined by
 \mathsf{leaf} & & \mathsf{leaf} 
 \end{tikzcd}
 \end{center}
-In order to fully specify these two types, we need to have some notion of a nodes arity. This is given by the type family $B$. For each node sort $a : A$, $B(a)$ describes the \emph{branching factor} of $a$, the index type to specify the predecessors of a node of sort $a$. For example, the branching factor of the sort $\z$ or $\mathsf{leaf}$ would be $0$, the branching factor of $\s$ would be $1$, and the branching factor of $\mathsf{leaf}$ would be $1 + 1$. Thus we can write $\Nat$ as $\W x{:}\Bool. \caseif(x;0;1)$, where $\ttsym$ represents $\z$ and $\ffsym$ represents $\s$.
+In order to fully specify these two types, we need to have some notion of a node's arity. This is given by the type family $B$. For each node sort $a : A$, $B(a)$ describes the \emph{branching factor} of $a$, the index type to specify the predecessors of a node of sort $a$. For example, the branching factor of the sort $\z$ or $\mathsf{leaf}$ would be $0$, the branching factor of $\s$ would be $1$, and the branching factor of $\mathsf{node}$ would be $1 + 1$. Thus we can write $\Nat$ as $\W x{:}\Bool. \caseif(x;0;1)$, where $\ttsym$ represents $\z$ and $\ffsym$ represents $\s$.
 
 Now that we have the purposes of $A$ and $B$ in hand, we can see how to define the introduction rule for $\W x{:}A. B$. 
 \[
