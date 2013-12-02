@@ -1,0 +1,171 @@
+\documentclass[11pt]{article}
+
+\usepackage{tikz-cd}
+\usepackage{proof-dashed}
+\input{macros}
+
+\newcommand{\U}{\mathbb{U}}
+\renewcommand{\SS}{\mathbb{S}}
+\newcommand{\lolli}{\multimap}
+\newcommand*{\Void}{\mathsf{0}}
+\newcommand*{\Unit}{\mathsf{1}}
+\newcommand*{\Bool}{\mathsf{2}}
+
+\newcommand*{\Interval}{I}
+\newcommand*{\Izero}{0_I}
+\newcommand*{\Ione}{1_I}
+\newcommand*{\Iseg}{\mathsf{seg}}
+
+\newcommand*{\ap}{\mathsf{ap}}
+\newcommand*{\apd}{\mathsf{apd}}
+
+\newcommand*{\funext}{\mathsf{funext}}
+\newcommand*{\isSet}{\mathsf{isSet}}
+\newcommand*{\isProp}{\mathsf{isProp}}
+\newcommand*{\elimtrunc}{\mathsf{elim}}
+\newcommand*{\isContr}{\mathsf{isContr}}
+\newcommand*{\squash}{\mathsf{squash}}
+\newcommand{\iseq}{\mathsf{isequiv}}
+\newcommand{\qinv}{\mathsf{qinv}}
+\newcommand*{\comp}{\mathbin{\circ}}
+
+\newcommand{\biequiv}{\mathsf{biequiv}}
+\newcommand{\isContrf}{\mathsf{isContr}}
+\newcommand{\ishae}{\mathsf{ishae}}
+\newcommand{\fib}{\mathsf{fib}}
+
+\newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
+\newcommand{\susp}[1]{\mathsf{Susp}(#1)}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{defn}{Definition}
+
+\title{15-819 Homotopy Type Theory\\Lecture Notes}
+\author{Matthew Maurer and Stefan Muller}
+\begin{document}
+\maketitle
+\section{Contents}
+\section{Recap}
+Construction of the suspension of a type. We are using different notation from the book, namely $\susp{A}$ as opposed to $\sum A$.
+Specifically, we recall that we can construct the meridian, e.g. if we have
+$$N : \susp{A}$$
+$$S : \susp{A}$$
+$$merid : \Pi x : A . N =_{\susp{A}} S$$
+$$x : \susp{A} \vdash B(X) : \U$$
+$$n : B(N)$$
+$$s : B(S)$$
+$$x : A \vdash m : n =_{merid(x)}^{z.B} s$$
+% Missed the end of this while getting latex document setup
+\section{???}
+%"Fact"
+$$\susp{2} \equiv S^1$$
+\begin{proof}
+$$f : \susp{2} \rightarrow \SS^1$$
+defined by 
+$$N \mapsto base$$
+$$S \mapsto base$$
+these merid terms are in some kind of ap shorthand
+$$merid(tt) \mapsto loop$$
+$$merid(ff) \mapsto \refl(base)$$
+quasinverse
+$$g : \susp{2} \rightarrow \SS^1$$
+where we send base is arbitrary but must be consistent
+$$base \mapsto N$$
+$$loop \mapsto merid(tt) \cdot merid(ff)^{-1}$$
+Now need to prove these are inverses
+$$\alpha : \Pi x : \susp{2} . g(f(x)) = x$$
+By induction
+$$(x = N); \refl(N) : N = N$$
+$$(x = S); merid(ff) : N = S$$
+$$merid(y); ? : \refl(N) =_{merid(y)}^{z.f(g(z) = z} merid(ff)$$
+Can case out on this
+$$\ap_g (\ap_f (merid(tt))^{-1} \cdot \refl(N) \cdot merid(tt)) = merid(ff)$$
+$$\ap_g (\ap_f (merid(ff))^{-1} \cdot \refl(N) \cdot merid(ff)) = merid(ff)$$
+stepping evaluation,
+$$\ap_g (loop)^{-1} \cdot merid(tt) = merid(ff)$$
+$$(merid(tt) \cdot merid(ff)^{-1})^{-1} \cdot merid(ff) = merid(ff)^{-1-1} \cdot merid(tt)^{-1} \cdot merid(tt) = merid(ff)$$
+
+Our other proof of inversion
+$$\beta : \Pi x : \SS^1 . f(g(x)) = x$$
+by induction on $\SS^1$
+$$x = base; \refl(base) : f(g(base)) = base$$
+$$x = loop; \ap_f(\ap_g(loop))^{-1} \cdot \refl(base) = \refl base $$
+\end{proof}
+\section{Pointed Type}
+A pointed type is one with an example inhabitant. Notation will be e.g. if A is a pointed type, then we have $a_0 : A$.
+
+e.g. $\Omega(A, a_0) = (a_0 =_A a_0)$ ``the loop space''
+The loop space is pointed by $\refl(a_0)$
+
+$\susp{A}$ is pointed by $N$
+
+``strict'' maps = pointed maps = maps in the category of pointed spaces
+%That last term I have no idea
+
+$$X \lolli Y := "\Sigma f : X -> Y . f(x_0) = y"$$
+\begin{proposition}
+$$\susp{A} \lolli B \simeq (A \lolli \Omega B)$$
+\end{proposition}
+\begin{proof}
+Given $f : \susp{A} \lolli B$, define $g : A \lolli \Omega B$ as
+$$g a = p_0^{-1} \cdot \ap_f(merid(a) \cdot merid(a_0)^{-1}) \cdot p_0$$
+where $f_0$ is the raw map, and $p_0$ is a proof of base point preservation, e.g. $p_0 : f_0(N) = b_0$, and $f = \langle f_0, p_0\rangle$
+$$q = \refl(b_0)$$
+
+On the other side, given $g : A \lolli \Omega B$, define $f : \susp{A} \lolli B$
+
+$$f_0(N) = b_0$$
+$$f_0(S) = b_0$$
+?????
+$$\ap_f(merid(a)) = g_0(a)$$
+"there is a big diagram to make this work out"
+
+where $g_0$ is the raw map, and $q_0$ is a proof of base point preservation, e.g. $q_0 : g_0(N) = b_0$ and $f = \langle g_0, q_0\rangle$
+\end{proof}
+
+\section{Pushouts}
+Temporarily, we move back to regular set math.
+
+A pushout is dual of a pullback.
+
+A pullback is an equationally constrained subset of a product.
+
+\begin{equation*}
+\begin{tikzcd}
+C \arrow{r}{g} \arrow{d}{f} & B \arrow[dashed]{d}{f'} \arrow[bend left]{ddr}{f''}\\
+A \arrow[dashed]{r}{g'} \arrow[bend right]{drr}{g''} & A \sqcup^C B \arrow[dashed]{dr}{!}\\
+{} & {} & D\\
+\end{tikzcd}
+\end{equation*}
+where f' and g' are identified by f and g
+
+Basically, a pushout is a disjoint union of two types with some of the elements merged together.
+
+$$A \sqcup^C B = (A + B) / R$$
+where $R$ is the least equivalence relation containing $\forall c \in C. R(inl(f(c)), inr(g(c)))$
+
+back to hottland
+
+\subsection{Pushouts of $A \leftarrow^f C \rightarrow^g B$}
+$$\inl : A \rightarrow A \sqcup^C B$$
+$$\inr : B \rightarrow A \sqcup^C B$$
+$$glue : \Pi c : C \Id{A \sqcup^C B} (\inl(f(c)), \inr(g(c)))$$
+
+recursor
+$$x : A \vdash l : D$$
+$$y : B \vdash r : D$$
+$$u : C \vdash q : [f(u)/x]l = [g(u)/x]r$$
+will give
+$$z : A \sqcup^C B \vdash rec[D](x.l; y.r; u.q)(z) : D$$
+
+hopefully having the property
+$$rec( )(\inl(a)) \equiv [a/x]l$$
+$$rec( )(\inr(b)) \equiv [b/y]r$$
+$$rec( )(glue(c)) \equiv [c/u]q$$
+
+This construction gives
+$$\susp A = 1 \sqcup^A 1$$
+
+\end{document}
