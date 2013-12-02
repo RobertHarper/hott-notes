@@ -81,6 +81,7 @@
 \newcommand*{\disj}{\vee}
 \newcommand*{\falsehood}{\bot}
 \newcommand*{\imp}{\supset}
+\newcommand*{\zero}{0}
 
 
 %%% Judgmental equality
@@ -101,6 +102,8 @@
 \newcommand{\pair}{\ensuremath{\mathsf{pair}}\xspace}
 \newcommand{\tuple}[2]{(#1,#2)}
 \newcommand{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
+%% Empty type
+\newcommand{\abort}[1]{\ensuremath{\mathsf{abort}_{#1}}}
 %%% Path concatenation
 \newcommand{\concat}{%
   \mathchoice{\mathbin{\raisebox{0.5ex}{$\displaystyle\centerdot$}}}%
@@ -130,3 +133,19 @@
 \DeclareMathOperator{\ttrue}{\textsf{tt}\xspace}
 \DeclareMathOperator{\ffalse}{\textsf{ff}\xspace}
 \newcommand*{\id}{\textsf{id}}
+
+\newcommand{\op}[1]{\operatorname{#1}}
+
+\newcommand{\universe}{\mathcal{U}}
+
+%inductive types
+\newcommand{\ind}{\ensuremath{\mathsf{ind}}\xspace}
+%higher inductive types
+%interval
+\newcommand{\interval}{\ensuremath{I}\xspace}
+\newcommand{\seg}{\ensuremath{\mathsf{seg}}\xspace}
+%circle
+\newcommand{\Sn}{\mathbb{S}}
+\newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
+\newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
+
