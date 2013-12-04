@@ -168,4 +168,132 @@ $$rec( )(glue(c)) \equiv [c/u]q$$
 This construction gives
 $$\susp A = 1 \sqcup^A 1$$
 
+\section{Recap}
+Pushouts as Higher Inductive Types
+
+$$A \leftarrow^f C \rightarrow^g B$$
+
+$$\inl : A \rightarrow A \sqcup^C B$$
+$$\inr : B \rightarrow A \sqcup^C B$$
+$$glue : \Pi_{c : C} \inl(f(c)) =_{A \sqcup^C B} \inr(g(c))$$
+
+Observe that $\susp{A} = 1 \sqcup^A 1$. f and g happen to be unique (const ())
+
+Corrallary: The pushout of two sets nedn't be a set (e.g. $\SS^1 = \susp{2}$, but $\SS^1$ is known not to be a set)
+\begin{equation*}
+\begin{tikzcd}
+{} & A \arrow{dr}{!} \arrow{dl}{!} & {}\\
+1 \arrow{dr}{\inl} & {} & 1 \arrow{dl}{\inr} \\
+{} & \susp{A} & {}\\
+\end{tikzcd}
+\end{equation*}
+
+We can also define quotients of sets by props uing HITs
+
+we examine A/R
+
+Desired properties
+Normal ones
+We can project an element of a into A/R, e.g. by computing its representative
+$$a : A \vdash q(a) : A/R$$
+If we have two elements of $A$ who are related by $R$, then we can construct a proof of equality
+$$a, b : A, r : R(a, b) \vdash wd(a, b, r) : q(a) = q(b)$$
+A/R is a set, e.g. forced to be truncated to a set
+$$x, y : A/R p, q : x =_{A/R} y \vdash tr(x, y, p, q) : p = q$$
+Saying there is a function from $A/R$ to some type $B$ is the same as saying there is a function from A to B that maps all elements in $R$ to the same element.
+$$(A/R) \rightarrow B \simeq \sum_{f : A \rightarrow B} . \Pi_{a, b : A} . R(a, b) \rightarrow f(a) =_B f(b)$$
+
+Example.
+
+$$Z = (N \times N) / R$$
+for suitable R, e.g. you have a formal difference, and a relation that says when two formal differences are equal.
+
+\section{Truncations as HITs}
+\newcommand{\ntrunc}[2]{||#1||_{#2}}
+\newcommand{\propt}[1]{\ntrunc{#1}{-1}}
+Propositional truncation will be written $\propt{A}$
+
+HIT of $\propt{A}$:
+Simple constructor
+$$\propt{-} : A \rightarrow \propt{A}$$
+All values are equal
+$$squash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
+
+Induction Principle:
+$$z : \propt{A} \vdash P(z) : U$$
+$$x : A \vdash p : P(\propt{x})$$
+$$x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{squash(x, y)}^{z.P} v$$
+gives
+$$z : \propt{A} \vdash ind[z.P](p, x, y, u, v, q)(z) : P(z)$$
+
+Set truncation as a HIT
+\newcommand{\sett}[1]{\ntrunc{#1}{0}}
+$$\sett{-} : A \rightarrow \sett{A}$$
+$$x, y : \sett{A}, p, q : x =_{\sett{A}} y \vdash sq(x, y, p, q) : p =_{x = y} q$$
+
+Induction principle
+$$z : \sett{A} \vdash P : U$$
+$$x : A \vdash p : P(\sett{A})$$
+$$x, y : \sett{A}, z : P(x), w : P(y), p, q : x = y, r : z=_p^{z.P} w, s : z =_q^{z.P} w \vdash ip : p =_{sq(x,y,p,q)}^{z.P} q$$
+gives
+$$z : \sett{A} \vdash P(z)$$
+
+\section{Fundamental group of $\SS^1$}
+Recall $\SS^1$ is a HIT defined by
+
+$$base : \SS^1$$
+$$loop : base =_{\SS^1} base$$
+
+Recall $\Omega(A, a_0) := (a_0 =_A a_0)$
+
+Find Gp of A at $a_0$ : $\sett{\Omega(A, a_0)}$
+
+\begin{thm}
+We want to show that
+$$\pi_1(\SS^1) \simeq Z$$
+\begin{proof}
+Show $\Omega(\SS^1, base) \simeq Z$
+
+$$loop^{(-)} : Z \rightarrow \Omega(\SS^1)$$
+$$loop^{(0)} = \refl(base)$$
+$$loop^{(-n)} = loop^{(-n + 1)} \cdot loop^{-1}$$
+$$loop^{(+n)} = loop^{(n - 1)} \cdot loop$$
+e.g. defined by the Z recursor
+
+$$winding : \Omega(\SS^{1}) \rightarrow Z$$
+We take that $succ : Z \simeq Z$, and $pred = succ^{-1}$, defined by shifting all the numbers up/down by one
+
+So, we have
+$$ua(succ) : Z = Z$$
+
+By recursion principle (not induction)
+$$code : \SS^1 \rightarrow U$$
+$$code(base) = Z$$
+$$code(loop) = ua(succ)$$
+
+$$ap_{code} : \Omega(\SS^1) \rightarrow (Z = Z)$$
+$$winding(p) = tr[x.x](\ap_{code}(p))(0)$$
+%\begin{prop}
+$$\Pi_{n : Z} . winding(loop^{(n)}) =_Z n$$
+straightforwards by induction
+%\end{prop}
+
+%\begin{prop}
+$$\Pi_{l : \Omega(\SS^1)} loop^{winding(l)} =_{\Omega(\SS^1)} l$$
+Path induction on l?
+
+Path not free
+
+$$encode : \Pi_{x : \SS^1} (base = x) \rightarrow code(x)$$
+$$decode : \Pi_{x : \SS^1} code(x) \rightarrow base = x$$
+
+$$encode x p = tr[code](p)(o)$$
+$$decode x = \SS^1-rec[z.code(z) \rightarrow base = z](\lambda z . refl(base), \lambda n . loop^{(n)})(x)$$
+
+
+You weill need a path induction and circle induction
+%\end{prop}
+\end{proof}
+\end{thm}
+
 \end{document}
