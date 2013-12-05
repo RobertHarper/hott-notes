@@ -34,6 +34,8 @@
 \newcommand{\ishae}{\mathsf{ishae}}
 \newcommand{\fib}{\mathsf{fib}}
 
+\newcommand{\merid}{\mathsf{merid}}
+
 \newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
 \newcommand{\susp}[1]{\mathsf{Susp}(#1)}
 
@@ -48,6 +50,7 @@
 \maketitle
 \section{Contents}
 \section{Recap}
+%% Clean up and add more text - Stefan
 Construction of the suspension of a type. We are using different notation from the book, namely $\susp{A}$ as opposed to $\sum A$.
 Specifically, we recall that we can construct the meridian, e.g. if we have
 $$N : \susp{A}$$
@@ -58,15 +61,18 @@ $$n : B(N)$$
 $$s : B(S)$$
 $$x : A \vdash m : n =_{merid(x)}^{z.B} s$$
 % Missed the end of this while getting latex document setup
-\section{???}
+\section{Equivalence of $\susp{2}$ and $\SS^1$}
+%TODO Cleanup: Maurer
 %"Fact"
-$$\susp{2} \equiv S^1$$
+\begin{proposition}
+$$\susp{2} \simeq \SS^1$$
+\end{proposition}
 \begin{proof}
 $$f : \susp{2} \rightarrow \SS^1$$
 defined by 
 $$N \mapsto base$$
 $$S \mapsto base$$
-these merid terms are in some kind of ap shorthand
+these merid terms are in some kind of ap shorthand %% TODO: Explain this
 $$merid(tt) \mapsto loop$$
 $$merid(ff) \mapsto \refl(base)$$
 quasinverse
@@ -94,6 +100,7 @@ $$x = base; \refl(base) : f(g(base)) = base$$
 $$x = loop; \ap_f(\ap_g(loop))^{-1} \cdot \refl(base) = \refl base $$
 \end{proof}
 \section{Pointed Type}
+% TODO Maurer
 A pointed type is one with an example inhabitant. Notation will be e.g. if A is a pointed type, then we have $a_0 : A$.
 
 e.g. $\Omega(A, a_0) = (a_0 =_A a_0)$ ``the loop space''
@@ -104,7 +111,7 @@ $\susp{A}$ is pointed by $N$
 ``strict'' maps = pointed maps = maps in the category of pointed spaces
 %That last term I have no idea
 
-$$X \lolli Y := "\Sigma f : X -> Y . f(x_0) = y"$$
+$$X \lolli Y := \Sigma f : X \to Y . f(x_0) = y_0$$
 \begin{proposition}
 $$\susp{A} \lolli B \simeq (A \lolli \Omega B)$$
 \end{proposition}
@@ -126,6 +133,7 @@ where $g_0$ is the raw map, and $q_0$ is a proof of base point preservation, e.g
 \end{proof}
 
 \section{Pushouts}
+%TODO Stefan
 Temporarily, we move back to regular set math.
 
 A pushout is dual of a pullback.
@@ -148,17 +156,19 @@ where $R$ is the least equivalence relation containing $\forall c \in C. R(inl(f
 
 back to hottland
 
-\subsection{Pushouts of $A \leftarrow^f C \rightarrow^g B$}
+\subsection{Pushouts of $A \xleftarrow{f} C \xrightarrow{g} B$}
+\newcommand{\glue}{\mathsf{glue}}
+
 $$\inl : A \rightarrow A \sqcup^C B$$
 $$\inr : B \rightarrow A \sqcup^C B$$
-$$glue : \Pi c : C \Id{A \sqcup^C B} (\inl(f(c)), \inr(g(c)))$$
+$$\glue : \Pi c : C. \Id{A \sqcup^C B} (\inl(f(c)), \inr(g(c)))$$
 
-recursor
-$$x : A \vdash l : D$$
-$$y : B \vdash r : D$$
-$$u : C \vdash q : [f(u)/x]l = [g(u)/x]r$$
-will give
-$$z : A \sqcup^C B \vdash rec[D](x.l; y.r; u.q)(z) : D$$
+\[
+\infer{z : A \sqcup^C B \vdash rec[D](x.l; y.r; u.q)(z) : D}
+{x : A \vdash l : D &
+y : B \vdash r : D &
+u : C \vdash q : [f(u)/x]l = [g(u)/x]r}
+\]
 
 hopefully having the property
 $$rec( )(\inl(a)) \equiv [a/x]l$$
@@ -168,18 +178,8 @@ $$rec( )(glue(c)) \equiv [c/u]q$$
 This construction gives
 $$\susp A = 1 \sqcup^A 1$$
 
-\section{Recap}
-Pushouts as Higher Inductive Types
-
-$$A \leftarrow^f C \rightarrow^g B$$
-
-$$\inl : A \rightarrow A \sqcup^C B$$
-$$\inr : B \rightarrow A \sqcup^C B$$
-$$glue : \Pi_{c : C} \inl(f(c)) =_{A \sqcup^C B} \inr(g(c))$$
-
-Observe that $\susp{A} = 1 \sqcup^A 1$. f and g happen to be unique (const ())
-
 Corrallary: The pushout of two sets nedn't be a set (e.g. $\SS^1 = \susp{2}$, but $\SS^1$ is known not to be a set)
+
 \begin{equation*}
 \begin{tikzcd}
 {} & A \arrow{dr}{!} \arrow{dl}{!} & {}\\
@@ -188,27 +188,31 @@ Corrallary: The pushout of two sets nedn't be a set (e.g. $\SS^1 = \susp{2}$, bu
 \end{tikzcd}
 \end{equation*}
 
+\section{Quotients as HITs}
+%TODO: Stefan
+\newcommand{\trunc}{\mathsf{trunc}}
 We can also define quotients of sets by props uing HITs
 
 we examine A/R
 
 Desired properties
 Normal ones
-We can project an element of a into A/R, e.g. by computing its representative
-$$a : A \vdash q(a) : A/R$$
+We can project an element of $A$ into $A/R$, e.g. by computing its representative
+$$q : A \to A/R$$
 If we have two elements of $A$ who are related by $R$, then we can construct a proof of equality
-$$a, b : A, r : R(a, b) \vdash wd(a, b, r) : q(a) = q(b)$$
+$$\mathsf{wd}: \Pi a,b: A. R(a,b) \to q(a) = q(b)$$
 A/R is a set, e.g. forced to be truncated to a set
-$$x, y : A/R p, q : x =_{A/R} y \vdash tr(x, y, p, q) : p = q$$
+$$\trunc : \Pi x,y: A/R. \Pi p, q : x =_{A/R} y. p = q$$
 Saying there is a function from $A/R$ to some type $B$ is the same as saying there is a function from A to B that maps all elements in $R$ to the same element.
 $$(A/R) \rightarrow B \simeq \sum_{f : A \rightarrow B} . \Pi_{a, b : A} . R(a, b) \rightarrow f(a) =_B f(b)$$
 
 Example.
-
+%% TODO: Expand
 $$Z = (N \times N) / R$$
 for suitable R, e.g. you have a formal difference, and a relation that says when two formal differences are equal.
 
 \section{Truncations as HITs}
+%TODO: Stefan
 \newcommand{\ntrunc}[2]{||#1||_{#2}}
 \newcommand{\propt}[1]{\ntrunc{#1}{-1}}
 Propositional truncation will be written $\propt{A}$
@@ -238,7 +242,14 @@ $$x, y : \sett{A}, z : P(x), w : P(y), p, q : x = y, r : z=_p^{z.P} w, s : z =_q
 gives
 $$z : \sett{A} \vdash P(z)$$
 
+\begin{proposition}\label{prop:sett}
+If $A$ is a set, it is equivalent to its own set truncation, i.e.
+
+\[\mathsf{isSet}(A) \to \sett{A} \simeq A\]
+\end{proposition}
+
 \section{Fundamental group of $\SS^1$}
+%TODO: Maurer
 Recall $\SS^1$ is a HIT defined by
 
 $$base : \SS^1$$
@@ -252,7 +263,7 @@ Find Gp of A at $a_0$ : $\sett{\Omega(A, a_0)}$
 We want to show that
 $$\pi_1(\SS^1) \simeq Z$$
 \begin{proof}
-Show $\Omega(\SS^1, base) \simeq Z$
+Show $\Omega(\SS^1, base) \simeq Z$ (this suffices by Proposition~\ref{prop:sett}.)
 
 $$loop^{(-)} : Z \rightarrow \Omega(\SS^1)$$
 $$loop^{(0)} = \refl(base)$$
