@@ -50,17 +50,27 @@
 \maketitle
 \section{Contents}
 \section{Recap}
-%% Clean up and add more text - Stefan
-Construction of the suspension of a type. We are using different notation from the book, namely $\susp{A}$ as opposed to $\sum A$.
-Specifically, we recall that we can construct the meridian, e.g. if we have
+Recall from last week the construction of the suspension of a type. Note that
+we are using different notation from the book, namely $\susp{A}$ as opposed
+to $\sum A$. The suspension $\susp{A}$ of $A$ contains two 0-cells:
 $$N : \susp{A}$$
 $$S : \susp{A}$$
-$$merid : \Pi x : A . N =_{\susp{A}} S$$
-$$x : \susp{A} \vdash B(X) : \U$$
-$$n : B(N)$$
-$$s : B(S)$$
-$$x : A \vdash m : n =_{merid(x)}^{z.B} s$$
-% Missed the end of this while getting latex document setup
+and paths $\merid(a)$ between $N$ and $S$, where $a: A$.
+$$\merid : \Pi x : A . N =_{\susp{A}} S$$
+$$x : \susp{A} \vdash B(X) : \universe$$
+
+We also defined recursion and induction on $\susp{A}$:
+$$
+\infer{z: \susp{A} \vdash \rec[B](n; s; x. m): B}
+{n: B & s: B & x: A \vdash m(x): n =_B s}
+$$
+
+$$
+\infer{z: \susp{A} \vdash \ind[B](n; s; x.m): B(z)}
+{z: \Susp{A} \vdash B(z): \universe &
+n : B(N) & s : B(S) &
+x : A \vdash m(x) : n =_{merid(x)}^{z.B} s}
+$$
 \section{Equivalence of $\susp{2}$ and $\SS^1$}
 %TODO Cleanup: Maurer
 %"Fact"
@@ -134,11 +144,24 @@ where $g_0$ is the raw map, and $q_0$ is a proof of base point preservation, e.g
 
 \section{Pushouts}
 %TODO Stefan
-Temporarily, we move back to regular set math.
+We temporarily return to conventional set math to define a pushout, which is
+dual to a pullback, which is an equationally constrained subset of a product.
+On the other hand, a pushout is essentially a disjoint union of two sets 
+with some of the elements ``glued'' together. Specifically, assume we have
+sets $A$, $B$ and $C$ with maps $f$ and $g$ from $C$ to $A$ and $B$ 
+respectively. The pushout 
+$A \sqcup^C B$ is the disjoint union of $A$ and $B$ with the images $f(C)$ and
+$g(C)$ merged by merging $f(c)$ and $g(c)$ together for all $c \in C$. In the
+notation of type theory, we denote the disjoint union of $A$ and $B$ as 
+$A + B$ and use the maps $\inl: A \to A + B$ and $\inr: B \to A + B$. We
+can then define the pushout as
 
-A pushout is dual of a pullback.
+$$A \sqcup^C B = (A + B) / R$$
+where $R$ is the least equivalence relation containing 
+$\forall c \in C. R(\inl(f(c)), \inr(g(c)))$
 
-A pullback is an equationally constrained subset of a product.
+$A \sqcup^C$ is the ``least such'' object in the sense that it has a unique
+map to any other object $D$ with the same properties:
 
 \begin{equation*}
 \begin{tikzcd}
@@ -148,11 +171,9 @@ A \arrow[dashed]{r}{g'} \arrow[bend right]{drr}{g''} & A \sqcup^C B \arrow[dashe
 \end{tikzcd}
 \end{equation*}
 where f' and g' are identified by f and g
+%TODO: what are f' and g'? Are they just inl and inr?
 
-Basically, a pushout is a disjoint union of two types with some of the elements merged together.
 
-$$A \sqcup^C B = (A + B) / R$$
-where $R$ is the least equivalence relation containing $\forall c \in C. R(inl(f(c)), inr(g(c)))$
 
 back to hottland
 
