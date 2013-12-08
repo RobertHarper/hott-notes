@@ -4,7 +4,8 @@ PDF=$(TEX:.tex=.pdf)
 all:${PDF}
 
 ${PDF}:%.pdf:%.tex macros.tex
-	latexmk -pdf $<
+#	latexmk -pdf $<
+	pdflatex $<
 
 clean:
 	rm -rf ${PDF}
