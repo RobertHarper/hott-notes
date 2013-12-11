@@ -24,7 +24,6 @@
 \newcommand*{\isProp}{\mathsf{isProp}}
 \newcommand*{\elimtrunc}{\mathsf{elim}}
 \newcommand*{\isContr}{\mathsf{isContr}}
-\newcommand*{\squash}{\mathsf{squash}}
 \newcommand{\iseq}{\mathsf{isequiv}}
 \newcommand{\qinv}{\mathsf{qinv}}
 \newcommand*{\comp}{\mathbin{\circ}}
@@ -37,7 +36,9 @@
 \newcommand{\merid}{\mathsf{merid}}
 
 \newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
+
 \newcommand{\susp}[1]{\mathsf{Susp}(#1)}
+\newcommand{\Susp}[1]{\susp{#1}}
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{thm}{Theorem}
@@ -224,7 +225,7 @@ $$\susp A = 1 \sqcup^A 1$$
 \end{equation*}
 
 This immediately implies the following:
-\begin{corr}The pushout of two sets needn't be a set.\end{corr}
+\begin{cor}The pushout of two sets needn't be a set.\end{cor}
 This is true since $\SS^1 = \susp{2}$, but $\SS^1$ is known not to be a set.
 
 
@@ -259,7 +260,7 @@ A proof appears in the textbook.
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
-\subsection{Example: \Z}
+\subsection{Example: $\Z$}
 We can represent integers as pairs of natural numbers $(a, b)$ (representing
 the integer $a - b$). Since (infinitely) many pairs correspond to each
 integer, we quotient out by an appropriate relation.
@@ -273,7 +274,7 @@ in Section~\ref{sec:fundgroup}
 \newcommand{\propt}[1]{\ntrunc{#1}{-1}}
 \newcommand{\vntrunc}[2]{|#1|_{#2}}
 \newcommand{\vpropt}[1]{\vntrunc{#1}{-1}}
-\newcommand{\squash}{\mathsf{squash}}
+\newcommand{\ssquash}{\mathsf{squash}}
 
 We have previously seen the propositional truncation $\ntrunc{A}{}$, which
 truncates the type $A$ to a proposition by forcing proofs of equality for all
@@ -283,16 +284,17 @@ now write propositional truncation as $\propt{A}$.
 
 The higher inductive type $\propt{A}$ has a simple constructor
 $$\vpropt{-} : A \rightarrow \propt{A}$$
-To add the 1-cells, $\squash$ produces a proof of equality for any two
+To add the 1-cells, $\ssquash$ produces a proof of equality for any two
 values of $A$.
-$$\squash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
+$$\ssquash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
 
 The induction principle is as follows:
 $$
 \infer{z : \propt{A} \vdash \ind[z.P](x. p; x, y, u, v. q)(z) : P(z)}
 {z : \propt{A} \vdash P(z) : U &
 x : A \vdash p : P(\vpropt{x}) &
-x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{squash(x, y)}^{z.P} v}
+x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{\ssquash(x, y)}^{z.P} v}
+$$
 
 We can now use the same methodology to define set truncation as a HIT:
 \newcommand{\sett}[1]{\ntrunc{#1}{0}}
