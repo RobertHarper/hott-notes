@@ -24,7 +24,6 @@
 \newcommand*{\isProp}{\mathsf{isProp}}
 \newcommand*{\elimtrunc}{\mathsf{elim}}
 \newcommand*{\isContr}{\mathsf{isContr}}
-\newcommand*{\squash}{\mathsf{squash}}
 \newcommand{\iseq}{\mathsf{isequiv}}
 \newcommand{\qinv}{\mathsf{qinv}}
 \newcommand*{\comp}{\mathbin{\circ}}
@@ -37,7 +36,9 @@
 \newcommand{\merid}{\mathsf{merid}}
 
 \newcommand*{\isNtype}[1]{\mathsf{is}\mbox{-}#1\mbox{-}\mathsf{type}}
+
 \newcommand{\susp}[1]{\mathsf{Susp}(#1)}
+\newcommand{\Susp}[1]{\susp{#1}}
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{thm}{Theorem}
@@ -73,8 +74,6 @@ n : B(N) & s : B(S) &
 x : A \vdash m(x) : n =_{merid(x)}^{z.B} s}
 $$
 \section{Equivalence of $\susp{2}$ and $\SS^1$}
-%TODO Cleanup: Maurer
-%"Fact"
 \begin{proposition}
 $$\susp{2} \simeq \SS^1$$
 \end{proposition}
@@ -83,7 +82,7 @@ $$f : \susp{2} \rightarrow \SS^1$$
 defined by 
 $$N \mapsto base$$
 $$S \mapsto base$$
-these merid terms are in some kind of ap shorthand %% TODO: Explain this
+On the higher order part of the suspension, we define what the behavior of the one-cells should be, e.g. how $\ap$ would act.
 $$merid(tt) \mapsto loop$$
 $$merid(ff) \mapsto \refl(base)$$
 quasinverse
@@ -97,7 +96,7 @@ By induction
 $$(x = N); \refl(N) : N = N$$
 $$(x = S); merid(ff) : N = S$$
 $$merid(y); ? : \refl(N) =_{merid(y)}^{z.f(g(z) = z} merid(ff)$$
-Can case out on this
+We can case out on this,
 $$\ap_g (\ap_f (merid(tt))^{-1} \cdot \refl(N) \cdot merid(tt)) = merid(ff)$$
 $$\ap_g (\ap_f (merid(ff))^{-1} \cdot \refl(N) \cdot merid(ff)) = merid(ff)$$
 stepping evaluation,
@@ -111,18 +110,13 @@ $$x = base; \refl(base) : f(g(base)) = base$$
 $$x = loop; \ap_f(\ap_g(loop))^{-1} \cdot \refl(base) = \refl base $$
 \end{proof}
 \section{Pointed Type}
-% TODO Maurer
 A pointed type is one with an example inhabitant. Notation will be e.g. if A is a pointed type, then we have $a_0 : A$.
 
-e.g. $\Omega(A, a_0) = (a_0 =_A a_0)$ ``the loop space''
-The loop space is pointed by $\refl(a_0)$
+For example, $\Omega(A, a_0) = (a_0 =_A a_0)$, ``the loop space'', is pointed by $\refl(a_0)$. $\susp{A}$ is another example of a pointed type, as it is pointed by $N$.
 
-$\susp{A}$ is pointed by $N$
-
-``strict'' maps = pointed maps = maps in the category of pointed spaces
-%That last term I have no idea
-
-$$X \lolli Y := \Sigma f : X \to Y . f(x_0) = y_0$$
+Pointed maps, also known as strict maps, are maps between two pointed types which map the well-known point of one to the well known point of the other, as in
+$$(X, x_0) \lolli (Y, y_0) := \Sigma f : X \to Y . f(x_0) = y_0$$
+We set out to prove
 \begin{proposition}
 $$\susp{A} \lolli B \simeq (A \lolli \Omega B)$$
 \end{proposition}
@@ -136,15 +130,13 @@ On the other side, given $g : A \lolli \Omega B$, define $f : \susp{A} \lolli B$
 
 $$f_0(N) = b_0$$
 $$f_0(S) = b_0$$
-?????
+We again define the behavior of the one-cell in the HIT
 $$\ap_f(merid(a)) = g_0(a)$$
-"there is a big diagram to make this work out"
 
 where $g_0$ is the raw map, and $q_0$ is a proof of base point preservation, e.g. $q_0 : g_0(N) = b_0$ and $f = \langle g_0, q_0\rangle$
 \end{proof}
 
 \section{Pushouts}
-%TODO Stefan
 We temporarily return to conventional set math to define a pushout, which is
 dual to a pullback, which is an equationally constrained subset of a product.
 On the other hand, a pushout is essentially a disjoint union of two sets 
@@ -224,12 +216,11 @@ $$\susp A = 1 \sqcup^A 1$$
 \end{equation*}
 
 This immediately implies the following:
-\begin{corr}The pushout of two sets needn't be a set.\end{corr}
+\begin{cor}The pushout of two sets needn't be a set.\end{cor}
 This is true since $\SS^1 = \susp{2}$, but $\SS^1$ is known not to be a set.
 
 
 \section{Quotients as HITs}
-%TODO: Stefan
 \newcommand{\trunc}{\mathsf{trunc}}
 The set definition of pushouts is in terms of a quotient, so we might
 consider defining quotients of sets by props uing HITs.
@@ -259,7 +250,7 @@ A proof appears in the textbook.
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
-\subsection{Example: \Z}
+\subsection{Example: $\Z$}
 We can represent integers as pairs of natural numbers $(a, b)$ (representing
 the integer $a - b$). Since (infinitely) many pairs correspond to each
 integer, we quotient out by an appropriate relation.
@@ -273,7 +264,7 @@ in Section~\ref{sec:fundgroup}
 \newcommand{\propt}[1]{\ntrunc{#1}{-1}}
 \newcommand{\vntrunc}[2]{|#1|_{#2}}
 \newcommand{\vpropt}[1]{\vntrunc{#1}{-1}}
-\newcommand{\squash}{\mathsf{squash}}
+\newcommand{\ssquash}{\mathsf{squash}}
 
 We have previously seen the propositional truncation $\ntrunc{A}{}$, which
 truncates the type $A$ to a proposition by forcing proofs of equality for all
@@ -283,18 +274,18 @@ now write propositional truncation as $\propt{A}$.
 
 The higher inductive type $\propt{A}$ has a simple constructor
 $$\vpropt{-} : A \rightarrow \propt{A}$$
-To add the 1-cells, $\squash$ produces a proof of equality for any two
+To add the 1-cells, $\ssquash$ produces a proof of equality for any two
 values of $A$.
-$$\squash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
+$$\ssquash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
 
 The induction principle is as follows:
 $$
 \inferrule
-{z : \propt{A} \vdash P(z) : U &
+{z : \propt{A} \vdash P(z) : U \qquad
 x : A \vdash p : P(\vpropt{x}) \\
-x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{\squash(x, y)}^{z.P} v}
+x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{\ssquash(x, y)}^{z.P} v}
 {z : \propt{A} \vdash \ind[z.P](x. p; x, y, u, v. q)(z) : P(z)}
-
+$$
 
 We can now use the same methodology to define set truncation as a HIT:
 \newcommand{\sett}[1]{\ntrunc{#1}{0}}
@@ -302,14 +293,14 @@ We can now use the same methodology to define set truncation as a HIT:
 $$\vsett{-} : A \rightarrow \sett{A}$$
 As in the definition of quotients, the set truncation provides proofs of
 equality for all paths.
-$$x, y : \sett{A}, p, q : x =_{\sett{A}} y \vdash \squash(x, y, p, q) : p =_{x = y} q$$
+$$x, y : \sett{A}, p, q : x =_{\sett{A}} y \vdash \ssquash(x, y, p, q) : p =_{x = y} q$$
 
 And we state an induction principle:
 $$
 \inferrule
-{z : \sett{A} \vdash P : U &
+{z : \sett{A} \vdash P : U \qquad
 x : A \vdash g : P(\vsett{A}) \\
-x, y : \sett{A}, z : P(x), w : P(y), p, q : x = y, r : z=_p^{z.P} w, s : z =_q^{z.P} w \vdash ip : p =_{\squash(x,y,p,q)}^{z.P} q}
+x, y : \sett{A}, z : P(x), w : P(y), p, q : x = y, r : z=_p^{z.P} w, s : z =_q^{z.P} w \vdash ip : p =_{\ssquash(x,y,p,q)}^{z.P} q}
 {z : \sett{A} \vdash \ind[z.P](x. g; x, y, z, w, p, q, r, s. ip)(z): P(z)}
 $$
 
@@ -320,7 +311,6 @@ If $A$ is a set, it is equivalent to its own set truncation, i.e.
 \end{proposition}
 
 \section{Fundamental group of $\SS^1$}\label{sec:fundgroup}
-%TODO: Maurer
 Recall $\SS^1$ is a HIT defined by
 
 $$base : \SS^1$$
@@ -328,7 +318,7 @@ $$loop : base =_{\SS^1} base$$
 
 Recall $\Omega(A, a_0) := (a_0 =_A a_0)$
 
-Find Gp of A at $a_0$ : $\sett{\Omega(A, a_0)}$
+We want to find the group of A at $a_0$ : $\sett{\Omega(A, a_0)}$
 
 \begin{thm}
 We want to show that
@@ -362,9 +352,8 @@ straightforwards by induction
 
 %\begin{prop}
 $$\Pi_{l : \Omega(\SS^1)} loop^{winding(l)} =_{\Omega(\SS^1)} l$$
-Path induction on l?
 
-Path not free
+We can't proceed by path induction on l, as the path is not free
 
 $$encode : \Pi_{x : \SS^1} (base = x) \rightarrow code(x)$$
 $$decode : \Pi_{x : \SS^1} code(x) \rightarrow base = x$$
@@ -372,8 +361,7 @@ $$decode : \Pi_{x : \SS^1} code(x) \rightarrow base = x$$
 $$encode x p = tr[code](p)(o)$$
 $$decode x = \SS^1-rec[z.code(z) \rightarrow base = z](\lambda z . refl(base), \lambda n . loop^{(n)})(x)$$
 
-
-You weill need a path induction and circle induction
+To complete the proof, you will need a path induction and a circle induction.
 %\end{prop}
 \end{proof}
 \end{thm}
