@@ -289,23 +289,28 @@ $$\squash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
 
 The induction principle is as follows:
 $$
-\infer{z : \propt{A} \vdash \ind[z.P](x. p; x, y, u, v. q)(z) : P(z)}
+\inferrule
 {z : \propt{A} \vdash P(z) : U &
-x : A \vdash p : P(\vpropt{x}) &
-x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{squash(x, y)}^{z.P} v}
+x : A \vdash p : P(\vpropt{x}) \\
+x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{\squash(x, y)}^{z.P} v}
+{z : \propt{A} \vdash \ind[z.P](x. p; x, y, u, v. q)(z) : P(z)}
+
 
 We can now use the same methodology to define set truncation as a HIT:
 \newcommand{\sett}[1]{\ntrunc{#1}{0}}
 \newcommand{\vsett}[1]{\vntrunc{#1}{0}}
 $$\vsett{-} : A \rightarrow \sett{A}$$
-$$x, y : \sett{A}, p, q : x =_{\sett{A}} y \vdash sq(x, y, p, q) : p =_{x = y} q$$
+As in the definition of quotients, the set truncation provides proofs of
+equality for all paths.
+$$x, y : \sett{A}, p, q : x =_{\sett{A}} y \vdash \squash(x, y, p, q) : p =_{x = y} q$$
 
-Induction principle
+And we state an induction principle:
 $$
-\infer{z : \sett{A} \vdash \ind[z.P](x. g; x, y, z, w, p, q, r, s. ip)(z): P(z)}
+\inferrule
 {z : \sett{A} \vdash P : U &
-x : A \vdash g : P(\vsett{A}) &
-x, y : \sett{A}, z : P(x), w : P(y), p, q : x = y, r : z=_p^{z.P} w, s : z =_q^{z.P} w \vdash ip : p =_{sq(x,y,p,q)}^{z.P} q}
+x : A \vdash g : P(\vsett{A}) \\
+x, y : \sett{A}, z : P(x), w : P(y), p, q : x = y, r : z=_p^{z.P} w, s : z =_q^{z.P} w \vdash ip : p =_{\squash(x,y,p,q)}^{z.P} q}
+{z : \sett{A} \vdash \ind[z.P](x. g; x, y, z, w, p, q, r, s. ip)(z): P(z)}
 $$
 
 \begin{proposition}\label{prop:sett}
