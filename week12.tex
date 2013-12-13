@@ -7,6 +7,8 @@
 \newcommand{\U}{\mathbb{U}}
 \renewcommand{\SS}{\mathbb{S}}
 \renewcommand{\refl}{\mathsf{refl}}
+\newcommand {\sbase}{\mathsf{base}}
+\newcommand {\sloop}{\mathsf{loop}}
 \newcommand{\lolli}{\multimap}
 \newcommand*{\Void}{\mathsf{0}}
 \newcommand*{\Unit}{\mathsf{1}}
@@ -81,16 +83,16 @@ $$\susp{2} \simeq \SS^1$$
 \begin{proof}
 $$f : \susp{2} \rightarrow \SS^1$$
 defined by 
-$$N \mapsto base$$
-$$S \mapsto base$$
+$$N \mapsto \sbase$$
+$$S \mapsto \sbase$$
 On the higher order part of the suspension, we define what the behavior of the one-cells should be, e.g. how $\ap$ would act.
-$$\merid(tt) \mapsto loop$$
-$$\merid(ff) \mapsto \refl(base)$$
+$$\merid(tt) \mapsto \sloop$$
+$$\merid(ff) \mapsto \refl(\sbase)$$
 quasinverse
 $$g : \susp{2} \rightarrow \SS^1$$
-where we send base is arbitrary but must be consistent
-$$base \mapsto N$$
-$$loop \mapsto \merid(tt) \cdot \merid(ff)^{-1}$$
+where we send $\sbase$ is arbitrary but must be consistent
+$$\sbase \mapsto N$$
+$$\sloop \mapsto \merid(tt) \cdot \merid(ff)^{-1}$$
 Now need to prove these are inverses
 $$\alpha : \Pi x : \susp{2} . g(f(x)) = x$$
 By induction
@@ -101,14 +103,14 @@ We can case out on this,
 $$\ap_g (\ap_f (\merid(tt))^{-1} \cdot \refl(N) \cdot \merid(tt)) = \merid(ff)$$
 $$\ap_g (\ap_f (\merid(ff))^{-1} \cdot \refl(N) \cdot \merid(ff)) = \merid(ff)$$
 stepping evaluation,
-$$\ap_g (loop)^{-1} \cdot \merid(tt) = \merid(ff)$$
+$$\ap_g (\sloop)^{-1} \cdot \merid(tt) = \merid(ff)$$
 $$(\merid(tt) \cdot \merid(ff)^{-1})^{-1} \cdot \merid(ff) = \merid(ff)^{-1-1} \cdot \merid(tt)^{-1} \cdot \merid(tt) = \merid(ff)$$
 
 Our other proof of inversion
 $$\beta : \Pi x : \SS^1 . f(g(x)) = x$$
 by induction on $\SS^1$
-$$x = base; \refl(base) : f(g(base)) = base$$
-$$x = loop; \ap_f(\ap_g(loop))^{-1} \cdot \refl(base) = \refl base $$
+$$x = \sbase; \refl(\sbase) : f(g(\sbase)) = \sbase$$
+$$x = \sloop; \ap_f(\ap_g(\sloop))^{-1} \cdot \refl(\sbase) = \refl \sbase $$
 \end{proof}
 \section{Pointed Type}
 A pointed type is one with an example inhabitant. Notation will be e.g. if A is a pointed type, then we have $a_0 : A$.
@@ -124,7 +126,7 @@ $$\susp{A} \lolli B \simeq (A \lolli \Omega B)$$
 \begin{proof}
 Given $f : \susp{A} \lolli B$, define $g : A \lolli \Omega B$ as
 $$g a = p_0^{-1} \cdot \ap_f(\merid(a) \cdot \merid(a_0)^{-1}) \cdot p_0$$
-where $f_0$ is the raw map, and $p_0$ is a proof of base point preservation, e.g. $p_0 : f_0(N) = b_0$, and $f = \langle f_0, p_0\rangle$
+where $f_0$ is the raw map, and $p_0$ is a proof of distinguished point preservation, e.g. $p_0 : f_0(N) = b_0$, and $f = \langle f_0, p_0\rangle$
 $$q = \refl(b_0)$$
 
 On the other side, given $g : A \lolli \Omega B$, define $f : \susp{A} \lolli B$
@@ -134,7 +136,7 @@ $$f_0(S) = b_0$$
 We again define the behavior of the one-cell in the HIT
 $$\ap_f(\merid(a)) = g_0(a)$$
 
-where $g_0$ is the raw map, and $q_0$ is a proof of base point preservation, e.g. $q_0 : g_0(N) = b_0$ and $f = \langle g_0, q_0\rangle$
+where $g_0$ is the raw map, and $q_0$ is a proof of distinguished point preservation, e.g. $q_0 : g_0(N) = b_0$ and $f = \langle g_0, q_0\rangle$
 \end{proof}
 
 \section{Pushouts}
@@ -314,8 +316,8 @@ If $A$ is a set, it is equivalent to its own set truncation, i.e.
 \section{Fundamental group of $\SS^1$}\label{sec:fundgroup}
 Recall $\SS^1$ is a HIT defined by
 
-$$base : \SS^1$$
-$$loop : base =_{\SS^1} base$$
+$$\sbase : \SS^1$$
+$$\sloop : \sbase =_{\SS^1} \sbase$$
 
 Recall $\Omega(A, a_0) := (a_0 =_A a_0)$
 
@@ -325,12 +327,12 @@ We want to find the group of A at $a_0$ : $\sett{\Omega(A, a_0)}$
 We want to show that
 $$\pi_1(\SS^1) \simeq Z$$
 \begin{proof}
-Show $\Omega(\SS^1, base) \simeq Z$ (this suffices by Proposition~\ref{prop:sett}.)
+Show $\Omega(\SS^1, \sbase) \simeq Z$ (this suffices by Proposition~\ref{prop:sett}.)
 
-$$loop^{(-)} : Z \rightarrow \Omega(\SS^1)$$
-$$loop^{(0)} = \refl(base)$$
-$$loop^{(-n)} = loop^{(-n + 1)} \cdot loop^{-1}$$
-$$loop^{(+n)} = loop^{(n - 1)} \cdot loop$$
+$$\sloop^{(-)} : Z \rightarrow \Omega(\SS^1)$$
+$$\sloop^{(0)} = \refl(\sbase)$$
+$$\sloop^{(-n)} = \sloop^{(-n + 1)} \cdot \sloop^{-1}$$
+$$\sloop^{(+n)} = \sloop^{(n - 1)} \cdot \sloop$$
 e.g. defined by the Z recursor
 
 $$winding : \Omega(\SS^{1}) \rightarrow Z$$
@@ -341,26 +343,26 @@ $$ua(succ) : Z = Z$$
 
 By recursion principle (not induction)
 $$code : \SS^1 \rightarrow U$$
-$$code(base) = Z$$
-$$code(loop) = ua(succ)$$
+$$code(\sbase) = Z$$
+$$code(\sloop) = ua(succ)$$
 
 $$ap_{code} : \Omega(\SS^1) \rightarrow (Z = Z)$$
 $$winding(p) = tr[x.x](\ap_{code}(p))(0)$$
 %\begin{prop}
-$$\Pi_{n : Z} . winding(loop^{(n)}) =_Z n$$
+$$\Pi_{n : Z} . winding(\sloop^{(n)}) =_Z n$$
 straightforwards by induction
 %\end{prop}
 
 %\begin{prop}
-$$\Pi_{l : \Omega(\SS^1)} loop^{winding(l)} =_{\Omega(\SS^1)} l$$
+$$\Pi_{l : \Omega(\SS^1)} \sloop^{winding(l)} =_{\Omega(\SS^1)} l$$
 
 We can't proceed by path induction on l, as the path is not free
 
-$$encode : \Pi_{x : \SS^1} (base = x) \rightarrow code(x)$$
-$$decode : \Pi_{x : \SS^1} code(x) \rightarrow base = x$$
+$$encode : \Pi_{x : \SS^1} (\sbase = x) \rightarrow code(x)$$
+$$decode : \Pi_{x : \SS^1} code(x) \rightarrow \sbase = x$$
 
 $$encode x p = tr[code](p)(o)$$
-$$decode x = \SS^1-rec[z.code(z) \rightarrow base = z](\lambda z . refl(base), \lambda n . loop^{(n)})(x)$$
+$$decode x = \SS^1-rec[z.code(z) \rightarrow \sbase = z](\lambda z . refl(\sbase), \lambda n . \sloop^{(n)})(x)$$
 
 To complete the proof, you will need a path induction and a circle induction.
 %\end{prop}
