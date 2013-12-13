@@ -71,7 +71,7 @@ $$
 \infer{z: \susp{A} \vdash \ind[B](n; s; x.m): B(z)}
 {z: \Susp{A} \vdash B(z): \universe &
 n : B(N) & s : B(S) &
-x : A \vdash m(x) : n =_{merid(x)}^{z.B} s}
+x : A \vdash m(x) : n =_{\merid(x)}^{z.B} s}
 $$
 \section{Equivalence of $\susp{2}$ and $\SS^1$}
 \begin{proposition}
@@ -83,25 +83,25 @@ defined by
 $$N \mapsto base$$
 $$S \mapsto base$$
 On the higher order part of the suspension, we define what the behavior of the one-cells should be, e.g. how $\ap$ would act.
-$$merid(tt) \mapsto loop$$
-$$merid(ff) \mapsto \refl(base)$$
+$$\merid(tt) \mapsto loop$$
+$$\merid(ff) \mapsto \refl(base)$$
 quasinverse
 $$g : \susp{2} \rightarrow \SS^1$$
 where we send base is arbitrary but must be consistent
 $$base \mapsto N$$
-$$loop \mapsto merid(tt) \cdot merid(ff)^{-1}$$
+$$loop \mapsto \merid(tt) \cdot \merid(ff)^{-1}$$
 Now need to prove these are inverses
 $$\alpha : \Pi x : \susp{2} . g(f(x)) = x$$
 By induction
 $$(x = N); \refl(N) : N = N$$
-$$(x = S); merid(ff) : N = S$$
-$$merid(y); ? : \refl(N) =_{merid(y)}^{z.f(g(z) = z} merid(ff)$$
+$$(x = S); \merid(ff) : N = S$$
+$$\merid(y); ? : \refl(N) =_{\merid(y)}^{z.f(g(z) = z} \merid(ff)$$
 We can case out on this,
-$$\ap_g (\ap_f (merid(tt))^{-1} \cdot \refl(N) \cdot merid(tt)) = merid(ff)$$
-$$\ap_g (\ap_f (merid(ff))^{-1} \cdot \refl(N) \cdot merid(ff)) = merid(ff)$$
+$$\ap_g (\ap_f (\merid(tt))^{-1} \cdot \refl(N) \cdot \merid(tt)) = \merid(ff)$$
+$$\ap_g (\ap_f (\merid(ff))^{-1} \cdot \refl(N) \cdot \merid(ff)) = \merid(ff)$$
 stepping evaluation,
-$$\ap_g (loop)^{-1} \cdot merid(tt) = merid(ff)$$
-$$(merid(tt) \cdot merid(ff)^{-1})^{-1} \cdot merid(ff) = merid(ff)^{-1-1} \cdot merid(tt)^{-1} \cdot merid(tt) = merid(ff)$$
+$$\ap_g (loop)^{-1} \cdot \merid(tt) = \merid(ff)$$
+$$(\merid(tt) \cdot \merid(ff)^{-1})^{-1} \cdot \merid(ff) = \merid(ff)^{-1-1} \cdot \merid(tt)^{-1} \cdot \merid(tt) = \merid(ff)$$
 
 Our other proof of inversion
 $$\beta : \Pi x : \SS^1 . f(g(x)) = x$$
@@ -122,7 +122,7 @@ $$\susp{A} \lolli B \simeq (A \lolli \Omega B)$$
 \end{proposition}
 \begin{proof}
 Given $f : \susp{A} \lolli B$, define $g : A \lolli \Omega B$ as
-$$g a = p_0^{-1} \cdot \ap_f(merid(a) \cdot merid(a_0)^{-1}) \cdot p_0$$
+$$g a = p_0^{-1} \cdot \ap_f(\merid(a) \cdot \merid(a_0)^{-1}) \cdot p_0$$
 where $f_0$ is the raw map, and $p_0$ is a proof of base point preservation, e.g. $p_0 : f_0(N) = b_0$, and $f = \langle f_0, p_0\rangle$
 $$q = \refl(b_0)$$
 
@@ -131,7 +131,7 @@ On the other side, given $g : A \lolli \Omega B$, define $f : \susp{A} \lolli B$
 $$f_0(N) = b_0$$
 $$f_0(S) = b_0$$
 We again define the behavior of the one-cell in the HIT
-$$\ap_f(merid(a)) = g_0(a)$$
+$$\ap_f(\merid(a)) = g_0(a)$$
 
 where $g_0$ is the raw map, and $q_0$ is a proof of base point preservation, e.g. $q_0 : g_0(N) = b_0$ and $f = \langle g_0, q_0\rangle$
 \end{proof}
