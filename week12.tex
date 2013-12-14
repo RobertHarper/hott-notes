@@ -88,7 +88,7 @@ $$S \mapsto \sbase$$
 On the higher order part of the suspension, we define what the behavior of the one-cells should be, e.g. how $\ap$ would act.
 $$\merid(tt) \mapsto \sloop$$
 $$\merid(ff) \mapsto \refl(\sbase)$$
-quasinverse
+To show equivalence, we now define a quasinverse of $f$
 $$g : \susp{2} \rightarrow \SS^1$$
 where we send $\sbase$ is arbitrary but must be consistent
 $$\sbase \mapsto N$$
@@ -96,9 +96,13 @@ $$\sloop \mapsto \merid(tt) \cdot \merid(ff)^{-1}$$
 Now need to prove these are inverses
 $$\alpha : \Pi x : \susp{2} . g(f(x)) = x$$
 By induction
-$$(x = N); \refl(N) : N = N$$
-$$(x = S); \merid(ff) : N = S$$
-$$\merid(y); ? : \refl(N) =_{\merid(y)}^{z.f(g(z) = z} \merid(ff)$$
+\[
+\begin{array}{r l}
+(x = N)& \refl(N) : N = N \\
+(x = S)& \merid(ff) : N = S\\
+\merid(y) & ? : \refl(N) =_{\merid(y)}^{z.f(g(z) = z} \merid(ff)
+\end{array}
+\]
 We can case out on this,
 $$\ap_g (\ap_f (\merid(tt))^{-1} \cdot \refl(N) \cdot \merid(tt)) = \merid(ff)$$
 $$\ap_g (\ap_f (\merid(ff))^{-1} \cdot \refl(N) \cdot \merid(ff)) = \merid(ff)$$
@@ -108,14 +112,18 @@ $$(\merid(tt) \cdot \merid(ff)^{-1})^{-1} \cdot \merid(ff) = \merid(ff)^{-1-1} \
 
 Our other proof of inversion
 $$\beta : \Pi x : \SS^1 . f(g(x)) = x$$
-by induction on $\SS^1$
-$$x = \sbase; \refl(\sbase) : f(g(\sbase)) = \sbase$$
-$$x = \sloop; \ap_f(\ap_g(\sloop))^{-1} \cdot \refl(\sbase) = \refl \sbase $$
+proceeds by induction on $\SS^1$
+\[
+\begin{array}{r l}
+(x = \sbase) & \refl(\sbase) : f(g(\sbase)) = \sbase\\
+(x = \sloop) & \ap_f(\ap_g(\sloop))^{-1} \cdot \refl(\sbase) = \refl(\sbase)
+\end{array}
+\]
 \end{proof}
 \section{Pointed Type}
-A pointed type is one with an example inhabitant. Notation will be e.g. if A is a pointed type, then we have $a_0 : A$.
+A pointed type is one with an example inhabitant. If A is a pointed type, then, in our notation, we have $a_0 : A$.
 
-For example, $\Omega(A, a_0) = (a_0 =_A a_0)$, ``the loop space'', is pointed by $\refl(a_0)$. $\susp{A}$ is another example of a pointed type, as it is pointed by $N$.
+For example, $\Omega(A, a_0) = (a_0 =_A a_0)$, ``the loop space'', is pointed by $\refl(a_0)$. $\susp{A}$ pointed by $N$ (or $S$) is another example of a pointed type.
 
 Pointed maps, also known as strict maps, are maps between two pointed types which map the well-known point of one to the well known point of the other, as in
 $$(X, x_0) \lolli (Y, y_0) := \Sigma f : X \to Y . f(x_0) = y_0$$
@@ -125,7 +133,7 @@ $$\susp{A} \lolli B \simeq (A \lolli \Omega B)$$
 \end{proposition}
 \begin{proof}
 Given $f : \susp{A} \lolli B$, define $g : A \lolli \Omega B$ as
-$$g a = p_0^{-1} \cdot \ap_f(\merid(a) \cdot \merid(a_0)^{-1}) \cdot p_0$$
+$$g(a) = p_0^{-1} \cdot \ap_f(\merid(a) \cdot \merid(a_0)^{-1}) \cdot p_0$$
 where $f_0$ is the raw map, and $p_0$ is a proof of distinguished point preservation, e.g. $p_0 : f_0(N) = b_0$, and $f = \langle f_0, p_0\rangle$
 $$q = \refl(b_0)$$
 
@@ -156,7 +164,7 @@ $$A \sqcup^C B = (A + B) / R$$
 where $R$ is the least equivalence relation containing 
 $\forall c \in C. R(\inl(f(c)), \inr(g(c)))$
 
-$A \sqcup^C$ is the ``least such'' object in the sense that it has a unique
+$A \sqcup^C B$ is the ``least such'' object in the sense that it has a unique
 map to any other object $D$ with the same properties:
 
 \begin{equation*}
@@ -166,7 +174,7 @@ A \arrow[dashed]{r}{g'} \arrow[bend right]{drr}{g''} & A \sqcup^C B \arrow[dashe
 {} & {} & D\\
 \end{tikzcd}
 \end{equation*}
-where f' and g' are identified by f and g
+where f' and g' are identified by f and g.
 %TODO: what are f' and g'? Are they just inl and inr?
 
 \subsection{Pushouts of $A \xleftarrow{f} C \xrightarrow{g} B$}
@@ -260,7 +268,7 @@ integer, we quotient out by an appropriate relation.
 $$\Z = (\N \times \N) / R$$
 where $R((a_1, b_1), (a_2, b_2))$ iff $a_1 + b_2 = a_2 + b_1$. This
 representation will be important in the proof that $\pi_1(\SS^1) \simeq \Z$
-in Section~\ref{sec:fundgroup}
+in Section~\ref{sec:fundgroup}.
 
 \section{Truncations as HITs}
 \newcommand{\ntrunc}[2]{||#1||_{#2}}
@@ -284,7 +292,7 @@ $$\ssquash : \Pi_{a, b : \propt{A}} . a =_{\propt{A}} b$$
 The induction principle is as follows:
 $$
 \inferrule
-{z : \propt{A} \vdash P(z) : U \qquad
+{z : \propt{A} \vdash P(z) : \universe \qquad
 x : A \vdash p : P(\vpropt{x}) \\
 x, y : \propt{A}, u : P(x), v : P(y) \vdash q : u =_{\ssquash(x, y)}^{z.P} v}
 {z : \propt{A} \vdash \ind[z.P](x. p; x, y, u, v. q)(z) : P(z)}
@@ -321,48 +329,54 @@ $$\sloop : \sbase =_{\SS^1} \sbase$$
 
 Recall $\Omega(A, a_0) := (a_0 =_A a_0)$
 
-We want to find the group of A at $a_0$ : $\sett{\Omega(A, a_0)}$
+The fundamental group of $A$ at $a_0$, $\pi_1(A, a_0)$,
+is defined to be $\sett{\Omega(A, a_0)}$.
 
 \begin{thm}
 We want to show that
 $$\pi_1(\SS^1) \simeq Z$$
 \begin{proof}
-Show $\Omega(\SS^1, \sbase) \simeq Z$ (this suffices by Proposition~\ref{prop:sett}.)
+Show $\Omega(\SS^1, \sbase) \simeq \Z$ (this suffices by Proposition~\ref{prop:sett}.)
 
-$$\sloop^{(-)} : Z \rightarrow \Omega(\SS^1)$$
+We define a map
+$$\sloop^{(-)} : \Z \rightarrow \Omega(\SS^1)$$
+as follows:
 $$\sloop^{(0)} = \refl(\sbase)$$
 $$\sloop^{(-n)} = \sloop^{(-n + 1)} \cdot \sloop^{-1}$$
 $$\sloop^{(+n)} = \sloop^{(n - 1)} \cdot \sloop$$
-e.g. defined by the Z recursor
+This could be, for example, defined by the $\Z$ recursor
 
-$$winding : \Omega(\SS^{1}) \rightarrow Z$$
-We take that $succ : Z \simeq Z$, and $pred = succ^{-1}$, defined by shifting all the numbers up/down by one
+$$winding : \Omega(\SS^{1}) \rightarrow \Z$$
+We take that $succ : \Z \simeq \Z$, and $pred = succ^{-1}$, defined by shifting all the numbers up/down by one
 
 So, we have
-$$ua(succ) : Z = Z$$
+$$ua(succ) : \Z =_\universe \Z$$
 
-By recursion principle (not induction)
-$$code : \SS^1 \rightarrow U$$
-$$code(\sbase) = Z$$
+By the recursion principle (not induction)
+$$code : \SS^1 \rightarrow \universe$$
+$$code(\sbase) = \Z$$
 $$code(\sloop) = ua(succ)$$
 
-$$ap_{code} : \Omega(\SS^1) \rightarrow (Z = Z)$$
+$$\ap_{code} : \Omega(\SS^1) \rightarrow (\Z = \Z)$$
 $$winding(p) = tr[x.x](\ap_{code}(p))(0)$$
-%\begin{prop}
+\begin{proposition}
 $$\Pi_{n : Z} . winding(\sloop^{(n)}) =_Z n$$
-straightforwards by induction
-%\end{prop}
+\end{proposition}
+\begin{proof}
+Straightforward by induction
+\end{proof}
 
-%\begin{prop}
+\begin{proposition}
 $$\Pi_{l : \Omega(\SS^1)} \sloop^{winding(l)} =_{\Omega(\SS^1)} l$$
+\end{proposition}
 
 We can't proceed by path induction on l, as the path is not free
 
 $$encode : \Pi_{x : \SS^1} (\sbase = x) \rightarrow code(x)$$
 $$decode : \Pi_{x : \SS^1} code(x) \rightarrow \sbase = x$$
 
-$$encode x p = tr[code](p)(o)$$
-$$decode x = \SS^1-rec[z.code(z) \rightarrow \sbase = z](\lambda z . refl(\sbase), \lambda n . \sloop^{(n)})(x)$$
+$$encode(x,p) \defeq tr[code](p)(o)$$
+$$decode(x) \defeq \rec_{\SS^1}[z.code(z) \rightarrow \sbase = z](\lambda z . \refl(\sbase), \lambda n . \sloop^{(n)})(x)$$
 
 To complete the proof, you will need a path induction and a circle induction.
 %\end{prop}
