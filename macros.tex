@@ -7,6 +7,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{mathtools}
+\usepackage{etoolbox}
 \usepackage{fancyhdr}
 \usepackage{mathpartir}
 \usepackage{xcolor}
@@ -28,6 +29,9 @@
 \newacronym{ETT}{ETT}{extensional type theory}
 \newacronym{NNO}{NNO}{natural numbers object}
 
+% Make \ac robust.
+\robustify{\ac}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fancy page style
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,8 +48,8 @@
 \renewcommand{\footrulewidth}{0.4pt}
 
 
-\newcommand*{\vocab}[1]{\emph{#1}}
-\newcommand*{\latin}[1]{\textit{#1}}
+\newrobustcmd*{\vocab}[1]{\emph{#1}}
+\newrobustcmd*{\latin}[1]{\textit{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Customize list enviroonments
@@ -60,91 +64,88 @@
 % Some really basic macros.
 % (Lots of them were stolen from HoTT/Book.)
 % See macros.tex in HoTT/book.
+%
+% This is a mess.  Needs clean-ups.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\ctx}{\Gamma}
-\newcommand{\entails}{\vdash}
+\newrobustcmd*{\ctx}{\Gamma}
+\newrobustcmd*{\entails}{\vdash}
 
-
-\newcommand*{\judgmentfont}[1]{{\normalfont\sffamily #1}}
-\newcommand*{\postfixjudgment}[1]{%
+\newrobustcmd*{\judgmentfont}[1]{{\normalfont\sffamily #1}}
+\newrobustcmd*{\postfixjudgment}[1]{%
   \relax\ifnum\lastnodetype>0\mskip\medmuskip\fi
   \text{\judgmentfont{#1}}%
 }
-\newcommand*{\prop}{\postfixjudgment{prop}}
-\newcommand*{\true}{\postfixjudgment{true}}
-\newcommand*{\type}{\postfixjudgment{type}}
-\newcommand*{\context}{\postfixjudgment{ctx}}
+\newrobustcmd*{\prop}{\postfixjudgment{prop}}
+\newrobustcmd*{\true}{\postfixjudgment{true}}
+\newrobustcmd*{\type}{\postfixjudgment{type}}
+\newrobustcmd*{\context}{\postfixjudgment{ctx}}
 
-
-\newcommand*{\truth}{\top}
-\newcommand*{\conj}{\wedge}
-\newcommand*{\disj}{\vee}
-\newcommand*{\falsehood}{\bot}
-\newcommand*{\imp}{\supset}
-\newcommand*{\zero}{0}
-
+\newrobustcmd*{\truth}{\top}
+\newrobustcmd*{\conj}{\wedge}
+\newrobustcmd*{\disj}{\vee}
+\newrobustcmd*{\falsehood}{\bot}
+\newrobustcmd*{\imp}{\supset}
+\newrobustcmd*{\zero}{0}
 
 %%% Judgmental equality
-\newcommand{\jdeq}{\equiv}
+\newrobustcmd*{\jdeq}{\equiv}
 %%% Definition
-\newcommand{\defeq}{\vcentcolon\equiv}
+\newrobustcmd*{\defeq}{\vcentcolon\equiv}
 %%% Binary sums
-\newcommand{\inlsym}{{\mathsf{inl}}}
-\newcommand{\inrsym}{{\mathsf{inr}}}
-\newcommand{\inl}{\ensuremath\inlsym\xspace}
-\newcommand{\inr}{\ensuremath\inrsym\xspace}
+\newrobustcmd*{\inlsym}{{\mathsf{inl}}}
+\newrobustcmd*{\inrsym}{{\mathsf{inr}}}
+\newrobustcmd*{\inl}{\ensuremath\inlsym\xspace}
+\newrobustcmd*{\inr}{\ensuremath\inrsym\xspace}
 %%% Booleans
-\newcommand{\ttsym}{{\mathsf{tt}}}
-\newcommand{\ffsym}{{\mathsf{ff}}}
-%\newcommand{\ttrue}{\ensuremath\ttsym\xspace}
-%\newcommand{\ffalse}{\ensuremath\ffsym\xspace}
+\newrobustcmd*{\ttsym}{{\mathsf{tt}}}
+\newrobustcmd*{\ffsym}{{\mathsf{ff}}}
 %%% Pairs
-\newcommand{\pair}{\ensuremath{\mathsf{pair}}\xspace}
-\newcommand{\tuple}[2]{(#1,#2)}
-\newcommand{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
+\newrobustcmd*{\pair}{\ensuremath{\mathsf{pair}}\xspace}
+\newrobustcmd*{\tuple}[2]{(#1,#2)}
+\newrobustcmd*{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
 %% Empty type
-\newcommand{\abort}[1]{\ensuremath{\mathsf{abort}_{#1}}}
+\newrobustcmd*{\abort}[1]{\ensuremath{\mathsf{abort}_{#1}}}
 %%% Path concatenation
-\newcommand{\concat}{%
+\newrobustcmd*{\concat}{%
   \mathchoice{\mathbin{\raisebox{0.5ex}{$\displaystyle\centerdot$}}}%
   {\mathbin{\raisebox{0.5ex}{$\centerdot$}}}%
   {\mathbin{\raisebox{0.25ex}{$\scriptstyle\,\centerdot\,$}}}%
   {\mathbin{\raisebox{0.1ex}{$\scriptscriptstyle\,\centerdot\,$}}}
 }
 %%% Transport (covariant)
-\newcommand{\trans}[2]{\ensuremath{{#1}_{*}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
+\newrobustcmd*{\trans}[2]{\ensuremath{{#1}_{*}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
 % Natural numbers objects
-\newcommand{\Nat}{\mathsf{Nat}}
-\newcommand{\rec}{\ensuremath{\mathsf{rec}}\xspace}
+\newrobustcmd*{\Nat}{\mathsf{Nat}}
+\newrobustcmd*{\rec}{\ensuremath{\mathsf{rec}}\xspace}
 % Sequence
-\newcommand{\Seq}{\ensuremath{\mathsf{Seq}}\xspace}
+\newrobustcmd*{\Seq}{\ensuremath{\mathsf{Seq}}\xspace}
 % Identity type
-\newcommand{\Id}[1]{\ensuremath{\mathsf{Id}_{#1}}\xspace}
+\newrobustcmd*{\Id}[1]{\ensuremath{\mathsf{Id}_{#1}}\xspace}
 % Reflection
-\newcommand{\refl}[1]{\ensuremath{\mathsf{refl}_{#1}}\xspace}
-\newcommand{\J}{\ensuremath{\mathsf{J}}\xspace}
+\newrobustcmd*{\refl}[1]{\ensuremath{\mathsf{refl}_{#1}}\xspace}
+\newrobustcmd*{\J}{\ensuremath{\mathsf{J}}\xspace}
 
 % fst,snd,case,id
-\newcommand*{\fst}{\textsf{fst}}
-\newcommand*{\snd}{\textsf{snd}}
+\newrobustcmd*{\fst}{\textsf{fst}}
+\newrobustcmd*{\snd}{\textsf{snd}}
 \DeclareMathOperator{\case}{\textsf{case}}
 \DeclareMathOperator{\caseif}{\textsf{if}}
 \DeclareMathOperator{\casesplit}{\textsf{split}}
 \DeclareMathOperator{\ttrue}{\textsf{tt}\xspace}
 \DeclareMathOperator{\ffalse}{\textsf{ff}\xspace}
-\newcommand*{\id}{\textsf{id}}
+\newrobustcmd*{\id}{\textsf{id}}
 
-\newcommand{\op}[1]{\operatorname{#1}}
+\newrobustcmd*{\op}[1]{\operatorname{#1}}
 
-\newcommand{\universe}{\mathcal{U}}
+\newrobustcmd*{\universe}{\mathcal{U}}
 
 %inductive types
-\newcommand{\ind}{\ensuremath{\mathsf{ind}}\xspace}
+\newrobustcmd*{\ind}{\ensuremath{\mathsf{ind}}\xspace}
 %higher inductive types
 %interval
-\newcommand{\interval}{\ensuremath{I}\xspace}
-\newcommand{\seg}{\ensuremath{\mathsf{seg}}\xspace}
+\newrobustcmd*{\interval}{\ensuremath{I}\xspace}
+\newrobustcmd*{\seg}{\ensuremath{\mathsf{seg}}\xspace}
 %circle
-\newcommand{\Sn}{\mathbb{S}}
-\newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
-\newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
+\newrobustcmd*{\Sn}{\mathbb{S}}
+\newrobustcmd*{\base}{\ensuremath{\mathsf{base}}\xspace}
+\newrobustcmd*{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
