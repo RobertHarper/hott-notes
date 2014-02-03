@@ -1,9 +1,9 @@
 %  Mathpartir --- Math Paragraph for Typesetting Inference Rules
 %
-%  Copyright (C) 2001, 2002, 2003, 2004, 2005 Didier RÃ©my
+%  Copyright (C) 2001, 2002, 2003, 2004, 2005 Didier Rémy
 %
 %  Author         : Didier Remy 
-%  Version        : 1.2.0
+%  Version        : 1.2.1
 %  Bug Reports    : to author
 %  Web Site       : http://pauillac.inria.fr/~remy/latex/
 % 
@@ -255,19 +255,26 @@
 
 %% A generic solution to arrow
 
+\def \mpr@@fractionaboveskip {0ex}
+\def \mpr@@fractionbelowskip {0.22ex}
+
 \def \mpr@make@fraction #1#2#3#4#5{\hbox {%
      \def \mpr@tail{#1}%
      \def \mpr@body{#2}%
      \def \mpr@head{#3}%
      \setbox1=\hbox{$#4$}\setbox2=\hbox{$#5$}%
      \setbox3=\hbox{$\mkern -3mu\mpr@body\mkern -3mu$}%
-     \setbox3=\hbox{$\mkern -3mu \mpr@body\mkern -3mu$}%
-     \dimen0=\dp1\advance\dimen0 by \ht3\relax\dp1\dimen0\relax
-     \dimen0=\ht2\advance\dimen0 by \dp3\relax\ht2\dimen0\relax
-     \setbox0=\hbox {$\box1 \@@atop \box2$}%
+     \dimen0\ht3\advance\dimen0 by \dp3\relax
+     \dimen0 0.5\dimen0\relax
+     \advance \dimen0 by \mpr@@fractionaboveskip
+     \setbox1=\hbox {\raise \dimen0 \box1}\relax
+     \dimen0 -\dimen0\advance \dimen0 \mpr@@fractionaboveskip\dimen0 -\dimen0
+     \advance \dimen0 by \mpr@@fractionbelowskip
+     \setbox2=\hbox {\lower \dimen0 \box2}\relax
+     \setbox0=\hbox {$\displaystyle {\box1 \atop \box2}$}%
      \dimen0=\wd0\box0
      \box0 \hskip -\dimen0\relax
-     \hbox to \dimen0 {$%
+     \hbox to \dimen0 {$%\color{blue}
        \mathrel{\mpr@tail}\joinrel
        \xleaders\hbox{\copy3}\hfil\joinrel\mathrel{\mpr@head}%
      $}}}
@@ -345,12 +352,12 @@
 %  after                execute val at the end/right
 %  
 %  Note that most options must come in this order to avoid strange
-%  typesetting (in particular  leftskip must precede left and Left and
+%  typesetting (in particular  leftskip must preceed left and Left and
 %  rightskip must follow Right or right; vdots must come last 
 %  or be only followed by rightskip. 
 %  
 
-%% Keys that make sense in all kinds of rules
+%% Keys that make sence in all kinds of rules
 \def \mprset #1{\setkeys{mprset}{#1}}
 \define@key {mprset}{andskip}[]{\mpr@andskip=#1}
 \define@key {mprset}{lineskip}[]{\lineskip=#1}
@@ -362,6 +369,8 @@
 \define@key {mprset}{myfraction}[]{\let \mpr@fraction #1}
 \define@key {mprset}{fraction}[]{\def \mpr@fraction {\mpr@make@fraction #1}}
 \define@key {mprset}{sep}{\def\mpr@sep{#1}}
+\define@key {mprset}{fractionaboveskip}{\def\mpr@@fractionaboveskip{#1}}
+\define@key {mprset}{fractionbelowskip}{\def\mpr@@fractionbelowskip{#1}}
 
 \newbox \mpr@right
 \define@key {mpr}{flushleft}[]{\mpr@centerfalse}
