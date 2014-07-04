@@ -150,7 +150,16 @@ A\drar{\inl}\arrow[bend right]{ddr}{(\beta)}[swap]{P}  & {} & B\dlar[swap] {\inr
 {} & C & {}
 \end{tikzcd}
 \]
-where given a map $M:A+B\to C$ such that $M\circ \inl \equiv P$ and $M\circ \inr \equiv Q$, the map is in fact equivalent to $M\equiv \{P,Q\}$, so the $\eta$ rule makes the center cell commute.
+where given a map $M:A+B\to C$ such that $M\circ \inl \equiv P$ and $M\circ
+\inr \equiv Q$, the map is in fact equivalent to $M\equiv \{P,Q\}$, so the
+$\eta$ rule makes the center cell commute. In other words,
+\[
+\infer[\eta+]
+      {M=\{P,Q\} : A+B \to C}
+      {M : A + B \to C & M \circ \inl = P : A \to C & M \circ \inr = Q : B \to C}
+\]
+
+
 
 Just as we have done for $\eta{\wedge}$, we can rewrite the $\eta{\vee}$ rule by explicitly naming $P:Q\to C$ and $Q:B\to C$ as follows
 \[
@@ -236,7 +245,7 @@ This has importance for proof theory.
 \end{comment}
 
 \subsection{Category theoretic definition: NNO}
-Fix a category $\mathcal{C}$ and suppose that $\mathcal{C}$ has a terminal object $1$. A \acl{NNO} in $\mathcal{C}$ is an object $\mathbb{N}$ equipped with arrows $0 : 1 \to \mathcal{C}$ and $s : \mathcal{C} \to \mathcal{C}$ satisfying the following univeral property:
+Fix a category $\mathcal{C}$ and suppose that $\mathcal{C}$ has a terminal object $1$. A \acl{NNO} in $\mathcal{C}$ is an object $\mathbb{N}$ equipped with arrows $0 : 1 \to \mathbb{N}$ and $s : \mathbb{N} \to \mathbb{N}$ satisfying the following univeral property:
 %\begin{center}\begin{tikzpicture}[node distance=2cm]
 %  \node (1) {$1$};
 %  \node (N1) [right of=1] {$\mathbb{N}$};
