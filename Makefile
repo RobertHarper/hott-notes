@@ -7,4 +7,4 @@ ${PDF}:%.pdf:%.tex macros.tex
 	latexmk -pdf $<
 
 clean:
-	rm -rf ${PDF}
+	latexmk -C ${TEX}
