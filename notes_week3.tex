@@ -206,10 +206,10 @@ We can think of $0$ as being zero and $s$ as being the successor operation, whic
 
 The $\beta$-rules for $\Nat$ are what they `should be':
 \begin{equation*}
-\infer[\beta{\text{-}}\Nat_0]{\Gamma \vdash \rec(P,Q)(0) \equiv P : A}{\Gamma \vdash P : A & \Gamma \vdash Q : A}
+\infer[\beta{\text{-}}\Nat_0]{\Gamma \vdash \rec(P,Q)(0) \equiv P : A}{\Gamma \vdash P : A & \Gamma, x : A \vdash Q : A}
 \end{equation*}
 \begin{equation*}
-\infer[\beta{\text{-}}\Nat_s]{\Gamma \vdash \rec(P,Q)(s(M)) \equiv [\rec(P,Q)(M)/x]Q : A}{\Gamma \vdash P : A & \Gamma \vdash Q : A}
+\infer[\beta{\text{-}}\Nat_s]{\Gamma \vdash \rec(P,Q)(s(M)) \equiv [\rec(P,Q)(M)/x]Q : A}{\Gamma \vdash P : A & \Gamma, x : A \vdash Q : A}
 \end{equation*}
 
 The $\eta$-rule for the \acs{NNO} is somewhat ugly:
