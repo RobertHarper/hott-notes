@@ -361,7 +361,7 @@ x : \Nat, y : \Nat \vdash x =_{\Nat} y \type
 \end{equation}
 We'll write the type $x =_{\Nat} y$ as $\Id{\Nat}(x,y)$ to emphasise that we really want to think of it as a type and not a proposition.
 
-Instantiating by substitution from \ref{eq:equalityAsType} gives
+Instantiating by substitution from \eqref{eq:equalityAsType} gives
 \begin{equation*}
 \infer{\Gamma \vdash \Id{\Nat}(M,N) \type}{\Gamma \vdash M : \Nat & \Gamma \vdash N : \Nat}
 \end{equation*}
