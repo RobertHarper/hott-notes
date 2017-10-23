@@ -46,9 +46,9 @@ Recall from last week that we intend to characterize paths in coproducts by show
 where $F: (A+B) \to (A+B) \to \mathcal{U}$ is defined by nested case-analysis so that
 \begin{align*}
  F(\inl(a),\inl(a'))\equiv &\ \Id{A}(a,a') \\
- F(\inr(a),\inr(a'))\equiv &\ \Id{B}(b,b') \\
+ F(\inr(b),\inr(b'))\equiv &\ \Id{B}(b,b') \\
  F(\inl(a),\inr(b)) \equiv &\ 0 \\
- F(\inr(a),\inl(b)) \equiv &\ 0
+ F(\inr(b),\inl(a)) \equiv &\ 0
 \end{align*}
 To this end we define a function $f : \prod_{x:A+B}\prod_{x':A+B} \Id{A+B}(x,x') \to F(x,x')$ by
 \[
@@ -88,7 +88,7 @@ Because $f$ is an equivalence, it has a quasi-inverse $f^{-1}:B\to A$ and we hav
 
 \begin{itemize}
 \item $\alpha:\prod_{a:A} f^{-1}(f(a)) =_A a$
-\item $\beta:\prod_{b:B} f(f^{-1}(b) =_B b$
+\item $\beta:\prod_{b:B} f(f^{-1}(b)) =_B b$
 \end{itemize}
 
 In order to show that $\ap_f$ is an equivalence, it suffices to give a
