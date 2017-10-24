@@ -271,5 +271,5 @@ We introduce the transport $\textsf{tr}$, with the following specification:
 \[x,y{:}A,\, p{:}\Id{A}(x,y)\entails \textsf{tr}[z.B](p):[x/z]B\to[y/z]B\]
 Informally, this says that a transport, which is specified by a total space ($z.B$) and a path $p$, takes elements from the fiber associated with the start of the path to the end-of-path fiber. We can define transport to be:
 \[\textsf{tr}[z.B](p) := \J[m.n.\_.[m/z]B\to[n/z]B](p;m.\lambda w.w)\]
-Because the motive is $[m/z]B\to[n/z]B$, we can use the identity function inside $\J$ as them motive will become $[m/z]B\to[m/z]B$. Outside, however, because $p:\Id{A}(x,y)$, this will become $[x/z]B\to[y/z]B$. The intuition here is that because the two elements $x$ and $y$ are ``equal," we don't need anything more than a glorified identity function to transport between the induced fibers.
+Because the motive is $[m/z]B\to[n/z]B$, we can use the identity function inside $\J$ as then the motive will become $[m/z]B\to[m/z]B$. Outside, however, because $p:\Id{A}(x,y)$, this will become $[x/z]B\to[y/z]B$. The intuition here is that because the two elements $x$ and $y$ are ``equal," we don't need anything more than a glorified identity function to transport between the induced fibers.
 \end{document}
