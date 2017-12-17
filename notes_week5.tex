@@ -302,7 +302,7 @@ The full implications of this principle were not understood when it was
 first introduced.  A realization central to Homotopy Type Theory
 is that the induction principle for identity types
 gives rise to an entire hierarchy of iterated identity types.
-That is, due J, we can form the type $p =_{\Id{A}(x,y)} q$ and so on.
+That is, due to J, we can form the type $p =_{\Id{A}(x,y)} q$ and so on.
 Homotopy Type Theory is so-called, in part, because these types form the
 same structure as iterated homotopies: that of an $\infty-$groupoid.
 
@@ -326,7 +326,7 @@ ITT, it is useful to recall the derivable equivalence relation:
 The second and third are theorems provable by path induction, since
 composition and inversion are both defined in terms of J.  Therefore, we may
 read identity types propositionally as witnesses of an equivalence, and 
-computationally as abstract daata types upon which we may operate.
+computationally as abstract data types upon which we may operate.
 The two notations for identity types, $x =_A y$ and $\Id{A(x,y)}$, 
 typically elucidate the intended reading.
 While the former reading comports with more traditional interpretations of
@@ -345,7 +345,7 @@ The groupoid laws may be forumated as coherence theorems, each proven by path
 induction using J:
 
 \begin{tabular}{l l}
-inv-right  & $p \centerdot p_{-1} =_{Id_A(M,M)} \id(M)$ \\
+inv-right  & $p \centerdot p^{-1} =_{Id_A(M,M)} \id(M)$ \\
 inv-left   & $p^{-1} \centerdot p =_{Id_A(N,N)} \id(N)$ \\
 unit-right & $p \centerdot id(N) =_{Id_A(M,N)} p$ \\
 unit-left  & $id(M) \centerdot p =_{Id_A(M,N)} p$ \\
