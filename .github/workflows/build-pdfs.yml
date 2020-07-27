@@ -1,0 +1,17 @@
+name: build-pdfs
+
+on:
+  push:
+    branches: [ cmu-2013-fall ]
+  pull_request:
+    branches: [ cmu-2013-fall ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: sudo apt-get install make texlive lmodern latexmk
+    - name: Run make
+      run: make
