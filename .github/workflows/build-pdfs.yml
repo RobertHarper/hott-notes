@@ -5,6 +5,8 @@ on:
     branches: [ cmu-2013-fall ]
   pull_request:
     branches: [ cmu-2013-fall ]
+  schedule:
+  - cron: "0 0 1 * *"
 
 jobs:
   build:
@@ -12,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: sudo apt-get install make texlive texlive-latex-extra lmodern latexmk
+      run: sudo apt-get install texlive texlive-latex-extra lmodern latexmk
     - name: Run make
       run: make
     - uses: actions/upload-artifact@v2
