@@ -93,7 +93,7 @@ with the computation rules
 \begin{eqnarray*}
   \rec_\Interval[z.A](\Izero;M;N;P) &\jdeq& M \\
   \rec_\Interval[z.A](\Ione;M;N;P) &\jdeq& N \\
-  \apd_{\lambda x.\rec_\Interval[x.A](x;M;N;P)}(\Iseg) &\jdeq& P
+  \apd_{\lambda x.\rec_\Interval[z.A](x;M;N;P)}(\Iseg) &\jdeq& P
 \end{eqnarray*}
 One question we should ask ourselves is whether this last computation rule should be definitional. Postulating a definitional equality involving an internally-defined function, $\apd$, is highly unnatural. On the other hand, adding new propositional ruins the computational interpretation of the theory. At this point, we have no satisfactory answer to this question. We will use definitional equality; the HoTT book uses propositional equality. The formal developments in Coq and Agda both use propositional equality, but this is largely an artifact of technical restrictions: it is impossible to add axioms for definitional equalities in these languages.
 
